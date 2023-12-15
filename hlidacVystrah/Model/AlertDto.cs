@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace hlidacVystrah.Model
 {
-    public class AlertDto
+    public class EventDto
     {
 
         public string language { get; set; }

@@ -60,12 +60,12 @@ export class Home extends Component {
     }
 
     async GetAlerts() {
-        const response = await fetch('api/alerts/cs');
+        const response = await fetch('api/events');
         const data = await response.json();
 
         console.log(data);
 
         if(data.responseCode == 200)
-            this.setState({ alerts: data.alerts, loading: false });
+            this.setState({ alerts: data.events, loading: false });
     }
 }

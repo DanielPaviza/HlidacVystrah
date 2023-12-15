@@ -9,23 +9,23 @@ using System.IO;
 namespace hlidacVystrah.Services
 {
 
-    public class AlertsService : MasterService
+    public class EventsService : MasterService
     {
 
         private string? dataTimestamp = null;
         private ParseService _parseService;
 
-        public AlertsService(AppDbContext context, ParseService parseService) : base(context)
+        public EventsService(AppDbContext context, ParseService parseService) : base(context)
         {
             _context = context;
             _parseService = parseService;
         }
 
-        public AlertsResponse GetAlerts(string language) {
+        public EventsResponse GetAlerts() {
 
-            List<AlertDto> alerts = new();
+            List<EventDto> alerts = new();
 
-            return new AlertsResponse
+            return new EventsResponse
             {
                 ResponseCode = 200,
                 DataTimestamp = dataTimestamp,
@@ -36,7 +36,7 @@ namespace hlidacVystrah.Services
         public ParseResponse UpdateAlerts(string? authToken) {
 
             if (!this.ValidateToken(authToken))
-                return new ParseResponse { responseCode = StatusCodes.Status401Unauthorized };
+                return new ParseResponse { ResponseCode = StatusCodes.Status401Unauthorized };
 
             return _parseService.UpdateAlerts();
         }

@@ -21,7 +21,7 @@ namespace hlidacVystrah.Services
 
         public ParseResponse UpdateAlerts() {
 
-            List<AlertDto> alerts = new();
+            List<EventDto> events = new();
             string xmlPath = @"D:\moje\programovani\absolutorium\random\test_data\bourky.xml";
             UpdateCount count = new();
 
@@ -33,37 +33,37 @@ namespace hlidacVystrah.Services
 
                 string dataTimestamp = GetElementValue(root, "sent");
 
-                alerts = root.Descendants().Where(
+                events = root.Descendants().Where(
                     el =>
                         el.Name.LocalName.ToLower() == "info" &&
                         GetElementValueLower(el, "language") == "cs" &&
                         GetElementValueLower(el, "responseType") != "none"
-                ).Select(alert => new AlertDto
+                ).Select(_event => new EventDto
                 {
-                    language = GetElementValue(alert, "language"),
-                    eventType = GetElementValue(alert, "event"),
-                    severity = GetElementValue(alert, "severity"),
-                    certainty = GetElementValue(alert, "certainty"),
-                    onset = GetElementValue(alert, "onset"),
-                    expires = GetElementValue(alert, "expires"),
-                    description = GetElementValue(alert, "description"),
-                    instruction = GetElementValue(alert, "instruction"),
-                    cisorps = this.GetAlertCisorps(alert)
+                    language = GetElementValue(_event, "language"),
+                    eventType = GetElementValue(_event, "event"),
+                    severity = GetElementValue(_event, "severity"),
+                    certainty = GetElementValue(_event, "certainty"),
+                    onset = GetElementValue(_event, "onset"),
+                    expires = GetElementValue(_event, "expires"),
+                    description = GetElementValue(_event, "description"),
+                    instruction = GetElementValue(_event, "instruction"),
+                    cisorps = this.GetEventCisorps(_event)
                 }).ToList();
 
-                foreach (AlertDto alert in alerts)
+                foreach (EventDto _eventDto in events)
                 {
                     try
                     {
                         EventTable _event = new EventTable
                         {
-                            id_event_type = _context.EventType.First(saved => saved.name == alert.eventType).id,
-                            id_severity = _context.Severity.First(saved => saved.name == alert.severity).id,
-                            id_certainity = _context.Certainity.First(saved => saved.name == alert.certainty).id,
-                            onset = alert.onset,
-                            expires = alert.expires,
-                            description = alert.description,
-                            instruction = alert.instruction
+                            id_event_type = _context.EventType.First(saved => saved.name == _eventDto.eventType).id,
+                            id_severity = _context.Severity.First(saved => saved.name == _eventDto.severity).id,
+                            id_certainity = _context.Certainity.First(saved => saved.name == _eventDto.certainty).id,
+                            onset = _eventDto.onset,
+                            expires = _eventDto.expires,
+                            description = _eventDto.description,
+                            instruction = _eventDto.instruction
                         };
 
                         if(
@@ -78,7 +78,7 @@ namespace hlidacVystrah.Services
                         _context.SaveChanges();
                         count.Event.Success++;
 
-                        foreach (int cisorp in alert.cisorps)
+                        foreach (int cisorp in _eventDto.cisorps)
                         {
 
                             try
@@ -238,15 +238,17 @@ namespace hlidacVystrah.Services
             return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
         }
 
-        private List<int> GetAlertCisorps(XElement alert) {
+        private List<int> GetEventCisorps(XElement _event) {
 
-            List<XElement> areas = alert.Descendants().Where(
-                    el => el.Name.LocalName.ToLower() == "area"
-                ).ToList();
+            List<XElement> areas = _event.Descendants().Where(
+                el => el.Name.LocalName.ToLower() == "area"
+            ).ToList();
 
             List<int> cisorps = areas.Descendants().Where(
-                    area => area.Name.LocalName.ToLower() == "geocode"
-                    ).Select(geocode => Int32.Parse(GetElementValue(geocode, "value"))).ToList();
+                area => area.Name.LocalName.ToLower() == "geocode"
+            ).Select(
+                geocode => Int32.Parse(GetElementValue(geocode, "value")
+            )).ToList();
 
             return cisorps;
         }

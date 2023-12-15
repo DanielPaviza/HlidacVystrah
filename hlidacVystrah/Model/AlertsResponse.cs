@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿
+using System.Xml.Linq;
 
 namespace hlidacVystrah.Model
 {
@@ -7,8 +8,8 @@ namespace hlidacVystrah.Model
 
         public int responseCode { get; set; }
 
-        public string dataTimestamp { get; set; }
+        public string? dataTimestamp { get; set; } = null;
 
-        public List<XElement> alerts { get; set; } = new();
+        public List<AlertDto> alerts { get; set; } = new();
     }
 }

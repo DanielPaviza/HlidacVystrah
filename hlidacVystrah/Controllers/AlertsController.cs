@@ -1,62 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Numerics;
 using System.Xml.Linq;
 using hlidacVystrah.Model;
+using hlidacVystrah.Services;
 
 namespace hlidacVystrah.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
     public class AlertsController : ControllerBase
     {
 
-        private readonly ILogger<WeatherForecastController> _logger;
-        private string url;
+        AlertsService _alertsService;
 
-        public AlertsController(ILogger<WeatherForecastController> logger)
+        public AlertsController(AlertsService alertsService)
         {
-            this._logger = logger;
-            this.url = @"D:\moje\programovani\absolutorium\test_data\clean.xml";
+            _alertsService = alertsService;
         }
 
-        [HttpGet]
-        public AlertsResponse Get()
+        // GET api/alerts/en
+        [HttpGet("{language}")]
+        public AlertsResponse Get(string language)
         {
-
-            try
-            {
-                // Load the XML file using XDocument
-                XDocument xdoc = XDocument.Load(this.url);
-                IEnumerable<XElement> alertElements = xdoc.Root.Elements();
-
-                string? dataTimestamp = alertElements.FirstOrDefault(el => el.Name.LocalName == "sent").Value;
-                List<XElement> infoElements = alertElements.Where(el => el.Name.LocalName == "info").ToList();
-
-                return new AlertsResponse
-                {
-                    responseCode = 200,
-                    dataTimestamp = dataTimestamp,
-                    alerts = infoElements
-                };
-            }
-            catch (Exception ex)
-            {
-                return new AlertsResponse
-                {
-                    responseCode = 500,
-                    dataTimestamp = ex.Message,
-                };
-            }
-
-            return new AlertsResponse
-            {
-                responseCode = 200,
-                dataTimestamp = "",
-            };
+            return _alertsService.GetAlerts(language);
         }
 
-        private XElement FindElementByName(IEnumerable<XElement> elements, string name) {
-            return elements.Where(el => el.Name.LocalName == name).FirstOrDefault();
+        // POST api/alerts/update
+        [HttpPost("update")]
+        public ParseResponse Post([FromHeader] string? authToken)
+        {
+            return _alertsService.UpdateAlerts(authToken);
         }
     }
 }

@@ -71,12 +71,12 @@ namespace hlidacVystrah.Services
                             _context.Event.Local.Any(saved => saved == _event)
                           )
                         {
-                            count.Event.failed++;
+                            count.Event.Failed++;
                             continue;
                         }
 
                         _context.SaveChanges();
-                        count.Event.success++;
+                        count.Event.Success++;
 
                         foreach (int cisorp in alert.cisorps)
                         {
@@ -90,25 +90,25 @@ namespace hlidacVystrah.Services
                                 });
 
                                 _context.SaveChanges();
-                                count.EventLocality.success++;
+                                count.EventLocality.Success++;
                             } catch
                             {
-                                count.EventLocality.failed++;
+                                count.EventLocality.Failed++;
                             }
                         } 
                     } catch (Exception ex)
                     {
-                        return new ParseResponse { responseCode = StatusCodes.Status500InternalServerError };
+                        return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
                     }
 
                 }
             }
             catch (Exception ex)
             {
-                return new ParseResponse { responseCode = StatusCodes.Status500InternalServerError };
+                return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
-            return new ParseResponse { responseCode = StatusCodes.Status200OK, count = count };
+            return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
         }
 
         public ParseResponse SaveLocalities() {
@@ -140,14 +140,14 @@ namespace hlidacVystrah.Services
                     int id;
                     if (!int.TryParse(GetElementValue(locality, "chodnota"), out id))
                     {
-                        count.Locality.failed++;
+                        count.Locality.Failed++;
                         continue;
                     }
 
                     int idRegion;
                     if (!int.TryParse(GetElementValue(region, "chodnota"), out idRegion))
                     {
-                        count.Locality.failed++;
+                        count.Locality.Failed++;
                         continue;
                     }
 
@@ -157,7 +157,7 @@ namespace hlidacVystrah.Services
                         _context.Locality.Any(r => r.id == id)
                        )
                     {
-                        count.Locality.failed++;
+                        count.Locality.Failed++;
                         continue;
                     }
 
@@ -167,15 +167,15 @@ namespace hlidacVystrah.Services
                         id_region = idRegion,
                         name = GetElementValue(locality, "text")
                     });
-                    count.Locality.success++;
+                    count.Locality.Success++;
                 }
             } catch (Exception ex) {
-                return new ParseResponse { responseCode = StatusCodes.Status500InternalServerError };
+                return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
             _context.SaveChanges();
 
-            return new ParseResponse { responseCode = StatusCodes.Status200OK, count = count };
+            return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
         }
 
         private ParseResponse SaveRegions() {
@@ -206,7 +206,7 @@ namespace hlidacVystrah.Services
                     int id;
                     if (!int.TryParse(GetElementValue(region, "chodnota"), out id))
                     {
-                        count.Region.failed++;
+                        count.Region.Failed++;
                         continue;
                     }
 
@@ -216,7 +216,7 @@ namespace hlidacVystrah.Services
                         _context.Region.Any(r => r.id == id)
                        ) 
                     {
-                        count.Region.failed++;
+                        count.Region.Failed++;
                         continue;
                     }
 
@@ -225,17 +225,17 @@ namespace hlidacVystrah.Services
                         id = id,
                         name = GetElementValue(region, "text")
                     });
-                    count.Region.success++;
+                    count.Region.Success++;
                 }
             }
             catch (Exception ex)
             {
-                return new ParseResponse { responseCode = StatusCodes.Status500InternalServerError };
+                return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
             _context.SaveChanges();
 
-            return new ParseResponse { responseCode = StatusCodes.Status200OK, count = count };
+            return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
         }
 
         private List<int> GetAlertCisorps(XElement alert) {

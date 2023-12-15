@@ -6,8 +6,8 @@ namespace hlidacVystrah.Model
     public class SuccessCount
     {
 
-        public int success { get; set; } = 0;
+        public int Success { get; set; } = 0;
 
-        public int failed { get; set; } = 0;
+        public int Failed { get; set; } = 0;
     }
 }

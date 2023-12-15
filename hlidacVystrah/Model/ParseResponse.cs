@@ -6,8 +6,8 @@ namespace hlidacVystrah.Model
     public class ParseResponse
     {
 
-        public int responseCode { get; set; }
+        public int ResponseCode { get; set; }
 
-        public UpdateCount count { get; set; } = new();
+        public UpdateCount Count { get; set; } = new();
     }
 }

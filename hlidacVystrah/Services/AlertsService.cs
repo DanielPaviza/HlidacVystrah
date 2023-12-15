@@ -27,9 +27,9 @@ namespace hlidacVystrah.Services
 
             return new AlertsResponse
             {
-                responseCode = 200,
-                dataTimestamp = dataTimestamp,
-                alerts = alerts
+                ResponseCode = 200,
+                DataTimestamp = dataTimestamp,
+                Events = alerts
             };
         }
 

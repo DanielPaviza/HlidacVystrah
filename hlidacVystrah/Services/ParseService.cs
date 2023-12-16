@@ -39,7 +39,7 @@ namespace hlidacVystrah.Services
 
                 List<EventDto> events = root.Descendants().Where(
                     el =>
-                        el.Name.LocalName.ToLower() == "info" &&
+                        GetElName(el) == "info" &&
                         GetElementValueLower(el, "language") == "cs" &&
                         GetElementValueLower(el, "responseType") != "none"
                 ).Select(_event => new EventDto
@@ -124,16 +124,16 @@ namespace hlidacVystrah.Services
                 XElement root = xdoc.Root;
 
                 List<XElement> polozky = root.Descendants().First(
-                    el => el.Name.LocalName.ToLower() == "data"
+                    el => GetElName(el) == "data"
                 ).Descendants().Where(
-                    el => el.Name.LocalName.ToLower() == "polozka"
+                    el => GetElName(el) == "polozka"
                 ).ToList();
 
                 foreach (XElement polozka in polozky)
                 {
 
                     List<XElement> vazby = polozka.Descendants().Where(
-                        el => el.Name.LocalName.ToLower() == "polvaz"
+                        el => GetElName(el) == "polvaz"
                     ).ToList();
 
                     XElement locality = vazby[0];
@@ -193,16 +193,16 @@ namespace hlidacVystrah.Services
                 XElement root = xdoc.Root;
 
                 List<XElement> polozky = root.Descendants().First(
-                    el => el.Name.LocalName.ToLower() == "data"
+                    el => GetElName(el) == "data"
                 ).Descendants().Where(
-                    el => el.Name.LocalName.ToLower() == "polozka"
+                    el => GetElName(el) == "polozka"
                 ).ToList();
 
                 foreach (XElement polozka in polozky)
                 {
 
                     XElement region = polozka.Descendants().Where(
-                        el => el.Name.LocalName.ToLower() == "polvaz"
+                        el => GetElName(el) == "polvaz"
                     ).ToList()[1];
 
                     int id;
@@ -243,16 +243,21 @@ namespace hlidacVystrah.Services
         private List<int> GetEventCisorps(XElement _event) {
 
             List<XElement> areas = _event.Descendants().Where(
-                el => el.Name.LocalName.ToLower() == "area"
+                el => GetElName(el) == "area"
             ).ToList();
 
             List<int> cisorps = areas.Descendants().Where(
-                area => area.Name.LocalName.ToLower() == "geocode"
+                area => GetElName(area) == "geocode"
             ).Select(
                 geocode => Int32.Parse(GetElementValue(geocode, "value")
             )).ToList();
 
             return cisorps;
+        }
+
+        private string GetElName(XElement el)
+        {
+            return el.Name.LocalName.ToLower();
         }
 
         private string? GetElementValueLower(XElement el, string name)
@@ -261,13 +266,13 @@ namespace hlidacVystrah.Services
         }
         private string? GetElementValue(XElement el, string name)
         {
-            return el.Descendants().FirstOrDefault(el => el.Name.LocalName.ToLower() == name.ToLower())?.Value;
+            return el.Descendants().FirstOrDefault(el => GetElName(el) == name.ToLower())?.Value;
         }
         private string GetEventId(XElement _event)
         {
 
             List<XElement> parameters = _event.Descendants().Where(
-                    el => el.Name.LocalName.ToLower() == "parameter"
+                    el => GetElName(el) == "parameter"
                 ).ToList();
 
             foreach (var parameter in parameters)

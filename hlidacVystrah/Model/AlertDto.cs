@@ -7,23 +7,21 @@ namespace hlidacVystrah.Model
     public class EventDto
     {
 
-        public string language { get; set; }
+        public string EventType { get; set; }
 
-        public string eventType { get; set; }
+        public string Severity { get; set; }
 
-        public string severity { get; set; }
+        public string Certainty { get; set; }
 
-        public string certainty { get; set; }
+        public string Onset { get; set; }
 
-        public string onset { get; set; }
+        public string? Expires { get; set; }
 
-        public string? expires { get; set; }
+        public string Description { get; set; }
 
-        public string description { get; set; }
+        public string Instruction { get; set; }
 
-        public string instruction { get; set; }
-
-        public List<int> cisorps { get; set; }
+        public List<int> CisorpList { get; set; }
 
     }
 }

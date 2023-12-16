@@ -21,81 +21,83 @@ namespace hlidacVystrah.Services
 
         public ParseResponse UpdateAlerts() {
 
-            List<EventDto> events = new();
             string xmlPath = @"D:\moje\programovani\absolutorium\random\test_data\bourky.xml";
             UpdateCount count = new();
 
             try
             {
-                // Load the XML file using XDocument
                 XDocument xdoc = XDocument.Load(xmlPath);
                 XElement root = xdoc.Root;
 
                 string dataTimestamp = GetElementValue(root, "sent");
 
-                events = root.Descendants().Where(
+                // if already saved, dont save again
+                if(_context.EventLocality.Any(el => el.timestamp == dataTimestamp))
+                {
+                    return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
+                }
+
+                List<EventDto> events = root.Descendants().Where(
                     el =>
                         el.Name.LocalName.ToLower() == "info" &&
                         GetElementValueLower(el, "language") == "cs" &&
                         GetElementValueLower(el, "responseType") != "none"
                 ).Select(_event => new EventDto
                 {
-                    language = GetElementValue(_event, "language"),
-                    eventType = GetElementValue(_event, "event"),
-                    severity = GetElementValue(_event, "severity"),
-                    certainty = GetElementValue(_event, "certainty"),
-                    onset = GetElementValue(_event, "onset"),
-                    expires = GetElementValue(_event, "expires"),
-                    description = GetElementValue(_event, "description"),
-                    instruction = GetElementValue(_event, "instruction"),
-                    cisorps = this.GetEventCisorps(_event)
+                    EventType = GetEventId(_event),
+                    Severity = GetElementValue(_event, "severity"),
+                    Certainty = GetElementValue(_event, "certainty"),
+                    Onset = GetElementValue(_event, "onset"),
+                    Expires = GetElementValue(_event, "expires"),
+                    Description = GetElementValue(_event, "description"),
+                    Instruction = GetElementValue(_event, "instruction"),
+                    CisorpList = this.GetEventCisorps(_event)
                 }).ToList();
 
                 foreach (EventDto _eventDto in events)
                 {
                     try
                     {
+
                         EventTable _event = new EventTable
                         {
-                            id_event_type = _context.EventType.First(saved => saved.name == _eventDto.eventType).id,
-                            id_severity = _context.Severity.First(saved => saved.name == _eventDto.severity).id,
-                            id_certainity = _context.Certainity.First(saved => saved.name == _eventDto.certainty).id,
-                            onset = _eventDto.onset,
-                            expires = _eventDto.expires,
-                            description = _eventDto.description,
-                            instruction = _eventDto.instruction
+                            id_event_type = Int32.Parse(_eventDto.EventType),
+                            id_severity = _context.Severity.First(saved => saved.name == _eventDto.Severity).id,
+                            id_certainity = _context.Certainity.First(saved => saved.name == _eventDto.Certainty).id,
+                            onset = _eventDto.Onset,
+                            expires = _eventDto.Expires,
+                            description = _eventDto.Description,
+                            instruction = _eventDto.Instruction
                         };
 
-                        if(
-                            _context.Event.Any(saved => saved == _event) ||
-                            _context.Event.Local.Any(saved => saved == _event)
-                          )
+                        if(_context.Event.Local.Any(saved => saved == _event))
                         {
                             count.Event.Failed++;
                             continue;
                         }
 
+                        _context.Event.Add(_event);
                         _context.SaveChanges();
                         count.Event.Success++;
 
-                        foreach (int cisorp in _eventDto.cisorps)
+                        foreach (int cisorp in _eventDto.CisorpList)
                         {
-
                             try
                             {
                                 _context.EventLocality.Add(new EventLocalityTable
                                 {
                                     id_event = _event.id,
                                     id_locality = cisorp,
+                                    timestamp = dataTimestamp
                                 });
-
-                                _context.SaveChanges();
                                 count.EventLocality.Success++;
                             } catch
                             {
                                 count.EventLocality.Failed++;
                             }
-                        } 
+                        }
+
+                        _context.SaveChanges();
                     } catch (Exception ex)
                     {
                         return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
@@ -260,6 +262,21 @@ namespace hlidacVystrah.Services
         private string? GetElementValue(XElement el, string name)
         {
             return el.Descendants().FirstOrDefault(el => el.Name.LocalName.ToLower() == name.ToLower())?.Value;
+        }
+        private string GetEventId(XElement _event)
+        {
+
+            List<XElement> parameters = _event.Descendants().Where(
+                    el => el.Name.LocalName.ToLower() == "parameter"
+                ).ToList();
+
+            foreach (var parameter in parameters)
+            {
+                if (GetElementValueLower(parameter, "valueName") == "awareness_type")
+                    return GetElementValueLower(parameter, "value").Split(';')[0];
+            }
+
+            return "-1";
         }
     }
 }

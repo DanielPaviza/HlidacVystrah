@@ -18,7 +18,7 @@ namespace hlidacVystrah.Model
 
         public int id_locality { get; set; }
 
-        public string timestamp { get; set; } = DateTime.Now.ToString();
+        public string timestamp { get; set; }
 
     }
 }

@@ -22,7 +22,7 @@ namespace hlidacVystrah.Model
 
         public string onset { get; set; }
 
-        public string expires { get; set; }
+        public string? expires { get; set; }
 
         public string description { get; set; }
 

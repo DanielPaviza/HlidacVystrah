@@ -7,5 +7,7 @@ namespace hlidacVystrah.Services.Interfaces
         EventListResponse GetEvents();
 
         ParseResponse UpdateEvents();
+
+        EventDetailResponse GetEventDetail(int id);
     }
 }

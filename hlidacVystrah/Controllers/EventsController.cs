@@ -23,6 +23,13 @@ namespace hlidacVystrah.Controllers
         public EventListResponse Get()
         {
             return _eventsService.GetEvents();
+        }        
+        
+        // GET api/events/{id}
+        [HttpGet("{id}")]
+        public EventDetailResponse Get(int id)
+        {
+            return _eventsService.GetEventDetail(id);
         }
 
         // POST api/events/update

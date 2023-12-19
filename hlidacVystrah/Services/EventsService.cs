@@ -83,6 +83,49 @@ namespace hlidacVystrah.Services
             };
         }
 
+        public EventDetailResponse GetEventDetail(int id)
+        {
+
+            EventTable? eventTable = _context.Event.FirstOrDefault(el => el.id == id);
+            if (eventTable == null)
+                return new EventDetailResponse { ResponseCode = StatusCodes.Status404NotFound };
+
+            try
+            {
+                EventDto eventDto = EventTableToDto(eventTable);
+                string timestamp = _context.Update.First(
+                        update => update.id == _context.EventLocality.First(el => el.id_event == eventDto.Id).id_update
+                    ).timestamp;
+
+                return new EventDetailResponse
+                {
+                    ResponseCode = StatusCodes.Status200OK,
+                    DataTimestamp = timestamp,
+                    Event = eventDto
+                };
+            } catch (Exception ex)
+            {
+                return new EventDetailResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
+        }
+
+        private EventDto EventTableToDto(EventTable et)
+        {
+            return new EventDto
+            {
+                Id = et.id,
+                EventType = _context.EventType.Where(el => el.id == et.id_event_type).First().name,
+                Severity = _context.Severity.Where(el => el.id == et.id_severity).First().text,
+                Certainty = _context.Certainity.Where(el => el.id == et.id_certainity).First().text,
+                Urgency = _context.Urgency.Where(el => el.id == et.id_urgency).First().text,
+                Onset = et.onset,
+                Expires = et.expires,
+                Description = et.description,
+                Instruction = et.instruction,
+                ImgPath = _context.EventType.Where(el => el.id == et.id_event_type).First().img_path
+            };
+        }
+
         public ParseResponse UpdateEvents() {
 
             /*

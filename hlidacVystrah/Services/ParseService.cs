@@ -23,7 +23,8 @@ namespace hlidacVystrah.Services
 
         public ParseResponse UpdateEvents() {
 
-            string xmlPath = @"D:\moje\programovani\absolutorium\random\test_data\bourky.xml";
+            //string xmlPath = @"D:\moje\programovani\absolutorium\random\test_data\bourky.xml";
+            string xmlPath = "https://www.chmi.cz/files/portal/docs/meteo/om/bulletiny/XOCZ50_OKPR.xml";
             UpdateCount count = new();
 
             try
@@ -53,6 +54,7 @@ namespace hlidacVystrah.Services
                     EventType = GetEventId(_event),
                     Severity = GetElementValue(_event, "severity"),
                     Certainty = GetElementValue(_event, "certainty"),
+                    Urgency = GetElementValue(_event, "urgency"),
                     Onset = GetElementValue(_event, "onset"),
                     Expires = GetElementValue(_event, "expires"),
                     Description = GetElementValue(_event, "description"),
@@ -70,6 +72,7 @@ namespace hlidacVystrah.Services
                             id_event_type = Int32.Parse(_eventDto.EventType),
                             id_severity = _context.Severity.First(saved => saved.name == _eventDto.Severity).id,
                             id_certainity = _context.Certainity.First(saved => saved.name == _eventDto.Certainty).id,
+                            id_urgency = _context.Urgency.First(saved => saved.name == _eventDto.Urgency).id,
                             onset = _eventDto.Onset,
                             expires = _eventDto.Expires,
                             description = _eventDto.Description,

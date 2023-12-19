@@ -7,6 +7,8 @@ namespace hlidacVystrah.Model
     public class EventDto
     {
 
+        public int Id { get; set; }
+
         public string EventType { get; set; }
 
         public string Severity { get; set; }
@@ -23,5 +25,8 @@ namespace hlidacVystrah.Model
 
         public List<int> CisorpList { get; set; } = new();
 
+        public string? ImgPath { get; set; }
+
+        public string Urgency { get; set; }
     }
 }

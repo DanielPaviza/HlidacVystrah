@@ -20,6 +20,8 @@ namespace hlidacVystrah.Model
 
         public int id_certainity { get; set; }
 
+        public int id_urgency { get; set; }
+
         public string onset { get; set; }
 
         public string? expires { get; set; }

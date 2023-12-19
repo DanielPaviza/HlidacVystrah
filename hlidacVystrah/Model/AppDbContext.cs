@@ -18,6 +18,7 @@ namespace hlidacVystrah.Model
         public DbSet<SeverityTable> Severity { get; set; }
         public DbSet<CertainityTable> Certainity { get; set; }
         public DbSet<UpdateTable> Update { get; set; }
+        public DbSet<UrgencyTable> Urgency { get; set; }
 
     }
 }

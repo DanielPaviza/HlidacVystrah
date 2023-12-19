@@ -35,7 +35,8 @@ namespace hlidacVystrah.Services
             try
             {
 
-               lastUpdate = _context.Update.FirstOrDefault();
+               lastUpdate = _context.Update.OrderByDescending(u => u.id).FirstOrDefault();
+
                 if (lastUpdate == null)
                     return new EventListResponse { ResponseCode = StatusCodes.Status200OK };
 
@@ -49,13 +50,16 @@ namespace hlidacVystrah.Services
                     EventTable eventTable = _context.Event.Where(el => el.id == _event.Key).First();
                     EventDto eventDto = new EventDto
                     {
+                        Id = _event.Key,
                         EventType = _context.EventType.Where(el => el.id == eventTable.id_event_type).First().name,
                         Severity = _context.Severity.Where(el => el.id == eventTable.id_severity).First().text,
                         Certainty = _context.Certainity.Where(el => el.id == eventTable.id_certainity).First().text,
+                        Urgency = _context.Urgency.Where(el => el.id == eventTable.id_urgency).First().text,
                         Onset = eventTable.onset,
                         Expires = eventTable.expires,
                         Description = eventTable.description,
-                        Instruction = eventTable.instruction
+                        Instruction = eventTable.instruction,
+                        ImgPath = _context.EventType.Where(el => el.id == eventTable.id_event_type).First().img_path
                     };
 
                     foreach (var locality in _event)

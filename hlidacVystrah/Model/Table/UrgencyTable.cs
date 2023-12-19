@@ -7,8 +7,8 @@ using System.Xml.Linq;
 namespace hlidacVystrah.Model
 {
 
-    [Table("event_type")]
-    public class EventTypeTable
+    [Table("urgency")]
+    public class UrgencyTable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -16,7 +16,7 @@ namespace hlidacVystrah.Model
 
         public string name { get; set; }
 
-        public string? img_path { get; set; }
+        public string text { get; set; }
 
     }
 }

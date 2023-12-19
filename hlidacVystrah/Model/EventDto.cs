@@ -21,7 +21,7 @@ namespace hlidacVystrah.Model
 
         public string Instruction { get; set; }
 
-        public List<int> CisorpList { get; set; }
+        public List<int> CisorpList { get; set; } = new();
 
     }
 }

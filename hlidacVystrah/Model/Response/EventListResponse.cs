@@ -1,15 +1,13 @@
 ﻿
 using System.Xml.Linq;
 
-namespace hlidacVystrah.Model
+namespace hlidacVystrah.Model.Response
 {
-    public class EventsResponse
+    public class EventListResponse : BaseResponse
     {
-
-        public int ResponseCode { get; set; }
-
         public string? DataTimestamp { get; set; } = null;
 
         public List<EventDto> Events { get; set; } = new();
+
     }
 }

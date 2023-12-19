@@ -17,6 +17,7 @@ namespace hlidacVystrah.Model
         public DbSet<RegionTable> Region { get; set; }
         public DbSet<SeverityTable> Severity { get; set; }
         public DbSet<CertainityTable> Certainity { get; set; }
+        public DbSet<UpdateTable> Update { get; set; }
 
     }
 }

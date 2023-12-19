@@ -18,7 +18,7 @@ namespace hlidacVystrah.Model
 
         public int id_locality { get; set; }
 
-        public string timestamp { get; set; }
+        public int id_update { get; set; }
 
     }
 }

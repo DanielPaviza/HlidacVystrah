@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
-using hlidacVystrah.Model;
 using hlidacVystrah.Services;
+using hlidacVystrah.Model.Response;
+using hlidacVystrah.Services.Interfaces;
 
 namespace hlidacVystrah.Controllers
 {
@@ -10,25 +11,25 @@ namespace hlidacVystrah.Controllers
     public class EventsController : ControllerBase
     {
 
-        EventsService _eventsService;
+        IEventsService _eventsService;
 
-        public EventsController(EventsService eventsService)
+        public EventsController(IEventsService eventsService)
         {
             _eventsService = eventsService;
         }
 
         // GET api/events
         [HttpGet]
-        public EventsResponse Get()
+        public EventListResponse Get()
         {
-            return _eventsService.GetAlerts();
+            return _eventsService.GetEvents();
         }
 
         // POST api/events/update
         [HttpPost("update")]
         public ParseResponse Post([FromHeader] string? authToken)
         {
-            return _eventsService.UpdateAlerts(authToken);
+            return _eventsService.UpdateEvents();
         }
     }
 }

@@ -1,5 +1,6 @@
 using hlidacVystrah.Model;
 using hlidacVystrah.Services;
+using hlidacVystrah.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +12,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
 ));
-builder.Services.AddScoped<EventsService>();
-builder.Services.AddScoped<ParseService>();
+
+builder.Services.AddTransient<IEventsService, EventsService>();
+builder.Services.AddTransient<IParseService, ParseService>();
+builder.Services.AddTransient<ILocalitiesService, LocalitiesService>();
 
 var app = builder.Build();
 

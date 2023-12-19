@@ -7,11 +7,13 @@ using System.Text;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using hlidacVystrah.Model.Response;
+using hlidacVystrah.Services.Interfaces;
 
 namespace hlidacVystrah.Services
 {
 
-    public class ParseService : MasterService
+    public class ParseService : MasterService, IParseService
     {
 
         public ParseService(AppDbContext context) : base(context)
@@ -19,7 +21,7 @@ namespace hlidacVystrah.Services
             _context = context;
         }
 
-        public ParseResponse UpdateAlerts() {
+        public ParseResponse UpdateEvents() {
 
             string xmlPath = @"D:\moje\programovani\absolutorium\random\test_data\bourky.xml";
             UpdateCount count = new();
@@ -32,10 +34,14 @@ namespace hlidacVystrah.Services
                 string dataTimestamp = GetElementValue(root, "sent");
 
                 // if already saved, dont save again
-                if(_context.EventLocality.Any(el => el.timestamp == dataTimestamp))
+                if(_context.Update.Any(el => el.timestamp == dataTimestamp))
                 {
-                    return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
+                    return new ParseResponse { ResponseCode = StatusCodes.Status200OK };
                 }
+
+                UpdateTable update = new UpdateTable { timestamp = dataTimestamp };
+                _context.Update.Add(update);
+                _context.SaveChanges();
 
                 List<EventDto> events = root.Descendants().Where(
                     el =>
@@ -88,7 +94,7 @@ namespace hlidacVystrah.Services
                                 {
                                     id_event = _event.id,
                                     id_locality = cisorp,
-                                    timestamp = dataTimestamp
+                                    id_update = update.id
                                 });
                                 count.EventLocality.Success++;
                             } catch
@@ -102,7 +108,6 @@ namespace hlidacVystrah.Services
                     {
                         return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
                     }
-
                 }
             }
             catch (Exception ex)

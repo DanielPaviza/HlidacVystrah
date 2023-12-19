@@ -5,24 +5,11 @@
 namespace hlidacVystrah.Migrations
 {
     /// <inheritdoc />
-    public partial class v2 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_page",
-                table: "page");
-
-            migrationBuilder.RenameTable(
-                name: "page",
-                newName: "region");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_region",
-                table: "region",
-                column: "id");
-
             migrationBuilder.CreateTable(
                 name: "certainity",
                 columns: table => new
@@ -98,6 +85,19 @@ namespace hlidacVystrah.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "region",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_region", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "severity",
                 columns: table => new
                 {
@@ -130,20 +130,10 @@ namespace hlidacVystrah.Migrations
                 name: "locality");
 
             migrationBuilder.DropTable(
+                name: "region");
+
+            migrationBuilder.DropTable(
                 name: "severity");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_region",
-                table: "region");
-
-            migrationBuilder.RenameTable(
-                name: "region",
-                newName: "page");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_page",
-                table: "page",
-                column: "id");
         }
     }
 }

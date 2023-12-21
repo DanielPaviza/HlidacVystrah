@@ -23,7 +23,7 @@ namespace hlidacVystrah.Services
 
         public ParseResponse UpdateEvents() {
 
-            //string xmlPath = @"D:\moje\programovani\absolutorium\random\test_data\bourky.xml";
+            //string xmlPath = @"D:\moje\programovani\absolutorium\random\test_data\vyhled_nebezpecnych_jevu_vysoke_teploty.xml";
             string xmlPath = "https://www.chmi.cz/files/portal/docs/meteo/om/bulletiny/XOCZ50_OKPR.xml";
             UpdateCount count = new();
 

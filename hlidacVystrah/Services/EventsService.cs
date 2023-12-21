@@ -8,6 +8,7 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace hlidacVystrah.Services
 {
@@ -69,6 +70,9 @@ namespace hlidacVystrah.Services
 
                     events.Add(eventDto);
                 }
+
+                // order by severity id
+                events = events.OrderByDescending(e => _context.Severity.First(s => s.text == e.Severity).id).ToList();
 
             } catch (Exception ex)
             {

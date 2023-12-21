@@ -18,11 +18,14 @@ export class Home extends Component {
 
         return (
             <div id="home">
-                {!this.state.loading &&
-                    <>
-                        <Map events={this.state.events} />
-                        <EventList events={this.state.events} />
-                    </>
+                {
+                    this.state.loading ?
+                        <div>Loading ...</div>
+                        :
+                        <>
+                            <Map events={this.state.events} />
+                            <EventList events={this.state.events} />
+                        </>
                 }
             </div>
         );

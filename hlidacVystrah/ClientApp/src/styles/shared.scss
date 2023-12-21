@@ -12,4 +12,25 @@ body {
     h2 {
         font-size: 1.5rem;
     }
+
+
+    .green {
+        background-color: rgba($green, 0.9);
+    }
+
+    .yellow {
+        background-color: rgba($yellow, 0.9);
+    }
+
+    .orange {
+        background-color: rgba($orange, 0.9);
+    }
+
+    .red {
+        background-color: rgba($red, 0.9);
+    }
+
+    .gray {
+        background-color: rgba($gray, 0.9);
+    }
 }

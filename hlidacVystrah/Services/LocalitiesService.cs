@@ -30,7 +30,7 @@ namespace hlidacVystrah.Services
                      {
                          Cisorp = el.id,
                          Name = el.name,
-                         Region = _context.Region.First(saved => saved.id == el.id_region).name
+                         //Region = _context.Region.First(saved => saved.id == el.id_region).name
                      }).ToList();
             } catch (Exception ex)
             {

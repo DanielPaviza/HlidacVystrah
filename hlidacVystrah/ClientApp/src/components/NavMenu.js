@@ -15,27 +15,38 @@ export class NavMenu extends Component {
     };
   }
 
-  toggleNavbar () {
-    this.setState({
-      collapsed: !this.state.collapsed
-    });
-  }
+    GetHomeOnclick = () => {
+        if (window.location.pathname == '/')
+            return this.props.closeDetail();
 
-  render() {
-    return (
-      <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light>
-          <NavbarBrand tag={Link} to="/">Hlídač výstrah</NavbarBrand>
-          <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-          <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-            <ul className="navbar-nav flex-grow">
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-              </NavItem>
-            </ul>
-          </Collapse>
-        </Navbar>
-      </header>
-    );
-  }
+        return undefined;
+    }
+
+    toggleNavbar () {
+        this.setState({
+            collapsed: !this.state.collapsed
+        });
+    }
+
+    render() {
+
+        let currentPath = window.location.pathname;
+        if(currentPath)
+
+        return (
+            <header>
+                <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light>
+                    <NavbarBrand tag={Link} to="/">Hlídač výstrah</NavbarBrand>
+                    <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+                    <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
+                        <ul className="navbar-nav flex-grow">
+                            <NavItem>
+                                <NavLink tag={Link} className="text-dark" to="/" onClick={() => this.GetHomeOnclick()}>Home</NavLink>
+                            </NavItem>
+                        </ul>
+                    </Collapse>
+                </Navbar>
+            </header>
+        );
+    }
 }

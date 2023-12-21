@@ -7,37 +7,19 @@ export class Home extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { events: [], loading: true };
-    }
-
-    componentDidMount() {
-        this.GetEvents();
     }
 
     render() {
 
         return (
             <div id="home">
-                {
-                    this.state.loading ?
-                        <div>Loading ...</div>
-                        :
-                        <>
-                            <Map events={this.state.events} />
-                            <EventList events={this.state.events} />
-                        </>
-                }
+                <Map events={this.props.events} />
+                <EventList
+                    events={this.props.events}
+                    openEvent={this.props.openEvent}
+                    GetEventColor={this.props.GetEventColor}
+                />
             </div>
         );
-    }
-
-    async GetEvents() {
-        const response = await fetch('api/events');
-        const data = await response.json();
-
-        console.log(data);
-
-        if(data.responseCode == 200)
-            this.setState({ events: data.events, loading: false });
     }
 }

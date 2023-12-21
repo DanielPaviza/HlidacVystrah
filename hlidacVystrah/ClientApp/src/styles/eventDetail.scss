@@ -1,0 +1,45 @@
+﻿
+@import "vars";
+
+#eventDetail {
+    .back {
+        span {
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+
+            &:hover {
+                border-bottom: 1px solid $gray;
+            }
+        }
+    }
+
+    .detail {
+
+        .typeImg {
+            max-width: 200px;
+        }
+
+        .detailRow {
+            padding-top: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid $gray;
+
+            .color {
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+            }
+
+            & > span:nth-child(1) {
+                font-weight: bold;
+                font-size: 1.06rem;
+                margin-right: 8px;
+            }
+        }
+
+        .rollDown {
+            cursor: pointer;
+        }
+    }
+}

@@ -1,10 +1,11 @@
 
 import { Home } from "./components/Home";
+import { HomeController } from "./components/HomeController";
 
 const AppRoutes = [
   {
     index: true,
-    element: <Home />
+    element: <HomeController />
   }
 
 ];

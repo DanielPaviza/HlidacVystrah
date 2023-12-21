@@ -18,11 +18,11 @@ export class EventList extends Component {
                         <h2>{key}</h2>
                         <div className='d-flex flex-wrap'>
                             {events[key].map(event => (
-                                <div className='col-4 col-md-3 col-lg-2 d-flex justify-content-center align-items-center'>
-                                    <a key={event.id} className={`event d-flex flex-column align-items-center ${this.GetEventColor(event.severity)}`}>
+                                <div key={event.id} onClick={() => this.props.openEvent(event.id)} className='col-4 col-md-3 col-lg-2 d-flex justify-content-center align-items-center'>
+                                    <div className={`event d-flex flex-column align-items-center ${this.props.GetEventColor(event.severity) }`}>
                                         <img alt="img" src={`images/${event.imgPath}`} />
                                         <span className=''>{event.eventType}</span>
-                                    </a>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -30,29 +30,6 @@ export class EventList extends Component {
                 )
             ))}
         </>
-    }
-
-    GetEventColor(severity) {
-
-        let color;
-        severity = severity.toLowerCase();
-        switch (severity) {
-            case "minimální":
-                color = "green";
-            case "nízká":
-                color = "yellow";
-                break;
-            case "vysoká":
-                color = "orange";
-                break;
-            case "extrémní":
-                color = "red";
-                break;
-            default:
-                color = "gray";
-        }
-
-        return color;
     }
 
     GetEventsGrouped() {

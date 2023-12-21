@@ -56,10 +56,10 @@ namespace hlidacVystrah.Services
                     Certainty = GetElementValue(_event, "certainty"),
                     Urgency = GetElementValue(_event, "urgency"),
                     Onset = GetElementValue(_event, "onset"),
-                    Expires = GetElementValue(_event, "expires"),
+                    Expires = GetEventEndingTime(_event),
                     Description = GetElementValue(_event, "description"),
                     Instruction = GetElementValue(_event, "instruction"),
-                    CisorpList = this.GetEventCisorps(_event)
+                    LocalityList = this.GetEventLocalityList(_event)
                 }).ToList();
 
                 foreach (EventDto _eventDto in events)
@@ -89,14 +89,14 @@ namespace hlidacVystrah.Services
                         _context.SaveChanges();
                         count.Event.Success++;
 
-                        foreach (int cisorp in _eventDto.CisorpList)
+                        foreach (LocalityDto locality in _eventDto.LocalityList["all"])
                         {
                             try
                             {
                                 _context.EventLocality.Add(new EventLocalityTable
                                 {
                                     id_event = _event.id,
-                                    id_locality = cisorp,
+                                    id_locality = locality.Cisorp,
                                     id_update = update.id
                                 });
                                 count.EventLocality.Success++;
@@ -248,19 +248,23 @@ namespace hlidacVystrah.Services
             return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
         }
 
-        private List<int> GetEventCisorps(XElement _event) {
+        private Dictionary<string, List<LocalityDto>> GetEventLocalityList(XElement _event) {
 
             List<XElement> areas = _event.Descendants().Where(
                 el => GetElName(el) == "area"
             ).ToList();
 
-            List<int> cisorps = areas.Descendants().Where(
-                area => GetElName(area) == "geocode"
-            ).Select(
-                geocode => Int32.Parse(GetElementValue(geocode, "value")
-            )).ToList();
+            Dictionary<string, List<LocalityDto>> localities = new Dictionary<string, List<LocalityDto>>();
 
-            return cisorps;
+            localities["all"] = areas.Descendants().Where(
+                area => GetElName(area) == "geocode"
+            ).Select(locality => new LocalityDto
+            {
+                Cisorp = Int32.Parse(GetElementValue(locality, "value"))
+            })
+            .ToList();
+
+            return localities;
         }
 
         private string GetElName(XElement el)
@@ -279,10 +283,7 @@ namespace hlidacVystrah.Services
         private string GetEventId(XElement _event)
         {
 
-            List<XElement> parameters = _event.Descendants().Where(
-                    el => GetElName(el) == "parameter"
-                ).ToList();
-
+            List<XElement> parameters = GetParameters(_event);
             foreach (var parameter in parameters)
             {
                 if (GetElementValueLower(parameter, "valueName") == "awareness_type")
@@ -290,6 +291,26 @@ namespace hlidacVystrah.Services
             }
 
             return "-1";
+        }
+
+        private string? GetEventEndingTime(XElement _event)
+        {
+
+            List<XElement> parameters = GetParameters(_event);
+            foreach (var parameter in parameters)
+            {
+                if (GetElementValueLower(parameter, "valueName") == "eventendingtime")
+                    return GetElementValueLower(parameter, "value");
+            }
+
+            return null;
+        }
+
+        private List<XElement> GetParameters(XElement _event)
+        {
+            return _event.Descendants().Where(
+                el => GetElName(el) == "parameter"
+            ).ToList();
         }
     }
 }

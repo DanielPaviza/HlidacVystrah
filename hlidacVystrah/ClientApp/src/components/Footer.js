@@ -12,7 +12,7 @@ export class Footer extends Component {
 
   render() {
     return (
-      <footer>
+      <footer className='container mt-5'>
             © 2023 Daniel Pavíza
       </footer>
     );

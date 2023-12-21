@@ -23,7 +23,7 @@ namespace hlidacVystrah.Model
 
         public string Instruction { get; set; }
 
-        public List<int> CisorpList { get; set; } = new();
+        public Dictionary<string, List<LocalityDto>> LocalityList {  get; set; } = new();
 
         public string? ImgPath { get; set; }
 

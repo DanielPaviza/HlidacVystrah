@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace hlidacVystrah.Services
 {
@@ -24,8 +25,19 @@ namespace hlidacVystrah.Services
             _parseService = parseService;
         }
 
-        private DateTimeOffset ParseOffsetTime(string timestamp) {
-           return DateTimeOffset.Parse(timestamp);
+        private string TimestampToReadable(string? timestamp) {
+
+            if (timestamp == null)
+                return null;
+
+            DateTimeOffset localTime = DateTimeOffset.Parse(timestamp);
+            string readable = localTime.ToString();
+
+            //today
+            if (localTime.Date == DateTimeOffset.Now.Date)
+                return $"Dnes v {readable.Split(' ')[1]}";
+
+            return $"{readable.Split(' ')[0]} {readable.Split(' ')[1]}"; ;
         }
 
         public EventListResponse GetEvents() {
@@ -56,17 +68,31 @@ namespace hlidacVystrah.Services
                         Severity = _context.Severity.Where(el => el.id == eventTable.id_severity).First().text,
                         Certainty = _context.Certainity.Where(el => el.id == eventTable.id_certainity).First().text,
                         Urgency = _context.Urgency.Where(el => el.id == eventTable.id_urgency).First().text,
-                        Onset = eventTable.onset,
-                        Expires = eventTable.expires,
+                        Onset = TimestampToReadable(eventTable.onset),
+                        Expires = TimestampToReadable(eventTable.expires),
                         Description = eventTable.description,
                         Instruction = eventTable.instruction,
                         ImgPath = _context.EventType.Where(el => el.id == eventTable.id_event_type).First().img_path
                     };
 
+                    List<int> cisorps = new();
                     foreach (var locality in _event)
                     {
-                        eventDto.CisorpList.Add(locality.id_locality);
+                        cisorps.Add(locality.id_locality);
                     }
+
+                    Dictionary<string, List< LocalityDto>> localitiesGrouped = _context.Locality.Where(
+                        el => cisorps.Contains(el.id)
+                    ).GroupBy(el => _context.Region.First(r => r.id == el.id_region).name).ToList().ToDictionary(
+                        group => group.Key,
+                        group => group.Select(locality => new LocalityDto
+                        {
+                            Cisorp = locality.id,
+                            Name = locality.name
+                        }).ToList()
+                    );
+
+                    eventDto.LocalityList = localitiesGrouped;
 
                     events.Add(eventDto);
                 }
@@ -82,7 +108,7 @@ namespace hlidacVystrah.Services
             return new EventListResponse
             {
                 ResponseCode = StatusCodes.Status200OK,
-                DataTimestamp = lastUpdate.timestamp,
+                DataTimestamp = TimestampToReadable(lastUpdate.timestamp),
                 Events = events
             };
         }

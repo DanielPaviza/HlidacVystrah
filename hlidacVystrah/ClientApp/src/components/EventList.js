@@ -1,14 +1,10 @@
 ﻿import React, { Component } from 'react';
-import { Legend } from "./Legend";
 import '../styles/eventList.scss';
 export class EventList extends Component {
     static displayName = EventList.name;
 
     constructor(props) {
         super(props);
-        this.state = {
-            legendOpened: false
-        };
     }
 
     HandleToggleLegend = () => {
@@ -66,7 +62,6 @@ export class EventList extends Component {
 
         return (
             <div id='eventList' className=''>
-                <Legend />
                 <span className='d-flex align-items-start justify-content-between'>
                     <h1 className='m-0'>Výstrahy</h1>
                 </span>

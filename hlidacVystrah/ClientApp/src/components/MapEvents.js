@@ -1,9 +1,10 @@
 ﻿import React, { Component } from 'react';
 import { Map } from "./Map"; 
 import { EventList } from "./EventList"; 
-import '../styles/home.scss';
-export class Home extends Component {
-    static displayName = Home.name;
+import { Legend } from "./Legend";
+import '../styles/mapEvents.scss';
+export class MapEvents extends Component {
+    static displayName = MapEvents.name;
 
     constructor(props) {
         super(props);
@@ -12,8 +13,9 @@ export class Home extends Component {
     render() {
 
         return (
-            <div id="home">
+            <div id="mapEvents">
                 <Map events={this.props.events} />
+                <Legend />
                 <EventList
                     events={this.props.events}
                     openEvent={this.props.openEvent}

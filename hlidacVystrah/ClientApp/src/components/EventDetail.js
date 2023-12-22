@@ -1,4 +1,6 @@
 ﻿import React, { Component } from 'react';
+import { Map } from "./Map";
+import { Legend } from "./Legend";
 import '../styles/eventDetail.scss';
 export class EventDetail extends Component {
     static displayName = EventDetail.name;
@@ -12,6 +14,8 @@ export class EventDetail extends Component {
             showDescription: false,
             showLocalityList: false
         };
+
+        this.props.ScrollToTop();
     }
 
     ToggleShowDescription = () => {
@@ -54,10 +58,10 @@ export class EventDetail extends Component {
     RenderLocalityList = (nameList) => {
         return (
             Object.values(nameList).map((item, index, array) => (
-                <React.Fragment key={item.cisorp}>
+                <span key={item.cisorp} onClick={() => this.props.OpenLocalityDetail(item.cisorp) }>
                     {item.name}
                     {index < array.length - 1 && ', '}
-                </React.Fragment>
+                </span>
             ))
         );
     }
@@ -66,14 +70,8 @@ export class EventDetail extends Component {
 
         return (
             <section id="eventDetail">
-                <h1 className='mb-3 mb-md-4'>Detail výstrahy</h1>
-                <div className='back'>
-                    <span className='pb-1 d-flex-inline align-items-center' onClick={() => this.props.closeDetail()}>
-                        <i className="fa-solid fa-arrow-left me-2"></i>
-                        Zpět
-                    </span>
-                </div>
-                <div className='detail mt-5 d-flex flex-column'>
+                <h1 className='mt-4 mt-md-5'>Detail výstrahy</h1>
+                <div className='detail d-flex flex-column'>
                     <div className='d-flex'>
                         <div className=''>
                             <div className='d-flex flex-column short'>
@@ -130,6 +128,10 @@ export class EventDetail extends Component {
                         {this.state.showLocalityList &&
                             this.RenderRegions()
                         }
+                    </div>
+                    <div className='mt-4 mt-md-5'>
+                        <Map events={this.props.events} />
+                        <Legend />
                     </div>
                 </div>
             </section>

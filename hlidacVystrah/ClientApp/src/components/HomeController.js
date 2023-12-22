@@ -1,9 +1,10 @@
 ﻿import React, { Component } from 'react';
-import { Home } from "./Home"; 
+import { MapEvents } from "./MapEvents"; 
 import { EventDetail } from "./EventDetail"; 
+import { LocalityDetail } from "./LocalityDetail"; 
 import { NavMenu } from './NavMenu';
 import { Footer } from './Footer';
-import '../styles/home.scss';
+import { HomeButton } from './HomeButton';
 export class HomeController extends Component {
     static displayName = HomeController.name;
 
@@ -14,10 +15,12 @@ export class HomeController extends Component {
             loading: true,
             timestamp: "",
             eventOpened: false,
-            selectedEvent: -1,
             localityOpened: false,
-            selectedLocality: -1
+            selectedEvent: null,
+            selectedLocality: null
         };
+
+        
     }
 
     componentDidMount() {
@@ -26,6 +29,7 @@ export class HomeController extends Component {
 
     HandleOpenEvent = (id) => {
 
+        this.HandleCloseDetail();
         let event = this.state.events.find(e => e.id === id);
         if (!event)
             return;
@@ -34,6 +38,17 @@ export class HomeController extends Component {
             ...prevState,
             eventOpened: true,
             selectedEvent: event
+        }));
+    }
+
+    HandleOpenLocality = (cisorp) => {
+
+        this.HandleCloseDetail();
+
+        this.setState((prevState) => ({
+            ...prevState,
+            localityOpened: true,
+            selectedLocality: cisorp
         }));
     }
 
@@ -69,17 +84,36 @@ export class HomeController extends Component {
         return color;
     }
 
+    scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    };
+
     RenderPage() {
 
         if (this.state.eventOpened) {
             return <EventDetail
                 event={this.state.selectedEvent}
-                closeDetail={this.HandleCloseDetail}
                 GetEventColor={this.HandleGetEventColor}
+                OpenLocalityDetail={this.HandleOpenLocality}
+                ScrollToTop={this.scrollToTop}
             />
         }
 
-        return <Home
+        if (this.state.localityOpened) {
+
+            return <LocalityDetail
+                allEvents={this.state.events}
+                targetLocality={this.state.selectedLocality}
+                openEvent={this.HandleOpenEvent}
+                GetEventColor={this.HandleGetEventColor}
+                ScrollToTop={this.scrollToTop}
+            />
+        }
+
+        return <MapEvents
             events={this.state.events}
             openEvent={this.HandleOpenEvent}
             GetEventColor={this.HandleGetEventColor}
@@ -105,7 +139,16 @@ export class HomeController extends Component {
                 <>
                     <NavMenu closeDetail={this.HandleCloseDetail} />
                     <div className='container'>
-                        {this.RenderTimestamp()}
+                        <span className='d-flex justify-content-between align-items-center'>
+                            {
+                                (this.state.eventOpened || this.state.localityOpened) ?
+                                    <HomeButton CloseDetail={this.HandleCloseDetail} />
+                                    :
+                                    <span></span>
+                            }
+                            {this.RenderTimestamp()}
+                        </span>
+                        
                         {this.RenderPage()}
                     </div>
                     <Footer />

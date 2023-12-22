@@ -84,7 +84,7 @@ export class EventDetail extends Component {
                                 <span className='detailRow d-flex align-items-center'>
                                     <span>Závažnost:</span>
                                     <span>{this.event.severity}</span>
-                                    <div className={`ms-2 color ${this.props.GetEventColor(this.event.severity)}`}></div>
+                                    <div className={`ms-2 colorCircle ${this.props.GetEventColor(this.event.severity)}`}></div>
                                 </span>
                                 <span className='detailRow'>
                                     <span>Pravděpodobnost:</span>

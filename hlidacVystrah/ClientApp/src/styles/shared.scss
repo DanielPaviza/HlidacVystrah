@@ -13,7 +13,6 @@ body {
         font-size: 1.5rem;
     }
 
-
     .green {
         background-color: rgba($green, 0.9);
     }
@@ -23,14 +22,20 @@ body {
     }
 
     .orange {
-        background-color: rgba($orange, 0.9);
+        background-color: rgba($orange, 0.8);
     }
 
     .red {
-        background-color: rgba($red, 0.9);
+        background-color: rgba($red, 1);
     }
 
     .gray {
-        background-color: rgba($gray, 0.9);
+        background-color: rgba($gray, 1);
+    }
+
+    .colorCircle {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
     }
 }

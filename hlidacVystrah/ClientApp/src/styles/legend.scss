@@ -2,6 +2,7 @@
 @import "vars";
 
 #legend {
+
     & > div {
         width: fit-content;
     }
@@ -15,6 +16,7 @@
         cursor: pointer;
         border: 1px solid $gray;
         border-radius: 6px;
+        user-select: none;
 
         &.border {
             border-radius: 6px 6px 0 0;

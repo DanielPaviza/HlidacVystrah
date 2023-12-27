@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace hlidacVystrah.Services
 {
@@ -28,9 +30,22 @@ namespace hlidacVystrah.Services
             {
                 XDocument xdoc = XDocument.Load(xmlPath);
                 XElement root = xdoc.Root;
-                //XElement gRoot = root.Descendants();
+                XElement gRoot = root.Descendants().First();
 
-                string greg = "f";
+                List<XElement> gs = gRoot.Descendants().Where(
+                    el =>
+                        GetElName(el) == "g"
+                ).ToList();
+
+                foreach (XElement g in gs)
+                {
+                    string id = g.Attribute("id")?.Value;
+                    g.SetAttributeValue("cisorp", id.Split(':')[1]);
+                    g.Attribute("class").Remove();
+                    g.Attribute("id").Remove();
+                }
+
+                xdoc.Save(xmlPath);
             }
             catch (Exception ex)
             {
@@ -39,9 +54,6 @@ namespace hlidacVystrah.Services
         }
 
         public ParseResponse UpdateEvents() {
-
-            //this.ParseSvgMap();
-            //return new ParseResponse { ResponseCode = StatusCodes.Status200OK };
 
             //string xmlPath = @"D:\moje\programovani\absolutorium\random\test_data\vyhled_nebezpecnych_jevu_vysoke_teploty.xml";
             string xmlPath = "https://www.chmi.cz/files/portal/docs/meteo/om/bulletiny/XOCZ50_OKPR.xml";

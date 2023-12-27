@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { MapEvents } from "./MapEvents"; 
+import { MapEventList } from "./MapEventList"; 
 import { EventDetail } from "./EventDetail"; 
 import { LocalityDetail } from "./LocalityDetail"; 
 import { NavMenu } from './NavMenu';
@@ -42,8 +42,6 @@ export class HomeController extends Component {
     }
 
     HandleOpenLocality = (id, isRegion = false) => {
-
-        console.log("open localityyyyyyyyyyyyyyyy")
 
         this.HandleCloseDetail();
 
@@ -125,10 +123,12 @@ export class HomeController extends Component {
                 localityList={this.state.localityList}
                 OpenLocalityDetail={this.HandleOpenLocality}
             />
-            <MapEvents
+            <MapEventList
                 events={this.state.eventList}
                 openEvent={this.HandleOpenEvent}
                 GetEventColor={this.HandleGetEventColor}
+                mapType={'event'}
+                localityList={this.state.localityList}
             />
         </>
     }

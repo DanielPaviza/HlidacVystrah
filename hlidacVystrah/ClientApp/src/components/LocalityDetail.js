@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { MapEvents } from "./MapEvents";
+import { MapEventList } from "./MapEventList";
 import '../styles/localityDetail.scss';
 export class LocalityDetail extends Component {
     static displayName = LocalityDetail.name;
@@ -10,27 +10,24 @@ export class LocalityDetail extends Component {
         this.events = this.GetEventsInLocality();
         this.localityInfo = this.GetLocalityInfo();
 
-        console.log(this.localityInfo)
+        //console.log(this.localityInfo)
 
         this.props.ScrollToTop();
     }
 
     GetLocalityInfo = () => {
 
-        let result = { region: null, locality: null };
+        let result = { region: null, name: null, cisorp: null };
 
         if (this.props.isRegion)
             result.region = this.props.targetId;
 
-        this.props.allEvents.forEach((event) => {
-            Object.entries(event.localityList).forEach(([region, localities]) => {
-                const locality = localities.find((item) => item.cisorp === this.props.targetId);
+        Object.entries(this.props.allLocalities).forEach(([region, localities]) => {
 
-                if (locality) {
-                    result = { region, name: locality.name, cisorp: locality.cisorp };
-                }
-            });
-        });
+            const locality = localities.find((item) => item.cisorp === this.props.targetId);
+            if (locality)
+                return result = { region, name: locality.name, cisorp: locality.cisorp };
+        })
         
         return result;
     }
@@ -67,10 +64,13 @@ export class LocalityDetail extends Component {
                         <h2 className='mb-3 mb-md-4 ' role="button" onClick={() => this.props.OpenLocalityDetail(this.localityInfo.region, true)}>{this.localityInfo.region}</h2>
                     </>
                 }
-                <MapEvents
+                <MapEventList
                     events={this.events}
                     openEvent={this.props.openEvent}
                     GetEventColor={this.props.GetEventColor}
+                    mapType={"locality"}
+                    localityInfo={this.localityInfo}
+                    localityList={this.props.allLocalities}
                 />
             </section>
         );

@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Map } from "./Map";
+import { MapEvent } from "./MapEvent";
 import { Legend } from "./Legend";
 import '../styles/eventDetail.scss';
 export class EventDetail extends Component {
@@ -130,7 +130,10 @@ export class EventDetail extends Component {
                         }
                     </div>
                     <div className='mt-4 mt-md-5'>
-                        <Map events={this.props.events} />
+                        <MapEvent
+                            events={[this.event]}
+                            GetEventColor={this.props.GetEventColor}
+                        />
                         <Legend />
                     </div>
                 </div>

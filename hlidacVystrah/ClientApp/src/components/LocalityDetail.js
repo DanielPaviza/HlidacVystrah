@@ -60,11 +60,11 @@ export class LocalityDetail extends Component {
         return (
             <section id="localityDetail">
                 {this.props.isRegion ?
-                    <h1 className='mt-4 mt-md-5'>{this.localityInfo.region}</h1>
+                    <h1 className='mt-3 mt-md-4 mb-3 mb-md-4'>{this.localityInfo.region}</h1>
                     :
                     <>
-                        <h1 className='mt-4 mt-md-5'>{this.localityInfo.name}</h1>
-                        <h2>{this.localityInfo.region}</h2>
+                        <h1 className='mt-3 mt-md-4 mb-1'>{this.localityInfo.name}</h1>
+                        <h2 className='mb-3 mb-md-4 ' role="button" onClick={() => this.props.OpenLocalityDetail(this.localityInfo.region, true)}>{this.localityInfo.region}</h2>
                     </>
                 }
                 <MapEvents

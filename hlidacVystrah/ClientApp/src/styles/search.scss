@@ -21,9 +21,22 @@
         overflow-y: auto;
         background: white;
         border-radius: 0 0 4px 4px;
+        animation-name: onRender;
+        animation-duration: 0.2s;
+
+        @keyframes onRender {
+            from {
+                max-height: 0;
+            }
+
+            to {
+                max-height: 300px;
+            }
+        }
 
         .region {
             cursor: pointer;
+
             &:hover {
                 background: $gray;
             }

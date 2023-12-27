@@ -114,6 +114,7 @@ export class HomeController extends Component {
                 targetId={this.state.selectedLocalityId}
                 isRegion={this.state.selectedLocalityIsRegion}
                 openEvent={this.HandleOpenEvent}
+                OpenLocalityDetail={this.HandleOpenLocality}
                 GetEventColor={this.HandleGetEventColor}
                 ScrollToTop={this.scrollToTop}
             />

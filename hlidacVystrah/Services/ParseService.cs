@@ -21,7 +21,27 @@ namespace hlidacVystrah.Services
             _context = context;
         }
 
+        private void ParseSvgMap() {
+
+            string xmlPath = @"D:\moje\programovani\absolutorium\hlidacVystrah\hlidacVystrah\ClientApp\src\map.svg";
+            try
+            {
+                XDocument xdoc = XDocument.Load(xmlPath);
+                XElement root = xdoc.Root;
+                //XElement gRoot = root.Descendants();
+
+                string greg = "f";
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
         public ParseResponse UpdateEvents() {
+
+            //this.ParseSvgMap();
+            //return new ParseResponse { ResponseCode = StatusCodes.Status200OK };
 
             //string xmlPath = @"D:\moje\programovani\absolutorium\random\test_data\vyhled_nebezpecnych_jevu_vysoke_teploty.xml";
             string xmlPath = "https://www.chmi.cz/files/portal/docs/meteo/om/bulletiny/XOCZ50_OKPR.xml";

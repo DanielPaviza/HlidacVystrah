@@ -3,6 +3,7 @@ import { MapEvents } from "./MapEvents";
 import { EventDetail } from "./EventDetail"; 
 import { LocalityDetail } from "./LocalityDetail"; 
 import { NavMenu } from './NavMenu';
+import { Search } from './Search';
 import { Footer } from './Footer';
 import { HomeButton } from './HomeButton';
 export class HomeController extends Component {
@@ -11,44 +12,46 @@ export class HomeController extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            events: [],
-            loading: true,
+            eventList: [],
+            eventListLoading: true,
             timestamp: "",
             eventOpened: false,
             localityOpened: false,
-            selectedEvent: null,
-            selectedLocality: null
+            selectedEventId: null,
+            selectedLocalityId: null,
+            selectedLocalityIsRegion: false,
+            localityList: [],
+            localityListLoading: true
         };
-
-        
     }
 
     componentDidMount() {
-        this.GetEvents();
+        this.GetEventList();
+        this.GetLocalityList();
     }
 
     HandleOpenEvent = (id) => {
 
         this.HandleCloseDetail();
-        let event = this.state.events.find(e => e.id === id);
-        if (!event)
-            return;
 
         this.setState((prevState) => ({
             ...prevState,
             eventOpened: true,
-            selectedEvent: event
+            selectedEventId: id
         }));
     }
 
-    HandleOpenLocality = (cisorp) => {
+    HandleOpenLocality = (id, isRegion = false) => {
+
+        console.log("open localityyyyyyyyyyyyyyyy")
 
         this.HandleCloseDetail();
 
         this.setState((prevState) => ({
             ...prevState,
             localityOpened: true,
-            selectedLocality: cisorp
+            selectedLocalityId: id,
+            selectedLocalityIsRegion: isRegion
         }));
     }
 
@@ -95,7 +98,8 @@ export class HomeController extends Component {
 
         if (this.state.eventOpened) {
             return <EventDetail
-                event={this.state.selectedEvent}
+                allEvents={this.state.eventList}
+                targetId={this.state.selectedEventId}
                 GetEventColor={this.HandleGetEventColor}
                 OpenLocalityDetail={this.HandleOpenLocality}
                 ScrollToTop={this.scrollToTop}
@@ -105,19 +109,27 @@ export class HomeController extends Component {
         if (this.state.localityOpened) {
 
             return <LocalityDetail
-                allEvents={this.state.events}
-                targetLocality={this.state.selectedLocality}
+                allLocalities={this.state.localityList}
+                allEvents={this.state.eventList}
+                targetId={this.state.selectedLocalityId}
+                isRegion={this.state.selectedLocalityIsRegion}
                 openEvent={this.HandleOpenEvent}
                 GetEventColor={this.HandleGetEventColor}
                 ScrollToTop={this.scrollToTop}
             />
         }
 
-        return <MapEvents
-            events={this.state.events}
-            openEvent={this.HandleOpenEvent}
-            GetEventColor={this.HandleGetEventColor}
-        />
+        return <>
+            <Search
+                localityList={this.state.localityList}
+                OpenLocalityDetail={this.HandleOpenLocality}
+            />
+            <MapEvents
+                events={this.state.eventList}
+                openEvent={this.HandleOpenEvent}
+                GetEventColor={this.HandleGetEventColor}
+            />
+        </>
     }
 
     RenderTimestamp() {
@@ -133,7 +145,7 @@ export class HomeController extends Component {
 
     render() {
         return (
-            this.state.loading ?
+            this.state.eventListLoading || this.state.localityListLoading ?
                 <p>Loading...</p>
                 :
                 <>
@@ -156,7 +168,7 @@ export class HomeController extends Component {
         );
     }
 
-    async GetEvents() {
+    async GetEventList() {
         const response = await fetch('api/events');
         const data = await response.json();
 
@@ -165,9 +177,23 @@ export class HomeController extends Component {
         if (data.responseCode == 200)
             this.setState((prevState) => ({
                 ...prevState,
-                events: data.events,
-                loading: false,
+                eventList: data.events,
+                eventListLoading: false,
                 timestamp: data.dataTimestamp,
+            }));
+    }
+
+    async GetLocalityList() {
+        const response = await fetch('api/localities');
+        const data = await response.json();
+
+        console.log(data);
+
+        if (data.responseCode == 200)
+            this.setState((prevState) => ({
+                ...prevState,
+                localityList: data.localityList,
+                localityListLoading: false
             }));
     }
 }

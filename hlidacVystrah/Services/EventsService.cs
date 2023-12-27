@@ -81,7 +81,7 @@ namespace hlidacVystrah.Services
                         cisorps.Add(locality.id_locality);
                     }
 
-                    Dictionary<string, List< LocalityDto>> localitiesGrouped = _context.Locality.Where(
+                    Dictionary<string, List<LocalityDto>> localitiesGrouped = _context.Locality.Where(
                         el => cisorps.Contains(el.id)
                     ).GroupBy(el => _context.Region.First(r => r.id == el.id_region).name).ToList().ToDictionary(
                         group => group.Key,

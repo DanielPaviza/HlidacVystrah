@@ -8,6 +8,7 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
+using System.Collections.Generic;
 
 namespace hlidacVystrah.Services
 {
@@ -22,22 +23,34 @@ namespace hlidacVystrah.Services
 
         public LocalityListResponse GetLocalityList() {
 
-            List<LocalityDto> localityList = new();
+            Dictionary<string, List<LocalityDto>> localityList = new();
 
             try {
-                localityList = _context.Locality.Select(
-                     el => new LocalityDto
-                     {
-                         Cisorp = el.id,
-                         Name = el.name,
-                         //Region = _context.Region.First(saved => saved.id == el.id_region).name
-                     }).ToList();
+                foreach (var region in _context.Region)
+                {
+                    localityList.Add(region.name, GetRegionLocalityList(region.id));
+                }
             } catch (Exception ex)
             {
                 return new LocalityListResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
             return new LocalityListResponse { ResponseCode = StatusCodes.Status200OK, LocalityList = localityList };
+        }
+
+        private List<LocalityDto> GetRegionLocalityList(int regionId)
+        {
+
+            List<LocalityDto> list = _context.Locality.Where(saved =>
+                saved.id_region == regionId
+            ).Select(l => new LocalityDto
+                {
+                    Cisorp = l.id,
+                    Name = l.name
+                }
+            ).ToList();
+
+            return list;
         }
 
         public EventListResponse GetLocalityDetail(int cisorp)

@@ -7,8 +7,8 @@ export class EventDetail extends Component {
 
     constructor(props) {
         super(props);
-        this.event = this.props.event;
-        console.log(props.event)
+
+        this.event = this.props.allEvents.find(e => e.id === this.props.targetId);
 
         this.state = {
             showDescription: false,
@@ -37,7 +37,7 @@ export class EventDetail extends Component {
             <div className='mt-2'>
                 {Object.entries(this.event.localityList).map(([key, value]) => (
                     <div key={key} className='d-flex flex-column'>
-                        <span className='fw-bold'>{key}</span>
+                        <span className='fw-bold' onClick={() => this.props.OpenLocalityDetail(key, true)}>{key}</span>
                         <span>
                             {this.RenderLocalityList(value)}
                         </span>

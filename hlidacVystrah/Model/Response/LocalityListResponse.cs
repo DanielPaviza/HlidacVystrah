@@ -5,7 +5,7 @@ namespace hlidacVystrah.Model.Response
 {
     public class LocalityListResponse : BaseResponse
     {
-        public List<LocalityDto> LocalityList { get; set; } = new();
+        public Dictionary<string, List<LocalityDto>> LocalityList { get; set; } = new();
 
     }
 }

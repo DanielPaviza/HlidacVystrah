@@ -11,30 +11,35 @@ body {
 
     h2 {
         font-size: 1.6rem;
-    }    
-    
+    }
+
     h3 {
         font-size: 1.4rem;
     }
 
     .green {
-        background-color: rgba($green, 0.9);
+        background-color: $green;
+        fill: $green;
     }
 
     .yellow {
-        background-color: rgba($yellow, 0.9);
+        background-color: $yellow;
+        fill: $yellow;
     }
 
     .orange {
-        background-color: rgba($orange, 0.8);
+        background-color: $orange;
+        fill: $orange !important;
     }
 
     .red {
-        background-color: rgba($red, 1)!important;
+        background-color: $red;
+        fill: $red;
     }
 
     .gray {
-        background-color: rgba($gray, 1);
+        background-color: $gray;
+        fill: $gray;
     }
 
     .colorCircle {

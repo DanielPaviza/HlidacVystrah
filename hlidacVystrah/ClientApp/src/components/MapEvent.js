@@ -1,13 +1,12 @@
 ﻿import React, { Component } from 'react';
-import { ReactComponent as Img } from '../map.svg';
-import ReactDOM from 'react-dom';  // Don't forget to import ReactDOM
+import MapHelper from './MapHelper';
 import '../styles/map.scss';
 export class MapEvent extends Component {
     static displayName = MapEvent.name;
 
     constructor(props) {
         super(props);
-        this.svgRef = React.createRef();
+        this.helper = new MapHelper();
 
         this.isDetail = false;
         if (this.props.events.length == 1)
@@ -15,10 +14,8 @@ export class MapEvent extends Component {
     }
 
     componentDidMount() {
-
-        const mapLocalityList = Array.from(this.svgRef.current.childNodes[0].childNodes);
-        let affectedLocalityList = this.isDetail ? this.GetAffectedLocality() : this.GetAffectedCisorpList();
-        this.RenderLocalityColor(mapLocalityList, affectedLocalityList);
+        let affectedLocalityList = this.isDetail ? this.GetAffectedLocality() : this.GetAffectedLocalityList();
+        this.helper.RenderLocalityColor(affectedLocalityList);
     }
 
     GetAffectedLocality() {
@@ -32,28 +29,12 @@ export class MapEvent extends Component {
             affected[color].push(localities);
         });
 
-        affected = this.FlattenAffected(affected);
+        affected = this.helper.FlattenAffected(affected);
 
         return affected;
     }
 
-    RenderLocalityColor = (mapLocalityList, affected) => {
-
-        Object.entries(affected).forEach(([severityColor, localities]) => {
-            localities.forEach((locality) => {
-
-                const foundElement = mapLocalityList.find(element => {
-                    const cisorpAttribute = element.attributes.getNamedItem("cisorp");
-
-                    return cisorpAttribute && cisorpAttribute.value == locality.cisorp;
-                });
-
-                foundElement.setAttribute("fill", severityColor);
-            });
-        });
-    }
-
-    GetAffectedCisorpList = () => {
+    GetAffectedLocalityList = () => {
 
         let affected = {};
 
@@ -66,64 +47,19 @@ export class MapEvent extends Component {
             });
         });
 
-        affected = this.FlattenAffected(affected);
+        affected = this.helper.FlattenAffected(affected);
 
         // remove less severe duplicate localities
-        affected = this.RemoveLessSevereLocality(affected, "red");
-        affected = this.RemoveLessSevereLocality(affected, "orange");
-        affected = this.RemoveLessSevereLocality(affected, "yellow");
+        affected = this.helper.RemoveLessSevereLocality(affected, "red");
+        affected = this.helper.RemoveLessSevereLocality(affected, "orange");
+        affected = this.helper.RemoveLessSevereLocality(affected, "yellow");
 
         return affected;
-    }
-
-    FlattenAffected = (list) => {
-        // The list arrays have 1 less depth
-        Object.keys(list).forEach(key => {
-            list[key] = list[key].flat();
-        })
-
-        return list;
-    }
-
-    RemoveLessSevereLocality = (cisorpList, localitySeverityKey) => {
-
-        const currentSeverityList = cisorpList[localitySeverityKey];
-        let reduced = {};
-
-        Object.keys(cisorpList).forEach(key => {
-
-            if (key != localitySeverityKey) {
-
-                cisorpList[key].forEach(locality => {
-
-                    let addLocality = true;
-                    currentSeverityList.forEach(u => {
-                        if (u.cisorp == locality.cisorp) {
-                            addLocality = false;
-                            return;
-                        }                            
-                    })
-
-                    if (addLocality) {
-                        if (!reduced.hasOwnProperty(key))
-                            reduced[key] = [];
-                        reduced[key].push(locality);
-                    }
-
-                })
-            }       
-        })
-
-        reduced[localitySeverityKey] = currentSeverityList;
-
-        return reduced;
     }
     
     render() {
         return (
-            <div id="map" className='d-flex justify-content-center'>
-                <Img ref={this.svgRef} />
-            </div>
+            this.helper.Render()
         );
     }
 }

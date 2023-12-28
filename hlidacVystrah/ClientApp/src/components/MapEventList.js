@@ -19,6 +19,7 @@ export class MapEventList extends Component {
                     <MapEvent
                         events={this.props.events}
                         GetEventColor={this.props.GetEventColor}
+                        OpenLocalityDetail={this.props.OpenLocalityDetail}
                     />
                 }
                 {this.props.mapType == "locality" && 
@@ -27,6 +28,7 @@ export class MapEventList extends Component {
                         GetEventColor={this.props.GetEventColor}
                         localityInfo={this.props.localityInfo}
                         localityList={this.props.localityList}
+                        OpenLocalityDetail={this.props.OpenLocalityDetail}
                     />
                 }
                 <Legend />

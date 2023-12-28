@@ -129,6 +129,7 @@ export class HomeController extends Component {
                 GetEventColor={this.HandleGetEventColor}
                 mapType={'event'}
                 localityList={this.state.localityList}
+                OpenLocalityDetail={this.HandleOpenLocality}
             />
         </>
     }

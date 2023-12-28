@@ -1,26 +1,23 @@
 ﻿import React, { Component } from 'react';
 import { ReactComponent as Img } from '../map.svg';
+import MapHelper from './MapHelper';
 import '../styles/map.scss';
 export class MapLocality extends Component {
     static displayName = MapLocality.name;
 
     constructor(props) {
         super(props);
-        this.svgRef = React.createRef();
+        this.helper = new MapHelper();
     }
 
     componentDidMount() {
-
-        console.log(this.props.localityInfo);
-
-        this.mapLocalityList = Array.from(this.svgRef.current.childNodes[0].childNodes);
 
         this.isRegion = this.props.localityInfo.name == null;
         let affected = {}
         if (this.isRegion) {
 
             let localityList = this.props.localityList[this.props.localityInfo.region];
-            affected = this.GetAffectedList(localityList);
+            affected = this.GetAffectedLocalityList(localityList);
 
 
         } else {
@@ -28,7 +25,7 @@ export class MapLocality extends Component {
             affected[severityColor] = [this.props.localityInfo];
         }
 
-        this.RenderLocalityColor(this.mapLocalityList, affected);
+        this.helper.RenderLocalityColor(affected);
     }
 
     GetMostSevereColor() {
@@ -48,10 +45,10 @@ export class MapLocality extends Component {
         if (this.EventsContainSeverity("gray"))
             return "gray";
 
-        return "white";
+        return "gray";
     }
 
-    GetAffectedList = (localityList) => {
+    GetAffectedLocalityList = (localityList) => {
 
         let affected = {};
         this.props.events.forEach(event => {
@@ -70,9 +67,9 @@ export class MapLocality extends Component {
         })
 
         // remove less severe duplicate localities
-        affected = this.RemoveLessSevereLocality(affected, "red");
-        affected = this.RemoveLessSevereLocality(affected, "orange");
-        affected = this.RemoveLessSevereLocality(affected, "yellow");
+        affected = this.helper.RemoveLessSevereLocality(affected, "red");
+        affected = this.helper.RemoveLessSevereLocality(affected, "orange");
+        affected = this.helper.RemoveLessSevereLocality(affected, "yellow");
 
         return affected;
     }
@@ -90,65 +87,10 @@ export class MapLocality extends Component {
 
         return contains;
     }
-
-    RemoveLessSevereLocality = (cisorpList, localitySeverityKey) => {
-
-        const currentSeverityList = cisorpList[localitySeverityKey];
-        if (currentSeverityList == undefined)
-            return cisorpList;
-
-        let reduced = {};
-
-        Object.keys(cisorpList).forEach(key => {
-
-            if (key != localitySeverityKey) {
-
-                cisorpList[key].forEach(locality => {
-
-                    let addLocality = true;
-                    currentSeverityList.forEach(u => {
-                        if (u.cisorp == locality.cisorp) {
-                            addLocality = false;
-                            return;
-                        }
-                    })
-
-                    if (addLocality) {
-                        if (!reduced.hasOwnProperty(key))
-                            reduced[key] = [];
-                        reduced[key].push(locality);
-                    }
-
-                })
-            }
-        })
-
-        reduced[localitySeverityKey] = currentSeverityList;
-
-        return reduced;
-    }
-
-    RenderLocalityColor = (mapLocalityList, affected) => {
-
-        Object.entries(affected).forEach(([severityColor, localities]) => {
-            localities.forEach((locality) => {
-
-                const foundElement = mapLocalityList.find(element => {
-                    const cisorpAttribute = element.attributes.getNamedItem("cisorp");
-
-                    return cisorpAttribute && cisorpAttribute.value == locality.cisorp;
-                });
-
-                foundElement.setAttribute("fill", severityColor);
-            });
-        });
-    }
     
     render() {
         return (
-            <div id="map" className='d-flex justify-content-center'>
-                <Img ref={this.svgRef} />
-            </div>
+            this.helper.Render()
         );
     }
 }

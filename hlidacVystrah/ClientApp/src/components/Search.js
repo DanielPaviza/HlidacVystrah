@@ -14,17 +14,6 @@ export class Search extends Component {
 
     FilterLocalityList = (val) => {
 
-        /*
-        if (val.length < 3) {
-            this.setState((prevState) => ({
-                ...prevState,
-                listOpened: false,
-            }));
-
-            return;
-        }
-        */
-
         val = val.toLowerCase();
         let filteredNames = {};
 
@@ -97,7 +86,7 @@ export class Search extends Component {
     render() {
 
         return (
-            <div id="search" className='d-flex flex-column mb-4'>
+            <div id="search" className='d-flex flex-column mb-4 col-12 col-lg-10 col-xl-8 mx-auto'>
                 <label htmlFor='localitySearch' className='fw-bold'>Vyhledejte kraj/obci</label>
                 <input
                     id='localitySearch'

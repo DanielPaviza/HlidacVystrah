@@ -5,14 +5,13 @@ import { ReactComponent as Img } from '../map.svg';
 class MapHelper {
 
     constructor() {
-        this.languageKey = 'lang';
         this.svgRef = React.createRef();
     }
 
     Render() {
         return (
-            <div id="map" className='d-flex justify-content-center'>
-                <Img ref={this.svgRef} />
+            <div id="map" className='d-flex justify-content-center mx-auto'>
+                <Img ref={this.svgRef} className='col-12 col-lg-10 col-xl-8'/>
             </div>
         );
     }

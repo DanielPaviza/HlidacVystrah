@@ -34,7 +34,7 @@ export class EventDetail extends Component {
 
     RenderRegions = () => {
         return (
-            <div className='mt-2'>
+            <div className='mt-2 affectedLocalities'>
                 {Object.entries(this.event.localityList).map(([key, value]) => (
                     <div key={key} className='d-flex flex-column'>
                         <span className='fw-bold' onClick={() => this.props.OpenLocalityDetail(key, true)}>{key}</span>
@@ -114,8 +114,10 @@ export class EventDetail extends Component {
                             <i className={`fa-solid fa-arrow-${this.GetDescriptionArrowDirection()}`}></i>
                         </span>
                         {this.state.showDescription &&
-                            <div className='mt-2'>
+                            <div className='ms-2 mt-2 description'>
                                 <span>{this.event.instruction}</span>
+                                <br />
+                                <br />
                                 <span>{this.event.description}</span>
                             </div>
                         }

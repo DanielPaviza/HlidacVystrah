@@ -13,6 +13,13 @@
             padding-bottom: 6px;
             border-bottom: 1px solid $gray;
 
+            .description {
+                max-height: 300px;
+                overflow-y: auto;
+                animation-name: onRender;
+                animation-duration: 0.2s;
+            }
+
             & > span:nth-child(1) {
                 font-weight: bold;
                 font-size: 1.06rem;
@@ -20,8 +27,25 @@
             }
         }
 
+        .affectedLocalities {
+            max-height: 300px;
+            overflow-y: auto;
+            animation-name: onRender;
+            animation-duration: 0.2s;
+        }
+
         .rollDown {
             cursor: pointer;
+        }
+
+        @keyframes onRender {
+            from {
+                max-height: 0;
+            }
+
+            to {
+                max-height: 300px;
+            }
         }
     }
 }

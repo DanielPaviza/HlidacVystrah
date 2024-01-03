@@ -1,11 +1,11 @@
 ﻿
 import React from 'react';
-import { ReactComponent as Img } from '../map.svg';
 
 class MapHelper {
 
-    constructor() {
-        this.svgRef = React.createRef();
+    constructor(map, OpenLocalityDetail) {
+        this.map = map;
+        this.OpenLocalityDetail = OpenLocalityDetail;
     }
 
     FlattenAffected = (list) => {
@@ -15,6 +15,23 @@ class MapHelper {
         })
 
         return list;
+    }
+
+    FilterLessSevereLocalities = (affected) => {
+
+        let filterByColors = [
+            "red",
+            "orange",
+            "yellow",
+            "green"
+        ];
+
+        // remove less severe duplicate localities
+        filterByColors.forEach(color => {
+            affected = this.RemoveLessSevereLocality(affected, color);
+        })
+
+        return affected;
     }
 
     RemoveLessSevereLocality = (cisorpList, localitySeverityKey) => {
@@ -54,37 +71,42 @@ class MapHelper {
         return reduced;
     }
 
-    RenderLocalityColor = (affected, openLocalityDetail) => {
+    GetColoredMap(affected) {
 
-        const mapLocalityList = Array.from(this.svgRef.current.childNodes[0].childNodes);
+        const mapClone = this.map.map(element => element.cloneNode(true));
 
-        // add attributes to all locations
-        mapLocalityList.forEach(g => {
-            let id = g.attributes.getNamedItem("cisorp").value;
-            g.addEventListener('click', () => openLocalityDetail(id))
+        mapClone.forEach(g => {
+            Object.entries(affected).forEach(([color, localities]) => {
+
+                const locality = localities.find((item) => item.cisorp == g.getAttribute('cisorp'));
+                if (locality)
+                    g.setAttribute("class", color)
+            })
         })
 
-        Object.entries(affected).forEach(([severityColor, localities]) => {
-            localities.forEach((locality) => {
-
-                const foundElement = mapLocalityList.find(element => {
-                    const cisorpAttribute = element.attributes.getNamedItem("cisorp");
-
-                    return cisorpAttribute && cisorpAttribute.value == locality.cisorp;
-                });
-
-                //foundElement.setAttribute("fill", severityColor);
-                foundElement.setAttribute("class", severityColor);
-            });
-        });
-    }
-
-    Render() {
         return (
             <div id="map" className='d-flex justify-content-center mx-auto'>
-                <Img ref={this.svgRef} className='col-12 col-lg-10 col-xl-8' />
+                <svg viewBox="18 78 1440 830" className='col-12 col-lg-10 col-xl-8'>
+                    <g stroke="black" fill="white">
+                    {
+                        mapClone.map((g, index) => (
+                            <g
+                                id={g.id} key={index}
+                                className={g.getAttribute('class')}
+                                onClick={() => this.OpenLocalityDetail(g.getAttribute('cisorp'))}
+                            >
+                                <path d={g.children[0].getAttribute('d')}></path>
+                            </g>
+                        ))
+                    }
+                    </g>
+                </svg>
             </div>
         );
+    }
+
+    Example = (cisorp) => {
+        console.log(cisorp);
     }
 }
 

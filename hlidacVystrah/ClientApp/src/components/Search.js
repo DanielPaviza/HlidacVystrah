@@ -43,7 +43,7 @@ export class Search extends Component {
             filteredLocalityList: filteredNames
         }));
 
-        console.log(filteredNames)
+        //console.log(filteredNames)
     }
 
     RenderLocalityList = () => {

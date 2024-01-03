@@ -23,7 +23,7 @@ namespace hlidacVystrah.Services
             _context = context;
         }
 
-        private void ParseSvgMap() {
+        private void ParseSvgMapOG() {
 
             string xmlPath = @"D:\moje\programovani\absolutorium\hlidacVystrah\hlidacVystrah\ClientApp\src\map.svg";
             try
@@ -43,6 +43,35 @@ namespace hlidacVystrah.Services
                     g.SetAttributeValue("cisorp", id.Split(':')[1]);
                     g.Attribute("class").Remove();
                     g.Attribute("id").Remove();
+                }
+
+                //xdoc.Save(xmlPath);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void ParseSvgMap()
+        {
+            string xmlPath = @"D:\moje\programovani\absolutorium\hlidacVystrah\hlidacVystrah\ClientApp\public\images\map.svg";
+            try
+            {
+                XDocument xdoc = XDocument.Load(xmlPath);
+                XElement root = xdoc.Root;
+                XElement gRoot = root.Descendants().First();
+
+                List<XElement> gs = gRoot.Descendants().Where(
+                    el =>
+                        GetElName(el) == "g"
+                ).ToList();
+
+                foreach (XElement g in gs)
+                {
+                    string id = g.Attribute("cisorp").Value;
+                    g.SetAttributeValue("id", "cisorp_" + id.ToString());
+                    g.Attribute("cisorp").Remove();
                 }
 
                 xdoc.Save(xmlPath);

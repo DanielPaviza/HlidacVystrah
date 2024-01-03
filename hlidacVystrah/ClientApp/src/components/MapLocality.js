@@ -1,23 +1,27 @@
 ﻿import React, { Component } from 'react';
-import MapHelper from './MapHelperLocality';
+import MapHelper from './MapHelper';
 import '../styles/map.scss';
 export class MapLocality extends Component {
     static displayName = MapLocality.name;
 
     constructor(props) {
         super(props);
-        this.helper = new MapHelper();
+        this.helper = new MapHelper(this.props.map, this.props.OpenLocalityDetail);
     }
 
-    componentDidMount() {
-        this.GetAffected();
+    render() {
+
+        let affected = this.GetAffected();
+
+        return (
+            this.helper.GetColoredMap(affected)
+        );
     }
 
     GetAffected() {
         this.isRegion = this.props.localityInfo.name == null;
         let affected = {}
         if (this.isRegion) {
-
             let localityList = this.props.localityList[this.props.localityInfo.region];
             affected = this.GetAffectedRegion(localityList);
         } else {
@@ -25,7 +29,7 @@ export class MapLocality extends Component {
             affected[severityColor] = [this.props.localityInfo];
         }
 
-       this.helper.RenderLocalityColor(affected, this.props.OpenLocalityDetail);
+        return affected;
     }
 
     GetMostSevereColor() {
@@ -39,45 +43,41 @@ export class MapLocality extends Component {
             "gray"
         ];
         // defaultval
-        let color = "noEvent";
+        let color = "noEventStroke";
 
+        let colorSet = false;
         colors.forEach(c => {
-            if (this.EventsContainSeverity(c))
+            if (!colorSet && this.EventsContainSeverity(c)) {
                 color = c;
+                colorSet = true;
+            }
         })
 
         return color;
     }
 
-    GetAffectedRegion = (localityList) => {
+    GetAffectedRegion = (regionLocalityList) => {
 
         let affected = {};
+        affected["noEvent"] = regionLocalityList;
+        affected["noEventStroke"] = regionLocalityList;
+
         this.props.events.forEach(event => {
 
             let severityColor = this.props.GetEventColor(event.severity);
             Object.entries(event.localityList).forEach(([region, localities]) => {
 
-                localityList.forEach(locality => {
-                    if (localities.some(obj => obj.cisorp === locality.cisorp)) {
+                regionLocalityList.forEach(regionLocality => {
+                    if (localities.some(obj => obj.cisorp === regionLocality.cisorp)) {
                         if (!affected.hasOwnProperty(severityColor))
                             affected[severityColor] = [];
-                        affected[severityColor].push(locality);
-                    }
+                        affected[severityColor].push(regionLocality);
+                    } 
                 })
             })
         })
 
-        let filterByColors = [
-            "red",
-            "orange",
-            "yellow",
-            "green"
-        ];
-
-        // remove less severe duplicate localities
-        filterByColors.forEach(color => {
-            affected = this.helper.RemoveLessSevereLocality(affected, color);
-        })
+        affected = this.helper.FilterLessSevereLocalities(affected);
 
         return affected;
     }
@@ -89,17 +89,10 @@ export class MapLocality extends Component {
         this.props.events.forEach(event => {
 
             let color = this.props.GetEventColor(event.severity);
-            if (color == severityColor)
+            if (!contains && color == severityColor)
                 contains = true;
         })
 
         return contains;
-    }
-    
-    render() {
-
-        return (
-            this.helper.Render()
-        );
     }
 }

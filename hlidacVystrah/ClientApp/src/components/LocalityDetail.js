@@ -69,6 +69,7 @@ export class LocalityDetail extends Component {
                     localityInfo={this.localityInfo}
                     localityList={this.props.allLocalities}
                     OpenLocalityDetail={this.props.OpenLocalityDetail}
+                    map={this.props.map}
                 />
             </section>
         );

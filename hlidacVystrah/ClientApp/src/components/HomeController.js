@@ -12,7 +12,7 @@ export class HomeController extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            timestamp: "",
+            timestamp: '',
             eventOpened: false,
             localityOpened: false,
             selectedEventId: null,
@@ -22,12 +22,14 @@ export class HomeController extends Component {
             localityListLoading: true,
             eventList: [],
             eventListLoading: true,
+            map: []
         };
     }
 
     componentDidMount() {
         this.GetEventList();
         this.GetLocalityList();
+        this.GetSvgMap();
     }
 
     HandleOpenEvent = (id) => {
@@ -43,6 +45,7 @@ export class HomeController extends Component {
 
     HandleOpenLocality = (id, isRegion = false) => {
 
+        console.log("opening locality")
         this.HandleCloseDetail();
 
         this.setState((prevState) => ({
@@ -101,6 +104,9 @@ export class HomeController extends Component {
                 GetEventColor={this.HandleGetEventColor}
                 OpenLocalityDetail={this.HandleOpenLocality}
                 ScrollToTop={this.scrollToTop}
+                svgMapElements={this.state.svgMapElements}
+                map={this.state.map}
+                allLocalities={this.state.localityList}
             />
         }
 
@@ -115,6 +121,7 @@ export class HomeController extends Component {
                 OpenLocalityDetail={this.HandleOpenLocality}
                 GetEventColor={this.HandleGetEventColor}
                 ScrollToTop={this.scrollToTop}
+                map={this.state.map}
             />
         }
 
@@ -130,6 +137,8 @@ export class HomeController extends Component {
                 mapType={'event'}
                 localityList={this.state.localityList}
                 OpenLocalityDetail={this.HandleOpenLocality}
+                map={this.state.map}
+                allLocalities={this.state.localityList}
             />
         </section>
     }
@@ -147,7 +156,7 @@ export class HomeController extends Component {
 
     render() {
         return (
-            this.state.eventListLoading || this.state.localityListLoading ?
+            this.state.eventListLoading || this.state.localityListLoading || this.state.map.length <= 0 ?
                 <p>Loading...</p>
                 :
                 <>
@@ -197,5 +206,29 @@ export class HomeController extends Component {
                 localityList: data.localityList,
                 localityListLoading: false
             }));
+    }
+
+    async GetSvgMap() {
+        fetch('/images/map.svg')
+            .then(response => {
+                if (!response.ok)
+                    throw new Error('Network response was not ok');
+
+                return response.text()
+            })
+            .then(map => {
+
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(map, 'image/svg+xml');
+                let gs = Array.from(svgDoc.children[0].children[0].children);
+
+                this.setState((prevState) => ({
+                    ...prevState,
+                    map: gs
+                }));
+            })
+            .catch(error => {
+                console.error('Error during fetch:', error);
+            });
     }
 }

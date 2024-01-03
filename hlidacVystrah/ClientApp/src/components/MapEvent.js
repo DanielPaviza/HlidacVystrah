@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import MapHelper from './MapHelper';
 import '../styles/map.scss';
 export class MapEvent extends Component {
@@ -6,16 +7,20 @@ export class MapEvent extends Component {
 
     constructor(props) {
         super(props);
-        this.helper = new MapHelper();
+        this.helper = new MapHelper(this.props.map, this.props.OpenLocalityDetail);
 
         this.isDetail = false;
         if (this.props.events.length == 1)
             this.isDetail = true;
     }
 
-    componentDidMount() {
-        let affectedLocalityList = this.isDetail ? this.GetAffectedLocality() : this.GetAffectedLocalityList();
-        this.helper.RenderLocalityColor(affectedLocalityList, this.props.OpenLocalityDetail);
+    render() {
+
+        let affected = this.isDetail ? this.GetAffectedLocality() : this.GetAffectedLocalityList();
+
+        return (
+            this.helper.GetColoredMap(affected)
+        );
     }
 
     GetAffectedLocality() {
@@ -37,6 +42,10 @@ export class MapEvent extends Component {
     GetAffectedLocalityList = () => {
 
         let affected = {};
+        affected["noEvent"] = [];
+        Object.entries(this.props.allLocalities).forEach(([region, localities]) => {
+            affected["noEvent"].push(localities);
+        })
 
         this.props.events.forEach((event) => {
             Object.entries(event.localityList).forEach(([region, localities]) => {
@@ -48,18 +57,8 @@ export class MapEvent extends Component {
         });
 
         affected = this.helper.FlattenAffected(affected);
-
-        // remove less severe duplicate localities
-        affected = this.helper.RemoveLessSevereLocality(affected, "red");
-        affected = this.helper.RemoveLessSevereLocality(affected, "orange");
-        affected = this.helper.RemoveLessSevereLocality(affected, "yellow");
+        affected = this.helper.FilterLessSevereLocalities(affected);
 
         return affected;
-    }
-    
-    render() {
-        return (
-            this.helper.Render()
-        );
     }
 }

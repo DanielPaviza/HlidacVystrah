@@ -136,6 +136,7 @@ export class EventDetail extends Component {
                             events={[this.event]}
                             GetEventColor={this.props.GetEventColor}
                             OpenLocalityDetail={this.props.OpenLocalityDetail}
+                            map={this.props.map}
                         />
                         <Legend />
                     </div>

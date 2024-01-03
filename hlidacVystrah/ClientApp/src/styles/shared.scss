@@ -43,13 +43,20 @@ body {
     }
 
     .gray {
-        background-color: $gray;
-        fill: $gray;
+        background-color: $grayDarker;
+        fill: $grayDarker;
     }
 
     .noEvent {
-        fill: $grayDarker;
-        stroke-width: 4px;
+        background-color: $noEvent;
+        fill: $noEvent;
+        border: 1px solid $black;
+    }
+
+    .noEventStroke {
+        stroke-width: 2px;
+        background-color: $noEvent;
+        fill: $noEvent;
     }
 
     .colorCircle {

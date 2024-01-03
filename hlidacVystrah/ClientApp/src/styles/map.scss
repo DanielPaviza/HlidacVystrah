@@ -3,14 +3,11 @@
 
 #map {
     svg {
-        //max-height: 500px;
-        //max-width: 100%;
-
         g > g {
             cursor: pointer;
 
             &:hover {
-                stroke-width: 4px;
+                stroke-width: 3px;
             }
         }
     }

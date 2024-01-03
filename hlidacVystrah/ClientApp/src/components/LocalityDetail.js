@@ -6,12 +6,6 @@ export class LocalityDetail extends Component {
 
     constructor(props) {
         super(props);
-
-        this.events = this.GetEventsInLocality();
-        this.localityInfo = this.GetLocalityInfo();
-
-        //console.log(this.localityInfo)
-
         this.props.ScrollToTop();
     }
 
@@ -24,7 +18,7 @@ export class LocalityDetail extends Component {
 
         Object.entries(this.props.allLocalities).forEach(([region, localities]) => {
 
-            const locality = localities.find((item) => item.cisorp === this.props.targetId);
+            const locality = localities.find((item) => item.cisorp == this.props.targetId);
             if (locality)
                 return result = { region, name: locality.name, cisorp: locality.cisorp };
         })
@@ -44,7 +38,7 @@ export class LocalityDetail extends Component {
 
             filteredEvents = this.props.allEvents.filter((event) =>
                 Object.values(event.localityList).some((list) =>
-                    list.some((item) => item.cisorp === this.props.targetId)
+                    list.some((item) => item.cisorp == this.props.targetId)
                 )
             );
         }
@@ -54,14 +48,17 @@ export class LocalityDetail extends Component {
 
     render() {
 
+        this.events = this.GetEventsInLocality();
+        this.localityInfo = this.GetLocalityInfo();
+
         return (
             <section id="localityDetail">
                 {this.props.isRegion ?
-                    <h1 className='mt-3 mt-md-4 mb-3 mb-md-4'>{this.localityInfo.region}</h1>
+                    <h2 className='mt-3 mt-md-4 mb-3 mb-md-4'>{this.localityInfo.region}</h2>
                     :
                     <>
-                        <h1 className='mt-3 mt-md-4 mb-1'>{this.localityInfo.name}</h1>
-                        <h2 className='mb-3 mb-md-4 ' role="button" onClick={() => this.props.OpenLocalityDetail(this.localityInfo.region, true)}>{this.localityInfo.region}</h2>
+                        <h2 className='mt-3 mt-md-4 mb-1'>{this.localityInfo.name}</h2>
+                        <h3 className='mb-3 mb-md-4 ' role="button" onClick={() => this.props.OpenLocalityDetail(this.localityInfo.region, true)}>{this.localityInfo.region}</h3>
                     </>
                 }
                 <MapEventList
@@ -71,6 +68,7 @@ export class LocalityDetail extends Component {
                     mapType={"locality"}
                     localityInfo={this.localityInfo}
                     localityList={this.props.allLocalities}
+                    OpenLocalityDetail={this.props.OpenLocalityDetail}
                 />
             </section>
         );

@@ -12,8 +12,6 @@ export class HomeController extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            eventList: [],
-            eventListLoading: true,
             timestamp: "",
             eventOpened: false,
             localityOpened: false,
@@ -21,7 +19,9 @@ export class HomeController extends Component {
             selectedLocalityId: null,
             selectedLocalityIsRegion: false,
             localityList: [],
-            localityListLoading: true
+            localityListLoading: true,
+            eventList: [],
+            eventListLoading: true,
         };
     }
 
@@ -118,7 +118,7 @@ export class HomeController extends Component {
             />
         }
 
-        return <>
+        return <section id='home'>
             <Search
                 localityList={this.state.localityList}
                 OpenLocalityDetail={this.HandleOpenLocality}
@@ -131,7 +131,7 @@ export class HomeController extends Component {
                 localityList={this.state.localityList}
                 OpenLocalityDetail={this.HandleOpenLocality}
             />
-        </>
+        </section>
     }
 
     RenderTimestamp() {

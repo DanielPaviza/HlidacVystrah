@@ -15,7 +15,7 @@ export class MapEvent extends Component {
 
     componentDidMount() {
         let affectedLocalityList = this.isDetail ? this.GetAffectedLocality() : this.GetAffectedLocalityList();
-        this.helper.RenderLocalityColor(affectedLocalityList);
+        this.helper.RenderLocalityColor(affectedLocalityList, this.props.OpenLocalityDetail);
     }
 
     GetAffectedLocality() {

@@ -22,7 +22,7 @@ export class EventList extends Component {
             {Object.keys(events).map(key => (
                 events[key].length > 0 && (
                     <div className='urgencyContainer mt-3' key={key}>
-                        <h2>{key}</h2>
+                        <h3>{key}</h3>
                         <div className='d-flex flex-wrap'>
                             {events[key].map(event => (
                                 <div key={event.id} onClick={() => this.props.openEvent(event.id)} className='col-4 col-md-3 col-lg-2 d-flex justify-content-center align-items-center'>
@@ -65,7 +65,7 @@ export class EventList extends Component {
         return (
             <div id='eventList' className=''>
                 <span className='d-flex align-items-start justify-content-between'>
-                    <h1 className='m-0'>Výstrahy</h1>
+                    <h2 className='m-0'>Výstrahy</h2>
                 </span>
                 {this.RenderEvents()}
             </div>

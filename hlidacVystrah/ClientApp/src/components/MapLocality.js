@@ -46,7 +46,7 @@ export class MapLocality extends Component {
         this.isRegion = this.props.localityInfo.name == null;
         let affected = {}
         if (this.isRegion) {
-            let localityList = this.props.localityList[this.props.localityInfo.region];
+            let localityList = this.props.allLocalities[this.props.localityInfo.region];
             affected = this.GetAffectedRegion(localityList);
         } else {
             let severityColor = this.GetMostSevereColor();

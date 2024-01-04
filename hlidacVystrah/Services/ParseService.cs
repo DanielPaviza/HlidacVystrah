@@ -82,8 +82,55 @@ namespace hlidacVystrah.Services
             }
         }
 
+        private List<EventDto> GetReducedEvents(List<EventDto> events)
+        {
+            // FILTER EVENTS AND JOIN SIMILAR TOGETHER
+            // some events differ only in description, localityList, onset
+            List<EventDto> eventsReduced = new();
+            foreach (EventDto e in events)
+            {
+
+                // event with the same properties
+                EventDto? matchingEvent = eventsReduced.FirstOrDefault(reduced =>
+                    reduced.EventType == e.EventType &&
+                    reduced.Severity == e.Severity &&
+                    reduced.Certainty == e.Certainty &&
+                    reduced.Urgency == e.Urgency
+                );
+
+                if (matchingEvent == null)
+                {
+                    eventsReduced.Add(e);
+                    continue;
+                }
+
+                // Expires is the latest value (or null)
+                if (matchingEvent.Expires == null || (e.Expires != null && DateTimeOffset.Parse(matchingEvent.Expires) < DateTimeOffset.Parse(e.Expires)))
+                {
+                    matchingEvent.Expires = e.Expires;
+                }
+
+                // Joining locality list
+                foreach (var location in e.LocalityList["all"])
+                {
+                    matchingEvent.LocalityList["all"].Add(location);
+                }
+
+                // Onset is the earlier one
+                if (DateTimeOffset.Parse(matchingEvent.Onset) > DateTimeOffset.Parse(e.Onset))
+                    matchingEvent.Onset = e.Onset;
+
+                // Take the longer description
+                if(matchingEvent.Description.Length > e.Description.Length)
+                    matchingEvent.Description = e.Description;
+            }
+
+            return eventsReduced;
+        }
+
         public ParseResponse UpdateEvents() {
 
+            bool saveToDb = true;
             //string xmlPath = @"D:\moje\programovani\absolutorium\random\test_data\vyhled_nebezpecnych_jevu_vysoke_teploty.xml";
             string xmlPath = "https://www.chmi.cz/files/portal/docs/meteo/om/bulletiny/XOCZ50_OKPR.xml";
             UpdateCount count = new();
@@ -103,7 +150,8 @@ namespace hlidacVystrah.Services
 
                 UpdateTable update = new UpdateTable { timestamp = dataTimestamp };
                 _context.Update.Add(update);
-                _context.SaveChanges();
+                if(saveToDb)
+                    _context.SaveChanges();
 
                 List<EventDto> events = root.Descendants().Where(
                     el =>
@@ -122,6 +170,12 @@ namespace hlidacVystrah.Services
                     Instruction = GetElementValue(_event, "instruction"),
                     LocalityList = this.GetEventLocalityList(_event)
                 }).ToList();
+
+                // Reduce events (join similar together)
+                events = this.GetReducedEvents(events);
+
+                //TODO FILTER STEJNY
+                string fefeeef = "fefe";
 
                 foreach (EventDto _eventDto in events)
                 {
@@ -147,7 +201,8 @@ namespace hlidacVystrah.Services
                         }
 
                         _context.Event.Add(_event);
-                        _context.SaveChanges();
+                        if (saveToDb)
+                            _context.SaveChanges();
                         count.Event.Success++;
 
                         foreach (LocalityDto locality in _eventDto.LocalityList["all"])
@@ -167,7 +222,9 @@ namespace hlidacVystrah.Services
                             }
                         }
 
-                        _context.SaveChanges();
+                        if (saveToDb)
+                            _context.SaveChanges();
+                        
                     } catch (Exception ex)
                     {
                         return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };

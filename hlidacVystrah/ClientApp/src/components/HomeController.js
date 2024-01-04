@@ -45,7 +45,6 @@ export class HomeController extends Component {
 
     HandleOpenLocality = (id, isRegion = false) => {
 
-        console.log("opening locality")
         this.HandleCloseDetail();
 
         this.setState((prevState) => ({

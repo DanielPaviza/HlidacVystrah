@@ -1,8 +1,8 @@
 ﻿import React, { Component } from 'react';
 import MapHelper from './MapHelper';
 import '../styles/map.scss';
-export class MapLocality extends Component {
-    static displayName = MapLocality.name;
+export class MapLocalityController extends Component {
+    static displayName = MapLocalityController.name;
 
     constructor(props) {
         super(props);

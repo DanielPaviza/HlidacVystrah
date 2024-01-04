@@ -2,8 +2,8 @@
 import ReactDOM from 'react-dom';
 import MapHelper from './MapHelper';
 import '../styles/map.scss';
-export class MapEvent extends Component {
-    static displayName = MapEvent.name;
+export class MapEventController extends Component {
+    static displayName = MapEventController.name;
 
     constructor(props) {
         super(props);

@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
-import { MapEvent } from "./MapEvent"; 
-import { MapLocality } from "./MapLocality"; 
+import { MapEventController } from "./MapEventController"; 
+import { MapLocalityController } from "./MapLocalityController"; 
 import { EventList } from "./EventList"; 
 import { Legend } from "./Legend";
 import '../styles/mapEvents.scss';
@@ -16,7 +16,7 @@ export class MapEventList extends Component {
         return (
             <div id="mapEvents">
                 {this.props.mapType == "event" && 
-                    <MapEvent
+                    <MapEventController
                         events={this.props.events}
                         GetEventColor={this.props.GetEventColor}
                         OpenLocalityDetail={this.props.OpenLocalityDetail}
@@ -26,7 +26,7 @@ export class MapEventList extends Component {
                     />
                 }
                 {this.props.mapType == "locality" && 
-                    <MapLocality
+                    <MapLocalityController
                         events={this.props.events}
                         GetEventColor={this.props.GetEventColor}
                         localityInfo={this.props.localityInfo}

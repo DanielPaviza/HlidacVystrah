@@ -12,6 +12,11 @@ export class MapEvent extends Component {
         this.isDetail = false;
         if (this.props.events.length == 1)
             this.isDetail = true;
+
+        this.state = {
+            labelOpened: false,
+            labelId: 0
+        }
     }
 
     render() {
@@ -19,12 +24,31 @@ export class MapEvent extends Component {
         let affected = this.isDetail ? this.GetAffectedLocality() : this.GetAffectedLocalityList();
 
         return (
-            this.helper.GetColoredMap(affected)
+            <div id="map" className='d-flex justify-content-center mx-auto'>
+                {this.state.labelOpened && 
+                    this.helper.GetLocalityLabel(this.props.allLocalities, this.state.labelId)
+                }
+                {this.helper.GetColoredMap(affected, this.HandleLocalityHover, this.HandleLocalityHoverEnd)}
+            </div>
         );
     }
 
-    GetAffectedLocality() {
+    HandleLocalityHover = (cisorp) => {
+        //console.log(cisorp);
+        this.setState({
+            labelOpened: true,
+            labelId: cisorp
+        })
+    }
 
+    HandleLocalityHoverEnd = () => {
+        this.setState((prevState) => ({
+            ...prevState,
+            labelOpened: false
+        }));
+    }
+
+    GetAffectedLocality() {
         let affected = [];
         let event = this.props.events[0];
         let color = this.props.GetEventColor(event.severity);

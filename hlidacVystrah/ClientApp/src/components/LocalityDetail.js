@@ -67,7 +67,7 @@ export class LocalityDetail extends Component {
                     GetEventColor={this.props.GetEventColor}
                     mapType={"locality"}
                     localityInfo={this.localityInfo}
-                    localityList={this.props.allLocalities}
+                    allLocalities={this.props.allLocalities}
                     OpenLocalityDetail={this.props.OpenLocalityDetail}
                     map={this.props.map}
                 />

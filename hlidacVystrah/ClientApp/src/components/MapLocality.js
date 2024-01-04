@@ -7,6 +7,11 @@ export class MapLocality extends Component {
     constructor(props) {
         super(props);
         this.helper = new MapHelper(this.props.map, this.props.OpenLocalityDetail);
+
+        this.state = {
+            labelOpened: false,
+            labelId: 0
+        }
     }
 
     render() {
@@ -14,8 +19,27 @@ export class MapLocality extends Component {
         let affected = this.GetAffected();
 
         return (
-            this.helper.GetColoredMap(affected)
+            <div id="map" className='d-flex justify-content-center mx-auto'>
+                {this.state.labelOpened &&
+                    this.helper.GetLocalityLabel(this.props.allLocalities, this.state.labelId)
+                }
+                {this.helper.GetColoredMap(affected, this.HandleLocalityHover, this.HandleLocalityHoverEnd)}
+            </div>
         );
+    }
+
+    HandleLocalityHover = (cisorp) => {
+        this.setState({
+            labelOpened: true,
+            labelId: cisorp
+        })
+    }
+
+    HandleLocalityHoverEnd = () => {
+        this.setState((prevState) => ({
+            ...prevState,
+            labelOpened: false
+        }));
     }
 
     GetAffected() {

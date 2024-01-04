@@ -2,6 +2,12 @@
 @import "vars";
 
 #map {
+    position: relative;
+    .label {
+        position: absolute;
+        top:0;
+        right: 0;
+    }
     svg {
         g > g {
             cursor: pointer;

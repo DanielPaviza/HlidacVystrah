@@ -30,7 +30,7 @@ export class MapEventList extends Component {
                         events={this.props.events}
                         GetEventColor={this.props.GetEventColor}
                         localityInfo={this.props.localityInfo}
-                        localityList={this.props.localityList}
+                        allLocalities={this.props.allLocalities}
                         OpenLocalityDetail={this.props.OpenLocalityDetail}
                         map={this.props.map}
                     />

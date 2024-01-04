@@ -45,6 +45,9 @@ export class NavMenu extends Component {
                             <NavItem>
                                 <NavLink tag={Link} className="text-dark" to="/" onClick={() => this.GetHomeOnclick()}>Home</NavLink>
                             </NavItem>
+                            <NavItem>
+                                <NavLink tag={Link} className="text-dark" to="/" onClick={() => this.GetHomeOnclick()}>Přihlášení</NavLink>
+                            </NavItem>
                         </ul>
                     </Collapse>
                 </Navbar>

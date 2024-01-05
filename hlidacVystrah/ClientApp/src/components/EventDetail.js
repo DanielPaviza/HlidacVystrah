@@ -104,8 +104,9 @@ export class EventDetail extends Component {
                                 }
                             </div>
                         </div>
-                        <div className='col-4 mx-auto my-auto d-flex justify-content-center align-items-center'>
-                            <img className='typeImg' src={`/images/${this.event.imgPath}`} />
+                        <div className={`colorLine ms-4 ${this.props.GetEventColor(this.event.severity)}`} ></div>
+                        <div className='eventIconContainer col-4 mx-auto my-auto d-flex justify-content-center align-items-center'>       
+                            <img className={`typeImg `} src={`/images/${this.event.imgPath}`} />
                         </div>
                     </div>
                     <div className='rollDown detailRow' onClick={() => this.ToggleShowDescription() }>

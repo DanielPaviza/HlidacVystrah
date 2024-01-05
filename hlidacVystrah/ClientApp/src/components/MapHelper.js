@@ -111,7 +111,7 @@ class MapHelper {
         })
 
         return (  
-            <svg viewBox="18 78 1440 830" className='col-12 col-lg-10 col-xl-8'>
+            <svg viewBox="19 78 1440 830" className='col-12 col-lg-10 col-xl-8'>
                 <g stroke="black" fill="white">
                     {
                         mapClone.map((g, index) => (

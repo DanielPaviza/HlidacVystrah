@@ -1,14 +1,15 @@
 ﻿
 @import "vars";
 
-.homeButton {
+.backButton {
     span {
         font-size: 1.2rem;
         font-weight: bold;
         cursor: pointer;
+        border-bottom: 1px solid transparent;
 
         &:hover {
-            border-bottom: 1px solid $gray;
+            border-bottom: 1px solid $grayDarker;
         }
     }
 }

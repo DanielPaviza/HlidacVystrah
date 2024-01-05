@@ -5,7 +5,8 @@ import { LocalityDetail } from "./LocalityDetail";
 import { NavMenu } from './NavMenu';
 import { Search } from './Search';
 import { Footer } from './Footer';
-import { HomeButton } from './HomeButton';
+import SiteHistory from './SiteHistory';
+import { BackButton } from './BackButton';
 export class HomeController extends Component {
     static displayName = HomeController.name;
 
@@ -24,6 +25,8 @@ export class HomeController extends Component {
             eventListLoading: true,
             map: []
         };
+
+        this.history = new SiteHistory(this.HandleCloseDetail);
     }
 
     componentDidMount() {
@@ -35,6 +38,7 @@ export class HomeController extends Component {
     HandleOpenEvent = (id) => {
 
         this.HandleCloseDetail();
+        this.history.AddRecord(this.HandleOpenEvent, id);
 
         this.setState((prevState) => ({
             ...prevState,
@@ -46,6 +50,7 @@ export class HomeController extends Component {
     HandleOpenLocality = (id, isRegion = false) => {
 
         this.HandleCloseDetail();
+        this.history.AddRecord(this.HandleOpenLocality, id, isRegion);
 
         this.setState((prevState) => ({
             ...prevState,
@@ -106,6 +111,7 @@ export class HomeController extends Component {
                 svgMapElements={this.state.svgMapElements}
                 map={this.state.map}
                 allLocalities={this.state.localityList}
+                CloseDetail={this.HandleCloseDetail}
             />
         }
 
@@ -163,7 +169,7 @@ export class HomeController extends Component {
                         <span className='d-flex justify-content-between align-items-center'>
                             {
                                 (this.state.eventOpened || this.state.localityOpened) ?
-                                    <HomeButton CloseDetail={this.HandleCloseDetail} />
+                                    <BackButton history={this.history} CloseDetail={this.HandleCloseDetail} />
                                     :
                                     <span></span>
                             }

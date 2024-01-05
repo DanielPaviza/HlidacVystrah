@@ -9,6 +9,8 @@ export class EventDetail extends Component {
         super(props);
 
         this.event = this.props.allEvents.find(e => e.id === this.props.targetId);
+        if (this.event == null)
+            this.props.CloseDetail();
 
         this.state = {
             showDescription: false,

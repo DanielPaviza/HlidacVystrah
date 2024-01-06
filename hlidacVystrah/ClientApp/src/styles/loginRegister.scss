@@ -1,7 +1,7 @@
 ﻿
 @import "vars";
 
-#login {
+#login, #register {
     background: $gray;
     min-height: calc(100vh - 40px);
 
@@ -18,7 +18,7 @@
         }
 
         i {
-            font-size: 20px;
+            font-size: 18px;
 
             &.toggler {
                 cursor: pointer;

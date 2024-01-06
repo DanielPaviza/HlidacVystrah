@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { NavMenu } from './NavMenu';
 import { Footer } from './Footer';
-import '../styles/login.scss';
+import '../styles/loginRegister.scss';
 
 export class Login extends Component {
     static displayName = Login.name;

@@ -15,38 +15,33 @@ export class NavMenu extends Component {
     };
   }
 
-    GetHomeOnclick = () => {
-        if (window.location.pathname == '/')
-            return this.props.closeDetail();
-
-        return undefined;
-    }
-
     toggleNavbar () {
         this.setState({
             collapsed: !this.state.collapsed
         });
     }
 
-    render() {
+    CloseDetail = () => {
+        if (window.location.pathname == '/')
+            return this.props.CloseDetail();
+    }
 
-        let currentPath = window.location.pathname;
-        if(currentPath)
+    render() {
 
         return (
             <header>
-                <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light>
-                    <NavbarBrand tag={Link} to="/" onClick={() => this.GetHomeOnclick()}>
+                <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow" container light>
+                    <NavbarBrand tag={Link} to="/" onClick={() => this.CloseDetail()}>
                         <h1 className='m-0'>Hlídač výstrah</h1>
                     </NavbarBrand>
                     <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                     <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
                         <ul className="navbar-nav flex-grow">
                             <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/" onClick={() => this.GetHomeOnclick()}>Home</NavLink>
+                                <NavLink tag={Link} className="text-dark" to="/" onClick={() => this.CloseDetail()}>Home</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/" onClick={() => this.GetHomeOnclick()}>Přihlášení</NavLink>
+                                <NavLink tag={Link} className="text-dark" to="/login">Přihlásit</NavLink>
                             </NavItem>
                         </ul>
                     </Collapse>

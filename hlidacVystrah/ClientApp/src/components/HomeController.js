@@ -164,9 +164,9 @@ export class HomeController extends Component {
                 <p>Loading...</p>
                 :
                 <>
-                    <NavMenu closeDetail={this.HandleCloseDetail} />
-                    <div className='container'>
-                        <span className='d-flex justify-content-between align-items-center'>
+                    <NavMenu CloseDetail={this.HandleCloseDetail} />
+                    <div className='container mt-3'>
+                        <span className='d-flex justify-content-between '>
                             {
                                 (this.state.eventOpened || this.state.localityOpened) ?
                                     <BackButton history={this.history} CloseDetail={this.HandleCloseDetail} />

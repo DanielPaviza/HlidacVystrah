@@ -56,7 +56,7 @@ export class Register extends Component {
                 <NavMenu />
                 <div id="register" className='d-flex justify-content-center align-items-center'>
                     <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded'>
-                        <h2 className='mb-3'>Registrace</h2>
+                        <h2 className='mb-3 mx-auto'>Registrace</h2>
                         <span className='mb-2 d-flex align-items-center justify-content-between'>
                             <i className="fa-solid fa-envelope me-2"></i>
                             <input id='email' className='p-1' type='text' placeholder='E-mail' />
@@ -64,14 +64,14 @@ export class Register extends Component {
                         <span className='mb-2 d-flex align-items-center justify-content-between position-relative'>
                             <i className="fa-solid fa-lock me-2"></i>
                             <input id='p1' className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo' />
-                        </span>
-                        <span className='mb-2 d-flex align-items-center justify-content-between position-relative'>
-                            <i className="fa-solid fa-lock me-2"></i>
-                            <input id='p2' className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo znovu' />
                             <i
                                 className={`toggler fa-regular fa-eye${this.state.passwordVisible ? '-slash' : ''}`}
                                 onClick={() => this.HandleTogglePassword()}
                             ></i>
+                        </span>
+                        <span className='mb-2 d-flex align-items-center justify-content-between position-relative'>
+                            <i className="fa-solid fa-lock me-2"></i>
+                            <input id='p2' className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo znovu' />
                         </span>
                         {this.state.passwordMismatch && this.RenderInputError('Hesla se neshodují')}
                         {this.state.passwordTooShort && this.RenderInputError('Heslo musí obsahovat alespoň 6 znaků')}

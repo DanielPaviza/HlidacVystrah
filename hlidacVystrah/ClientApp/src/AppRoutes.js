@@ -2,6 +2,7 @@
 import { HomeController } from "./components/HomeController";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
+import { ResetPassword } from "./components/ResetPassword";
 import { NotFound } from "./components/NotFound";
 
 const AppRoutes = [
@@ -16,6 +17,10 @@ const AppRoutes = [
     {
         path: '/register',
         element: <Register />
+    },
+    {
+        path: '/resetpassword',
+        element: <ResetPassword />
     },
     {
         path: '*',

@@ -25,7 +25,7 @@ export class Login extends Component {
                 <NavMenu />
                 <div id="login" className='d-flex justify-content-center align-items-center'>
                     <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded'>
-                        <h2 className='mb-3'>Přihlašte se</h2>
+                        <h2 className='mb-3 mx-auto'>Přihlášení</h2>
                         <span className='mb-2 d-flex align-items-center justify-content-between'>
                             <i className="fa-solid fa-envelope me-2"></i>
                             <input className='p-1' type='text' placeholder='E-mail'/>
@@ -38,7 +38,7 @@ export class Login extends Component {
                                 onClick={() => this.HandleTogglePassword()}
                             ></i>
                         </span>
-                        <a href='/forgotpassword' className='d-flex mt-1'>Zapomněli jste heslo?</a>
+                        <a href='/resetpassword' className='d-flex mt-1'>Zapomněli jste heslo?</a>
                         <button className='ms-auto border p-2 rounded my-2'>Přihlásit</button>
                         <span className='mt-2 d-flex justify-content-center'>
                             Nemáte účet?

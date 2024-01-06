@@ -22,7 +22,7 @@ export class Login extends Component {
 
         return (
             <>
-                <NavMenu CloseDetail={this.HandleCloseDetail} />
+                <NavMenu />
                 <div id="login" className='d-flex justify-content-center align-items-center'>
                     <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded'>
                         <h2 className='mb-3'>Přihlašte se</h2>

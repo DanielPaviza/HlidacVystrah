@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
 builder.Services.AddTransient<IEventsService, EventsService>();
 builder.Services.AddTransient<IParseService, ParseService>();
 builder.Services.AddTransient<ILocalitiesService, LocalitiesService>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
 

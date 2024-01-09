@@ -18,11 +18,13 @@ namespace hlidacVystrah.Services
     public class UserService : MasterService, IUserService
     {
 
+        IMailService _mailService;
         private int passwordMinLength = 6;
 
-        public UserService(AppDbContext context) : base(context)
+        public UserService(AppDbContext context, IMailService mailService) : base(context)
         {
             _context = context;
+            _mailService = mailService;
         }
 
         public UserResetPasswordResponse ResetPassword(ResetPasswordDto data)
@@ -69,26 +71,41 @@ namespace hlidacVystrah.Services
             try
             {
 
-                string token = this.GenerateToken();
                 UserTable user = new UserTable
                 {
                     email = data.Email,
                     password = this.HashPassword(data.Password),
                     isActive = false,
-                    activation_token = token
+                    activation_token = this.GenerateActivationToken()
                 };
 
                 _context.User.Add(user);
-                _context.SaveChanges();
 
-                //SEND ACTIVATION EMAIL
+                bool emailSent = _mailService.SendRegistrationMail(user.email, user.activation_token);
+                
+                if(!emailSent)
+                    return new UserRegisterResponse { ResponseCode = StatusCodes.Status500InternalServerError };
 
-            } catch (Exception ex)
+                //_context.SaveChanges();
+
+            }
+            catch (Exception ex)
             {
                 return new UserRegisterResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
             return new UserRegisterResponse { ResponseCode = StatusCodes.Status200OK };
+        }
+
+        private string GenerateActivationToken()
+        {
+            string token;
+            do
+            {
+                token = this.GenerateToken();
+            } while (_context.User.Any(u => u.activation_token == token));
+
+            return token;
         }
 
         private string GenerateToken(int length = 32)

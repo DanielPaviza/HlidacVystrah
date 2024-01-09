@@ -14,6 +14,7 @@ export class Footer extends Component {
     return (
       <footer className='container mt-5'>
             © 2023 Daniel Pavíza
+            <a href="https://www.flaticon.com/free-icons/eye" title="eye icons">Eye icons created by Gregor Cresnar - Flaticon</a>
       </footer>
     );
   }

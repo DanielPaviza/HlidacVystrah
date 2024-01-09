@@ -1,3 +1,4 @@
+using hlidacVystrah.Configuration;
 using hlidacVystrah.Model;
 using hlidacVystrah.Services;
 using hlidacVystrah.Services.Interfaces;
@@ -17,6 +18,8 @@ builder.Services.AddTransient<IEventsService, EventsService>();
 builder.Services.AddTransient<IParseService, ParseService>();
 builder.Services.AddTransient<ILocalitiesService, LocalitiesService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 var app = builder.Build();
 

@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { NavMenu } from './NavMenu';
 import { Footer } from './Footer';
-import '../styles/loginRegister.scss';
+import '../styles/submitForm.scss';
 
 export class ResetPassword extends Component {
     static displayName = ResetPassword.name;

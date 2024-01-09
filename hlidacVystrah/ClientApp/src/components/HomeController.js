@@ -7,6 +7,7 @@ import { Search } from './Search';
 import { Footer } from './Footer';
 import SiteHistory from './SiteHistory';
 import { BackButton } from './BackButton';
+
 export class HomeController extends Component {
     static displayName = HomeController.name;
 

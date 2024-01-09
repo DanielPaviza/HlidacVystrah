@@ -1,7 +1,10 @@
 ﻿import React, { Component } from 'react';
 import { NavMenu } from './NavMenu';
 import { Footer } from './Footer';
-import '../styles/loginRegister.scss';
+import '../styles/submitForm.scss';
+import '../styles/register.scss';
+import axios from "axios";
+import { Spinner } from './Spinner';
 
 export class Register extends Component {
     static displayName = Register.name;
@@ -9,10 +12,15 @@ export class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            email: "",
+            password1: "",
+            password2: "",
             passwordVisible: false,
             passwordMismatch: false,
             passwordTooShort: false,
-            emailError: false
+            emailError: false,
+            response: null,
+            loading: false
         }
 
         this.minPasswordLength = 6;
@@ -28,25 +36,70 @@ export class Register extends Component {
     }
 
     ValidateInputs = () => {
-        let p1 = document.getElementById("p1").value;
-        let p2 = document.getElementById("p2").value;
-        let email = document.getElementById("email").value;
+
+        let passwordMismatch = this.state.password1 != this.state.password2;
+        let passwordTooShort = this.state.password1.length < this.minPasswordLength;
+        let emailError = !this.emailRegex.test(this.state.email);
 
         this.setState((prevState) => ({
             ...prevState,
-            passwordMismatch: p1 != p2,
-            passwordTooShort: p1.length < this.minPasswordLength,
-            emailError: !this.emailRegex.test(email)
+            passwordMismatch: passwordMismatch,
+            passwordTooShort: passwordTooShort,
+            emailError: emailError
         }))
+
+        return !(passwordMismatch || passwordTooShort || emailError);
     }
 
-    RenderInputError = (text) => {
+    RenderInformationText = (text, isError) => {
         return (
             <span className='d-flex align-items-center my-1'>
-                <div className='colorCircle red me-1'></div>
+                <div className={`colorCircle ${isError ? 'red' : 'green'} me-1`}></div>
                 <span className=''>{text}</span>
             </span>
         );
+    }
+
+    Register = () => {
+
+        let inputsValid = this.ValidateInputs();
+        if (!inputsValid)
+            return;
+
+        this.setState((prevState) => ({
+            ...prevState,
+            loading: true,
+            response: null
+        }));
+
+        axios
+            .post("/api/user/register", {
+                email: this.state.email,
+                password: this.state.password1
+            })
+            .then((response) => {
+                this.setState((prevState) => ({
+                    ...prevState,
+                    response: response.data.responseCode,
+                    loading: false,
+                    password1: '',
+                    password2: ''
+                }))
+            });
+    }
+
+    RenderResponseText = () => {
+
+        switch (this.state.response) {
+            case 200:
+                return this.RenderInformationText("Registrace proběhla úspěšně!", false);
+            case 409:
+                return this.RenderInformationText("Email je již zaregistrován!", true);
+            case 500:
+                return this.RenderInformationText("Něco se nepovedlo. Zkuste to později.", true);
+            default:
+                return;
+        }
     }
 
     render() {
@@ -55,32 +108,34 @@ export class Register extends Component {
             <>
                 <NavMenu />
                 <div id="register" className='d-flex justify-content-center align-items-center'>
-                    <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded'>
+                    <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded position-relative'>
                         <h2 className='mb-3 mx-auto'>Registrace</h2>
-                        <span className='mb-2 d-flex align-items-center justify-content-between'>
+                        <span className='mb-2 d-flex align-items-center mx-auto'>
                             <i className="fa-solid fa-envelope me-2"></i>
-                            <input id='email' className='p-1' type='text' placeholder='E-mail' />
+                            <input id='email' className='p-1' type='text' placeholder='E-mail' value={this.state.email} onChange={(e) => this.setState((prevState) => ({ ...prevState, email: e.target.value }))} />
                         </span>
-                        <span className='mb-2 d-flex align-items-center justify-content-between position-relative'>
+                        <span className='mb-2 d-flex align-items-center position-relative mx-auto'>
                             <i className="fa-solid fa-lock me-2"></i>
-                            <input id='p1' className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo' />
+                            <input id='p1' className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo' value={this.state.password1} onChange={(e) => this.setState((prevState) => ({ ...prevState, password1: e.target.value }))} />
                             <i
                                 className={`toggler fa-regular fa-eye${this.state.passwordVisible ? '-slash' : ''}`}
                                 onClick={() => this.HandleTogglePassword()}
                             ></i>
                         </span>
-                        <span className='mb-2 d-flex align-items-center justify-content-between position-relative'>
+                        <span className='mb-2 d-flex align-items-center position-relative mx-auto'>
                             <i className="fa-solid fa-lock me-2"></i>
-                            <input id='p2' className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo znovu' />
+                            <input id='p2' className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo znovu' value={this.state.password2} onChange={(e) => this.setState((prevState) => ({ ...prevState, password2: e.target.value }))} />
                         </span>
-                        {this.state.passwordMismatch && this.RenderInputError('Hesla se neshodují')}
-                        {this.state.passwordTooShort && this.RenderInputError('Heslo musí obsahovat alespoň 6 znaků')}
-                        {this.state.emailError && this.RenderInputError('Email nemá správný formát (email@priklad.xx)')}
-                        <button className='ms-auto border p-2 rounded my-2' onClick={() => this.ValidateInputs()}>Registrovat</button>
+                        {this.state.passwordMismatch && this.RenderInformationText('Hesla se neshodují', true)}
+                        {this.state.passwordTooShort && this.RenderInformationText('Heslo musí obsahovat alespoň 6 znaků', true)}
+                        {this.state.emailError && this.RenderInformationText('Email nemá správný formát (email@priklad.xx)', true)}
+                        {this.RenderResponseText()}
+                        <button className='ms-auto border p-2 rounded my-2' onClick={() => this.Register()}>Registrovat</button>
                         <span className='mt-2 d-flex justify-content-center'>
                             Již máte účet?
                             <a href='/login' className='ms-1'>Přihlašte se</a>
                         </span>
+                        {this.state.loading && <Spinner />}
                     </div>
                 </div>
                 <Footer />

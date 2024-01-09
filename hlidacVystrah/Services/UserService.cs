@@ -86,7 +86,7 @@ namespace hlidacVystrah.Services
                 if(!emailSent)
                     return new UserRegisterResponse { ResponseCode = StatusCodes.Status500InternalServerError };
 
-                //_context.SaveChanges();
+                _context.SaveChanges();
 
             }
             catch (Exception ex)

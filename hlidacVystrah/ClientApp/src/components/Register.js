@@ -1,10 +1,11 @@
 ﻿import React, { Component } from 'react';
 import { NavMenu } from './NavMenu';
 import { Footer } from './Footer';
-import '../styles/submitForm.scss';
+import '../styles/userForm.scss';
 import '../styles/register.scss';
 import axios from "axios";
 import { Spinner } from './Spinner';
+import UserFormHelper from './UserFormHelper';
 
 export class Register extends Component {
     static displayName = Register.name;
@@ -23,8 +24,7 @@ export class Register extends Component {
             loading: false
         }
 
-        this.minPasswordLength = 6;
-        this.emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        this.helper = new UserFormHelper();
     }
 
     HandleTogglePassword = () => {
@@ -38,8 +38,8 @@ export class Register extends Component {
     ValidateInputs = () => {
 
         let passwordMismatch = this.state.password1 != this.state.password2;
-        let passwordTooShort = this.state.password1.length < this.minPasswordLength;
-        let emailError = !this.emailRegex.test(this.state.email);
+        let passwordTooShort = this.state.password1.length < this.helper.minPasswordLength;
+        let emailError = !this.helper.emailRegex.test(this.state.email);
 
         this.setState((prevState) => ({
             ...prevState,
@@ -49,15 +49,6 @@ export class Register extends Component {
         }))
 
         return !(passwordMismatch || passwordTooShort || emailError);
-    }
-
-    RenderInformationText = (text, isError) => {
-        return (
-            <span className='d-flex align-items-center my-1'>
-                <div className={`colorCircle ${isError ? 'red' : 'green'} me-1`}></div>
-                <span className=''>{text}</span>
-            </span>
-        );
     }
 
     Register = () => {
@@ -92,11 +83,11 @@ export class Register extends Component {
 
         switch (this.state.response) {
             case 200:
-                return this.RenderInformationText("Registrace proběhla úspěšně!", false);
+                return this.helper.RenderInformationText("Registrace proběhla úspěšně!", false);
             case 409:
-                return this.RenderInformationText("Email je již zaregistrován!", true);
+                return this.helper.RenderInformationText("Email je již zaregistrován!", true);
             case 500:
-                return this.RenderInformationText("Něco se nepovedlo. Zkuste to později.", true);
+                return this.helper.RenderInformationText("Něco se nepovedlo. Zkuste to později.", true);
             default:
                 return;
         }
@@ -112,11 +103,11 @@ export class Register extends Component {
                         <h2 className='mb-3 mx-auto'>Registrace</h2>
                         <span className='mb-2 d-flex align-items-center mx-auto'>
                             <i className="fa-solid fa-envelope me-2"></i>
-                            <input id='email' className='p-1' type='text' placeholder='E-mail' value={this.state.email} onChange={(e) => this.setState((prevState) => ({ ...prevState, email: e.target.value }))} />
+                            <input className='p-1' type='text' placeholder='E-mail' value={this.state.email} onChange={(e) => this.setState((prevState) => ({ ...prevState, email: e.target.value }))} />
                         </span>
                         <span className='mb-2 d-flex align-items-center position-relative mx-auto'>
                             <i className="fa-solid fa-lock me-2"></i>
-                            <input id='p1' className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo' value={this.state.password1} onChange={(e) => this.setState((prevState) => ({ ...prevState, password1: e.target.value }))} />
+                            <input className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo' value={this.state.password1} onChange={(e) => this.setState((prevState) => ({ ...prevState, password1: e.target.value }))} />
                             <i
                                 className={`toggler fa-regular fa-eye${this.state.passwordVisible ? '-slash' : ''}`}
                                 onClick={() => this.HandleTogglePassword()}
@@ -124,11 +115,11 @@ export class Register extends Component {
                         </span>
                         <span className='mb-2 d-flex align-items-center position-relative mx-auto'>
                             <i className="fa-solid fa-lock me-2"></i>
-                            <input id='p2' className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo znovu' value={this.state.password2} onChange={(e) => this.setState((prevState) => ({ ...prevState, password2: e.target.value }))} />
+                            <input className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo znovu' value={this.state.password2} onChange={(e) => this.setState((prevState) => ({ ...prevState, password2: e.target.value }))} />
                         </span>
-                        {this.state.passwordMismatch && this.RenderInformationText('Hesla se neshodují', true)}
-                        {this.state.passwordTooShort && this.RenderInformationText('Heslo musí obsahovat alespoň 6 znaků', true)}
-                        {this.state.emailError && this.RenderInformationText('Email nemá správný formát (email@priklad.xx)', true)}
+                        {this.state.passwordMismatch && this.helper.RenderInformationText('Hesla se neshodují', true)}
+                        {this.state.passwordTooShort && this.helper.RenderInformationText('Heslo musí obsahovat alespoň 6 znaků', true)}
+                        {this.state.emailError && this.helper.RenderInformationText('Email nemá správný formát (email@priklad.xx)', true)}
                         {this.RenderResponseText()}
                         <button className='ms-auto border p-2 rounded my-2' onClick={() => this.Register()}>Registrovat</button>
                         <span className='mt-2 d-flex justify-content-center'>

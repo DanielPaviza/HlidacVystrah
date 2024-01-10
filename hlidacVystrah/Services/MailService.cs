@@ -29,7 +29,7 @@ namespace hlidacVystrah.Services
 
         private string GetCurrentDatetime()
         {
-            return String.Format("{0} {1}", DateTime.Today.Date.ToShortDateString(), DateTime.Today.Date.ToShortTimeString()); 
+            return DateTime.Now.ToString("dd.MM.yyyy HH:mm");
         }
 
         public bool SendPasswordResetMail(string email, string passwordResetToken)
@@ -46,7 +46,7 @@ namespace hlidacVystrah.Services
 
                     emailMessage.Subject = "Zapomenuté heslo";
 
-                    string filePath = Directory.GetCurrentDirectory() + "\\MailTemplates\\Register.html";
+                    string filePath = Directory.GetCurrentDirectory() + "\\MailTemplates\\PasswordReset.html";
                     string emailTemplateText = File.ReadAllText(filePath);
 
                     string link = this.CreatePasswordResetLink(passwordResetToken);
@@ -55,7 +55,7 @@ namespace hlidacVystrah.Services
 
                     emailMessage.Body = this.BuildEmailBody(emailTemplateText);
 
-                    this.SendMail(emailMessage);
+                    //this.SendMail(emailMessage);
                 }
 
                 return true;
@@ -102,20 +102,12 @@ namespace hlidacVystrah.Services
                     string emailTemplateText = File.ReadAllText(filePath);
 
                     string link = this.CreateRegistrationLink(activationToken);
-                    string today = DateTime.Today.Date.ToShortDateString();
-                    emailTemplateText = string.Format(emailTemplateText, link, today);
+                    string timestamp = this.GetCurrentDatetime();
+                    emailTemplateText = string.Format(emailTemplateText, link, timestamp);
 
-                    BodyBuilder emailBodyBuilder = new BodyBuilder();
-                    emailBodyBuilder.HtmlBody = emailTemplateText;
-                    emailBodyBuilder.TextBody = "Plain Text goes here to avoid marked as spam for some email servers.";
+                    emailMessage.Body = this.BuildEmailBody(emailTemplateText);
 
-                    emailMessage.Body = emailBodyBuilder.ToMessageBody();
-
-                    using SmtpClient mailClient = new SmtpClient();
-                    mailClient.Connect(_mailSettings.Server, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
-                    mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
-                    mailClient.Send(emailMessage);
-                    mailClient.Disconnect(true);
+                    this.SendMail(emailMessage);
                 }
 
                 return true;

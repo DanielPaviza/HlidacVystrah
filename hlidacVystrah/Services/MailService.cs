@@ -5,6 +5,7 @@ using hlidacVystrah.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MailKit.Net.Smtp;
+using System.Web;
 
 namespace hlidacVystrah.Services
 {
@@ -19,12 +20,14 @@ namespace hlidacVystrah.Services
 
         private string CreateRegistrationLink(string activationToken)
         {
-            return string.Format("https://localhost:44408/activateAccount/{0}", activationToken);
+            string token = Uri.EscapeDataString(activationToken);
+            return string.Format("https://localhost:44408/activateAccount?token={0}", token);
         }        
         
         private string CreatePasswordResetLink(string passwordResetToken)
         {
-            return string.Format("https://localhost:44408/resetpassword/{0}", passwordResetToken);
+            string token = Uri.EscapeDataString(passwordResetToken);
+            return string.Format("https://localhost:44408/newpassword?token={0}", token);
         }
 
         private string GetCurrentDatetime()
@@ -55,7 +58,7 @@ namespace hlidacVystrah.Services
 
                     emailMessage.Body = this.BuildEmailBody(emailTemplateText);
 
-                    //this.SendMail(emailMessage);
+                    this.SendMail(emailMessage);
                 }
 
                 return true;

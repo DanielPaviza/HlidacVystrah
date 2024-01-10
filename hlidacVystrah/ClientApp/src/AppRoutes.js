@@ -5,6 +5,7 @@ import { Register } from "./components/Register";
 import { ResetPassword } from "./components/ResetPassword";
 import { NewPassword } from "./components/NewPassword";
 import { NotFound } from "./components/NotFound";
+import ActivateAccount from "./components/ActivateAccount";
 
 const AppRoutes = [
     {
@@ -24,8 +25,12 @@ const AppRoutes = [
         element: <ResetPassword />
     },
     {
-        path: '/newpassword/:id/:token',
+        path: '/newpassword',
         element: <NewPassword />
+    },
+    {
+        path: '/activateaccount',
+        element: <ActivateAccount />
     },
     {
         path: '*',

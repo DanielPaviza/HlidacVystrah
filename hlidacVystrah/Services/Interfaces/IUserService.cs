@@ -5,10 +5,12 @@ namespace hlidacVystrah.Services.Interfaces
 {
     public interface IUserService
     {
-        UserRegisterResponse Register(RegisterDataDto data);
+        BaseResponse Register(RegisterDataDto data);
 
         UserLoginResponse Login(LoginDataDto data);
 
-        UserResetPasswordResponse ResetPassword(ResetPasswordDto data);
+        BaseResponse ResetPassword(ResetPasswordDto data);
+
+        BaseResponse ActivateAccount(ActivateAccountDto data);
     }
 }

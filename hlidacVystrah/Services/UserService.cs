@@ -27,12 +27,24 @@ namespace hlidacVystrah.Services
             _mailService = mailService;
         }
 
-        public UserResetPasswordResponse ResetPassword(ResetPasswordDto data)
+        public BaseResponse ActivateAccount(ActivateAccountDto data)
+        {
+            UserTable? user = _context.User.FirstOrDefault(u => u.activation_token == data.ActivationToken);
+            if (user == null || user.isActive)
+                return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+
+            user.isActive = true;
+            _context.SaveChanges();
+
+            return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
+        }
+
+        public BaseResponse ResetPassword(ResetPasswordDto data)
         {
 
             UserTable? user = _context.User.FirstOrDefault(u => u.email == data.Email);
             if(user == null)
-                return new UserResetPasswordResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
 
             try
             {
@@ -41,14 +53,14 @@ namespace hlidacVystrah.Services
                 _context.SaveChanges();
             } catch (Exception ex)
             {
-                return new UserResetPasswordResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
             bool emailSent = _mailService.SendPasswordResetMail(user.email, user.password_reset_token);
             if (!emailSent)
-                return new UserResetPasswordResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
 
-            return new UserResetPasswordResponse { ResponseCode = StatusCodes.Status200OK };
+            return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
         public UserLoginResponse Login(LoginDataDto data)
@@ -60,15 +72,15 @@ namespace hlidacVystrah.Services
             return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
-        public UserRegisterResponse Register(RegisterDataDto data) {
+        public BaseResponse Register(RegisterDataDto data) {
 
             // Return bad request if the email isnt the right format or if the password isnt at least 6 characters long
             if(!this.EmailIsValid(data.Email) || data.Password.Length < passwordMinLength)
-                return new UserRegisterResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
 
             // Return 409 conflict if the email is already registered
             if (_context.User.Any(user => user.email == data.Email))
-                return new UserRegisterResponse { ResponseCode = StatusCodes.Status409Conflict };
+                return new BaseResponse { ResponseCode = StatusCodes.Status409Conflict };
 
             try
             {
@@ -86,17 +98,17 @@ namespace hlidacVystrah.Services
                 bool emailSent = _mailService.SendRegistrationMail(user.email, user.activation_token);
                 
                 if(!emailSent)
-                    return new UserRegisterResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+                    return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
 
                 _context.SaveChanges();
 
             }
             catch (Exception ex)
             {
-                return new UserRegisterResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
-            return new UserRegisterResponse { ResponseCode = StatusCodes.Status200OK };
+            return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
         private string GenerateActivationToken()

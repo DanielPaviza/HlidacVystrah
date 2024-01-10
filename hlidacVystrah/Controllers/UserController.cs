@@ -21,7 +21,7 @@ namespace hlidacVystrah.Controllers
 
         // GET api/user/register
         [HttpPost("register")]
-        public UserRegisterResponse Get([FromBody] RegisterDataDto data)
+        public BaseResponse Get([FromBody] RegisterDataDto data)
         {
             return _userService.Register(data);
         }        
@@ -31,13 +31,20 @@ namespace hlidacVystrah.Controllers
         public UserLoginResponse Get([FromBody] LoginDataDto data)
         {
             return _userService.Login(data);
-        }        
-        
-        // GET api/user/login
+        }
+
+        // GET api/user/resetpassword
         [HttpPost("resetpassword")]
-        public UserResetPasswordResponse Get([FromBody] ResetPasswordDto data)
+        public BaseResponse Get([FromBody] ResetPasswordDto data)
         {
             return _userService.ResetPassword(data);
+        }
+
+        // GET api/user/activateaccount
+        [HttpPost("activateaccount")]
+        public BaseResponse Get([FromBody] ActivateAccountDto data)
+        {
+            return _userService.ActivateAccount(data);
         }
     }
 }

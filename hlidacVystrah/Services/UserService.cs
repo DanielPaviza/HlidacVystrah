@@ -30,13 +30,13 @@ namespace hlidacVystrah.Services
         public UserResetPasswordResponse ResetPassword(ResetPasswordDto data)
         {
 
-            UserTable user = _context.User.FirstOrDefault(u => u.email == data.Email);
+            UserTable? user = _context.User.FirstOrDefault(u => u.email == data.Email);
             if(user == null)
                 return new UserResetPasswordResponse { ResponseCode = StatusCodes.Status400BadRequest };
 
             try
             {
-                user.password_reset_token = this.GenerateToken();
+                user.password_reset_token = this.GeneratePasswordResetToken();
                 user.password_reset_token_expire = DateTime.Now.AddHours(24);
                 _context.SaveChanges();
             } catch (Exception ex)
@@ -44,7 +44,9 @@ namespace hlidacVystrah.Services
                 return new UserResetPasswordResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
-            //SEND RESET EMAIL with reset token
+            bool emailSent = _mailService.SendPasswordResetMail(user.email, user.password_reset_token);
+            if (!emailSent)
+                return new UserResetPasswordResponse { ResponseCode = StatusCodes.Status500InternalServerError };
 
             return new UserResetPasswordResponse { ResponseCode = StatusCodes.Status200OK };
         }
@@ -104,6 +106,17 @@ namespace hlidacVystrah.Services
             {
                 token = this.GenerateToken();
             } while (_context.User.Any(u => u.activation_token == token));
+
+            return token;
+        }        
+        
+        private string GeneratePasswordResetToken()
+        {
+            string token;
+            do
+            {
+                token = this.GenerateToken();
+            } while (_context.User.Any(u => u.password_reset_token == token));
 
             return token;
         }

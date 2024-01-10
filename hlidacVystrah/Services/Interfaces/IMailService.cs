@@ -7,5 +7,7 @@ namespace hlidacVystrah.Services.Interfaces
     {
         bool SendRegistrationMail(string email, string activationToken);
 
+        bool SendPasswordResetMail(string email, string passwordResetToken);
+
     }
 }

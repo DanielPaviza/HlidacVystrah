@@ -31,7 +31,7 @@ export class Legend extends Component {
                 {
                     this.state.opened &&
                     <div className='legenda ms-auto' onClick={() => this.HandleToggleOpen()}>
-                        <div className='ms-auto p-2'>
+                        <div className='ms-auto p-2 border'>
                             <span className='fw-bold'>Stupeň nebezpečí</span>
                                 <div className='d-flex mt-1 flex-wrap align-items-center justify-content-between'>
                                 <div className='d-flex align-items-center me-3 mb-1'>

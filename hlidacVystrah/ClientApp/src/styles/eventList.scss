@@ -2,7 +2,7 @@
 @import "vars";
 
 #eventList {
-        .urgencyContainer {
+    .urgencyContainer {
         .event {
             width: calc(100% - 2px);
             height: calc(100% - 2px);
@@ -21,6 +21,15 @@
                 font-weight: bold;
                 letter-spacing: 0.02rem;
                 margin-bottom: 6px;
+            }
+        }
+
+
+        @media (max-width: 768px) {
+            .event {
+                span {
+                    font-size: 14px;
+                }
             }
         }
     }

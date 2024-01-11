@@ -33,7 +33,7 @@ export class NavMenu extends Component {
                 <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow" container light>
                     <NavbarBrand tag={Link} to="/" onClick={() => this.CloseDetail()} className='d-flex align-items-center p-0'>
                         <h1 className='m-0 me-2'>Hlídač výstrah</h1>
-                        <img src='/images/logo.png' />
+                        <img src='/images/logo.png' alt='Logo'/>
                     </NavbarBrand>
                     <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                     <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>

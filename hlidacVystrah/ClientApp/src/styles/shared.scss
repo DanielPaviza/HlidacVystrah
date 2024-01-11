@@ -50,7 +50,7 @@ body {
     .noEvent {
         background-color: $noEvent;
         fill: $noEvent;
-        border: 1px solid $black;
+        border: 1px solid rgba($black, 0.4);
     }
 
     .noEventStroke {

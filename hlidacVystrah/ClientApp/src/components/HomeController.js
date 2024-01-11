@@ -7,6 +7,7 @@ import { Search } from './Search';
 import { Footer } from './Footer';
 import SiteHistory from './SiteHistory';
 import { BackButton } from './BackButton';
+import { Loading } from './Loading';
 
 export class HomeController extends Component {
     static displayName = HomeController.name;
@@ -162,7 +163,7 @@ export class HomeController extends Component {
     render() {
         return (
             this.state.eventListLoading || this.state.localityListLoading || this.state.map.length <= 0 ?
-                <p>Loading...</p>
+                <Loading />
                 :
                 <>
                     <NavMenu CloseDetail={this.HandleCloseDetail} />

@@ -63,7 +63,7 @@ export class EventList extends Component {
     render() {
 
         return (
-            <div id='eventList' className=''>
+            <div id='eventList' className='pb-5'>
                 <span className='d-flex align-items-start justify-content-between'>
                     <h2 className='m-0'>Výstrahy</h2>
                 </span>

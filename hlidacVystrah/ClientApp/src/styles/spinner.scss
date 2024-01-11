@@ -9,12 +9,17 @@
     align-items: center;
     background-color: white;
 
+    .base, .spinner {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border-width: 8px;
+        border-style: solid;
+    }
+
     .base {
         position: relative;
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        border: 8px solid $gray;
+        border-color: $gray;
         animation: spin 1s linear infinite;
     }
 
@@ -23,12 +28,10 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-top: 8px solid $grayDarker;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-top-color: $grayDarker;
     }
 
     @keyframes spin {
@@ -38,6 +41,13 @@
 
         to {
             transform: rotate(360deg);
+        }
+    }
+
+    @media (min-width: 768px) {
+        .base, .spinner {
+            width: 64px;
+            height: 64px;
         }
     }
 }

@@ -179,7 +179,7 @@ export class HomeController extends Component {
                         
                         {this.RenderPage()}
                     </div>
-                    <Footer />
+                    <Footer background={'lightGray'} />
                 </>
         );
     }

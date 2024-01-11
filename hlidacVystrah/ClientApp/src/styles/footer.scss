@@ -1,1 +1,13 @@
 ﻿
+@import "vars";
+
+footer {
+
+    &.lightGray {
+        background-color: $gray;
+    }
+
+    .copyright, a {
+        opacity: 0.8;
+    }
+}

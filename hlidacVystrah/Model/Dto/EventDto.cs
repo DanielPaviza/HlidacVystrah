@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
-namespace hlidacVystrah.Model
+namespace hlidacVystrah.Model.Dto
 {
     public class EventDto
     {
@@ -23,7 +23,7 @@ namespace hlidacVystrah.Model
 
         public string Instruction { get; set; }
 
-        public Dictionary<string, List<LocalityDto>> LocalityList {  get; set; } = new();
+        public Dictionary<string, List<LocalityDto>> LocalityList { get; set; } = new();
 
         public string? ImgPath { get; set; }
 

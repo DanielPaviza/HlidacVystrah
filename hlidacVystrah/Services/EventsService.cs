@@ -10,6 +10,7 @@ using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using hlidacVystrah.Model.Dto;
 
 namespace hlidacVystrah.Services
 {

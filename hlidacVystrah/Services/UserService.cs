@@ -11,6 +11,7 @@ using hlidacVystrah.Services.Interfaces;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
+using hlidacVystrah.Model.Dto;
 
 namespace hlidacVystrah.Services
 {
@@ -25,6 +26,20 @@ namespace hlidacVystrah.Services
         {
             _context = context;
             _mailService = mailService;
+        }
+
+        public BaseResponse SetNewPassword(NewPasswordDto data)
+        {
+
+            UserTable? user = _context.User.FirstOrDefault(u => u.password_reset_token == data.PasswordResetToken);
+            if(user == null || user.password_reset_token_expire < DateTime.Now)
+                return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+
+            user.password = this.HashPassword(data.Password);
+            user.password_reset_token = "";
+            _context.SaveChanges();
+
+            return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
         public BaseResponse ActivateAccount(ActivateAccountDto data)

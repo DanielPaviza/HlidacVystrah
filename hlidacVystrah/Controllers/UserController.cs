@@ -3,7 +3,7 @@ using System.Xml.Linq;
 using hlidacVystrah.Services;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
-using hlidacVystrah.Model;
+using hlidacVystrah.Model.Dto;
 
 namespace hlidacVystrah.Controllers
 {
@@ -45,6 +45,13 @@ namespace hlidacVystrah.Controllers
         public BaseResponse Get([FromBody] ActivateAccountDto data)
         {
             return _userService.ActivateAccount(data);
+        }        
+        
+        // GET api/user/newpassword
+        [HttpPost("newpassword")]
+        public BaseResponse Get([FromBody] NewPasswordDto data)
+        {
+            return _userService.SetNewPassword(data);
         }
     }
 }

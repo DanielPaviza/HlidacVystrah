@@ -1,4 +1,4 @@
-﻿using hlidacVystrah.Model;
+﻿using hlidacVystrah.Model.Dto;
 using hlidacVystrah.Model.Response;
 
 namespace hlidacVystrah.Services.Interfaces
@@ -12,5 +12,7 @@ namespace hlidacVystrah.Services.Interfaces
         BaseResponse ResetPassword(ResetPasswordDto data);
 
         BaseResponse ActivateAccount(ActivateAccountDto data);
+
+        BaseResponse SetNewPassword(NewPasswordDto data);
     }
 }

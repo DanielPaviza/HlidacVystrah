@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 using System.Collections.Generic;
+using hlidacVystrah.Model.Dto;
 
 namespace hlidacVystrah.Services
 {

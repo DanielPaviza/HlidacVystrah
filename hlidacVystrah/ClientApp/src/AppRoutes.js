@@ -3,8 +3,8 @@ import { HomeController } from "./components/HomeController";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { ResetPassword } from "./components/ResetPassword";
-import { NewPassword } from "./components/NewPassword";
 import { NotFound } from "./components/NotFound";
+import NewPassword from "./components/NewPassword";
 import ActivateAccount from "./components/ActivateAccount";
 
 const AppRoutes = [

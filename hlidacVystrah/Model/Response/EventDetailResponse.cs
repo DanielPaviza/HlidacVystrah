@@ -1,5 +1,6 @@
 ﻿
 using System.Xml.Linq;
+using hlidacVystrah.Model.Dto;
 
 namespace hlidacVystrah.Model.Response
 {

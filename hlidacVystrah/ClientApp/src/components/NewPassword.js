@@ -1,78 +1,118 @@
-﻿import React, { Component } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { NavMenu } from './NavMenu';
 import { Footer } from './Footer';
 import '../styles/userForm.scss';
+import '../styles/spinnerAbsolute.scss';
+import { Spinner } from './Spinner';
+import { useSearchParams } from 'react-router-dom';
+import UserFormHelper from './UserFormHelper';
+import axios from "axios";
 
-export class NewPassword extends Component {
-    static displayName = NewPassword.name;
+function NewPassword() {
+    // Access the token parameter from the URL
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get('token');
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            passwordVisible: false,
-            passwordMismatch: false,
-            passwordTooShort: false,
+    const [loading, setLoading] = useState(false);
+    const [response, setResponse] = useState(null);
+    const [password1, setPassword1] = useState("");
+    const [password2, setPassword2] = useState("");
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [passwordMismatch, setPasswordMismatch] = useState(false);
+    const [passwordTooShort, setPasswordTooShort] = useState(false);
+    const helper = new UserFormHelper();
+
+    useEffect(() => {
+        if (TokenInvalid()) {
+            setResponse(400);
         }
+    }, []);
 
-        this.minPasswordLength = 6;
+    const ValidatePassword = () => {
+
+        let mismatch = password1 != password2;
+        let tooShort = password1.length < helper.minPasswordLength;
+
+        setPasswordMismatch(mismatch);
+        setPasswordTooShort(tooShort);
+
+        return !(mismatch || tooShort);
     }
 
-    HandleTogglePassword = () => {
-
-        this.setState((prevState) => ({
-            ...prevState,
-            passwordVisible: !this.state.passwordVisible
-        }))
+    const HandleTogglePassword = () => {
+        setPasswordVisible(!passwordVisible);
     }
 
-    ValidateInputs = () => {
-        let p1 = document.getElementById("p1").value;
-        let p2 = document.getElementById("p2").value;
+    const SetNewPassword = () => {
 
-        this.setState((prevState) => ({
-            ...prevState,
-            passwordMismatch: p1 != p2,
-            passwordTooShort: p1.length < this.minPasswordLength,
-        }))
+        if (TokenInvalid() || !ValidatePassword())
+            return;
+
+        setLoading(true);
+
+        axios
+            .post("/api/user/newpassword", {
+                password: password1,
+                passwordResetToken: token
+            })
+            .then((response) => {
+                setResponse(response.data.responseCode);
+            }).catch(err => {
+                setResponse(400);
+            }).finally(() => {
+                setLoading(false);
+                setPassword1("");
+                setPassword2("");
+            });
     }
 
-    RenderInputError = (text) => {
-        return (
-            <span className='d-flex align-items-center my-1'>
-                <div className='colorCircle red me-1'></div>
-                <span className=''>{text}</span>
-            </span>
-        );
+    const TokenInvalid = () => {
+        return (token == null || token == '');
     }
 
-    render() {
+    const RenderResponseText = () => {
 
-        return (
-            <>
-                <NavMenu />
-                <div id="newpassword" className='d-flex justify-content-center align-items-center'>
-                    <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded'>
-                        <h2 className='mb-3 mx-auto'>Změna hesla</h2>
-                        <span className='mb-2 d-flex align-items-center justify-content-between position-relative'>
-                            <i className="fa-solid fa-lock me-2"></i>
-                            <input id='p1' className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Nové heslo' />
-                            <i
-                                className={`toggler fa-regular fa-eye${this.state.passwordVisible ? '-slash' : ''}`}
-                                onClick={() => this.HandleTogglePassword()}
-                            ></i>
-                        </span>
-                        <span className='mb-2 d-flex align-items-center justify-content-between position-relative'>
-                            <i className="fa-solid fa-lock me-2"></i>
-                            <input id='p2' className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Nové heslo znovu' />
-                        </span>
-                        {this.state.passwordMismatch && this.RenderInputError('Hesla se neshodují')}
-                        {this.state.passwordTooShort && this.RenderInputError('Heslo musí obsahovat alespoň 6 znaků')}
-                        <button className='ms-auto border p-2 rounded my-2' onClick={() => this.ValidateInputs()}>Změnit</button>
-                        <a href='/login' className='ms-1 d-flex justify-content-center'>Přihlašte se zde</a>
-                    </div>
+        switch (response) {
+            case 200:
+                return helper.RenderInformationText("Heslo bylo úspěšně změněno!", false);
+            case 400:
+                return helper.RenderInformationText("Neplatný odkaz, nebo čas na změnu hesla již vypršel!", true);
+            case 500:
+                return helper.RenderInformationText("Něco se nepovedlo. Zkuste to později.", true);
+            default:
+                return;
+        }
+    }
+
+    return (
+        <>
+            <NavMenu />
+            <div id="newpassword" className='d-flex justify-content-center align-items-center'>
+                <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded position-relative'>
+                    <h2 className='mb-3 mx-auto'>Změna hesla</h2>
+                    <span className='mb-2 d-flex align-items-center position-relative mx-auto'>
+                        <i className="fa-solid fa-lock me-2"></i>
+                        <input className='p-1' type={`${passwordVisible ? 'text' : 'password'}`} placeholder='Heslo' value={password1} onChange={(e) => setPassword1(e.target.value)} />
+                        <i
+                            className={`toggler fa-regular fa-eye${passwordVisible ? '-slash' : ''}`}
+                            onClick={() => HandleTogglePassword()}
+                        ></i>
+                    </span>
+                    <span className='mb-2 d-flex align-items-center position-relative mx-auto'>
+                        <i className="fa-solid fa-lock me-2"></i>
+                        <input className='p-1' type={`${passwordVisible ? 'text' : 'password'}`} placeholder='Heslo znovu' value={password2} onChange={(e) => setPassword2(e.target.value)} />
+                    </span>
+                    {passwordMismatch && helper.RenderInformationText('Hesla se neshodují', true)}
+                    {passwordTooShort && helper.RenderInformationText('Heslo musí obsahovat alespoň 6 znaků', true)}
+                    {RenderResponseText()}
+                    <button className='ms-auto border p-2 rounded my-2' onClick={() => SetNewPassword()}>Změnit</button>
+                    <a href='/login' className='ms-1 d-flex justify-content-center'>Přihlašte se zde</a>
+                    {loading && <Spinner /> }
                 </div>
-                <Footer />
-            </>
-        );
-    }
+            </div>
+            <Footer />
+        </>
+    );
 }
+
+export default NewPassword;

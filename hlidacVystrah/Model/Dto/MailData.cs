@@ -1,7 +1,7 @@
 ﻿
 using System.Xml.Linq;
 
-namespace hlidacVystrah.Model
+namespace hlidacVystrah.Model.Dto
 {
     public class MailData
     {

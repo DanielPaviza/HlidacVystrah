@@ -11,6 +11,7 @@ using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
+using hlidacVystrah.Model.Dto;
 
 namespace hlidacVystrah.Services
 {

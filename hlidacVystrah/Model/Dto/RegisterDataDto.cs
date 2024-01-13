@@ -2,9 +2,9 @@
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
-namespace hlidacVystrah.Model
+namespace hlidacVystrah.Model.Dto
 {
-    public class LoginDataDto
+    public class RegisterDataDto
     {
 
         public string Email { get; set; }

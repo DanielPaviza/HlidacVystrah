@@ -2,7 +2,7 @@
 import { NavMenu } from './NavMenu';
 import { Footer } from './Footer';
 import '../styles/userForm.scss';
-import '../styles/register.scss';
+import '../styles/spinnerAbsolute.scss';
 import axios from "axios";
 import { Spinner } from './Spinner';
 import UserFormHelper from './UserFormHelper';

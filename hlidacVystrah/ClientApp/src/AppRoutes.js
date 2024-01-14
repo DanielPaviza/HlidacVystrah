@@ -4,6 +4,7 @@ import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { ResetPassword } from "./components/ResetPassword";
 import { NotFound } from "./components/NotFound";
+import { UserAccount } from "./components/UserAccount";
 import NewPassword from "./components/NewPassword";
 import ActivateAccount from "./components/ActivateAccount";
 
@@ -31,6 +32,10 @@ const AppRoutes = [
     {
         path: '/activateaccount',
         element: <ActivateAccount />
+    },
+    {
+        path: '/account',
+        element: <UserAccount />
     },
     {
         path: '*',

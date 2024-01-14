@@ -26,5 +26,9 @@ namespace hlidacVystrah.Model
 
         public string activation_token { get; set; }
 
+        public string? login_token { get; set; }
+
+        public DateTime? login_token_expire { get; set; }
+
     }
 }

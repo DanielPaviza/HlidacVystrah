@@ -14,5 +14,7 @@ namespace hlidacVystrah.Services.Interfaces
         BaseResponse ActivateAccount(ActivateAccountDto data);
 
         BaseResponse SetNewPassword(NewPasswordDto data);
+
+        UserLoginResponse TokenLogin(LoginTokenDataDto data);
     }
 }

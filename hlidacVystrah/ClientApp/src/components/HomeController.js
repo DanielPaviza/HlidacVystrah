@@ -25,7 +25,9 @@ export class HomeController extends Component {
             localityListLoading: true,
             eventList: [],
             eventListLoading: true,
-            map: []
+            map: [],
+            loggedIn: false,
+            loggedUserEmail: null
         };
 
         this.history = new SiteHistory(this.HandleCloseDetail);

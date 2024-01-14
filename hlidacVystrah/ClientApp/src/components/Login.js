@@ -2,6 +2,11 @@
 import { NavMenu } from './NavMenu';
 import { Footer } from './Footer';
 import '../styles/userForm.scss';
+import '../styles/spinnerAbsolute.scss';
+import axios from "axios";
+import { Spinner } from './Spinner';
+import UserFormHelper from './UserFormHelper';
+import UserLoginHelper from './UserLoginHelper';
 
 export class Login extends Component {
     static displayName = Login.name;
@@ -10,12 +15,70 @@ export class Login extends Component {
         super(props);
 
         this.state = {
-            passwordVisible: false
+            passwordVisible: false,
+            email: "",
+            password: "",
+            loading: false,
+            loggedIn: false,
+            loggedUserEmail: null,
+            response: null
         }
+
+        this.formHelper = new UserFormHelper();
+        this.loginHelper = new UserLoginHelper();
+    }
+
+    componentDidMount() {
+        this.loginHelper.TokenLogin().then(tokenLoginResponse => {
+            if (tokenLoginResponse.loggedIn)
+                window.location.href = '/account'
+        });
     }
 
     HandleTogglePassword = () => {
         this.setState({passwordVisible: !this.state.passwordVisible})
+    }
+
+    Login = () => {
+
+        this.setState({ loading: true })
+
+        axios
+            .post("/api/user/login", {
+                Email: this.state.email,
+                Password: this.state.password
+            })
+            .then((response) => {
+
+                this.setState((prevState) => ({
+                    ...prevState,
+                    loggedIn: response.data.responseCode == 200,
+                    loggedUserEmail: response.data.email,
+                    response: response.data.responseCode
+                }));
+
+                if (response.data.responseCode == 200) {
+                    localStorage.setItem("loginToken", response.data.loginToken)
+                    window.location.href = '/account';
+                }
+                    
+            }).finally(() => {
+                this.setState({ loading: false })
+            });
+    }
+
+    RenderResponseText = () => {
+
+        switch (this.state.response) {
+            case 200:
+                return this.formHelper.RenderInformationText("Přihlášení proběhlo úspěšně!", false);
+            case 401:
+                return this.formHelper.RenderInformationText("Nesprávné přihlašovací údaje!", true);
+            case 500:
+                return this.formHelper.RenderInformationText("Něco se nepovedlo. Zkuste to později.", true);
+            default:
+                return;
+        }
     }
 
     render() {
@@ -24,26 +87,28 @@ export class Login extends Component {
             <>
                 <NavMenu />
                 <div id="login" className='d-flex justify-content-center align-items-center'>
-                    <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded'>
+                    <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded position-relative'>
                         <h2 className='mb-3 mx-auto'>Přihlášení</h2>
                         <span className='mb-2 d-flex align-items-center justify-content-between'>
                             <i className="fa-solid fa-envelope me-2"></i>
-                            <input className='p-1' type='text' placeholder='E-mail'/>
+                            <input className='p-1' type='text' placeholder='E-mail' value={this.state.email} onChange={(e) => this.setState((prevState) => ({ ...prevState, email: e.target.value }))} />
                         </span>
                         <span className='mb-2 d-flex align-items-center justify-content-between position-relative'>
                             <i className="fa-solid fa-lock me-2"></i>
-                            <input className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo' />
+                            <input className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo' value={this.state.password} onChange={(e) => this.setState((prevState) => ({ ...prevState, password: e.target.value }))} />
                             <i
                                 className={`toggler fa-regular fa-eye${this.state.passwordVisible ? '-slash' : ''}`}
                                 onClick={() => this.HandleTogglePassword()}
                             ></i>
                         </span>
+                        {this.RenderResponseText()}
                         <a href='/resetpassword' className='d-flex mt-1'>Zapomněli jste heslo?</a>
-                        <button className='ms-auto border p-2 rounded my-2'>Přihlásit</button>
+                        <button className='ms-auto border p-2 rounded my-2' onClick={() => this.Login()}>Přihlásit</button>
                         <span className='mt-2 d-flex justify-content-center'>
                             Nemáte účet?
                             <a href='/register' className='ms-1'>Zaregistrujte se</a>
                         </span>
+                        {this.state.loading && <Spinner />}
                     </div>
                 </div>
                 <Footer />

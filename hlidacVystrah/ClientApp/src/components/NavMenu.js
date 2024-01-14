@@ -2,18 +2,31 @@
 import { Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './../styles/navMenu.scss';
+import UserLoginHelper from './UserLoginHelper';
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
 
-  constructor (props) {
-    super(props);
+    constructor (props) {
+        super(props);
 
-    this.toggleNavbar = this.toggleNavbar.bind(this);
-    this.state = {
-      collapsed: true
-    };
-  }
+        this.toggleNavbar = this.toggleNavbar.bind(this);
+        this.state = {
+            collapsed: true,
+            userEmail: null
+        };
+
+        this.loginHelper = new UserLoginHelper();
+    }
+
+    componentDidMount() {
+        this.loginHelper.TokenLogin().then(tokenLoginResponse => {
+            this.setState((prevState) => ({
+                ...prevState,
+                userEmail: tokenLoginResponse.userEmail
+            }));
+        });
+    }
 
     toggleNavbar () {
         this.setState({
@@ -24,6 +37,15 @@ export class NavMenu extends Component {
     CloseDetail = () => {
         if (window.location.pathname == '/')
             return this.props.CloseDetail();
+    }
+
+    RenderLoginNavLink = () => {
+
+        if (this.state.userEmail) {
+            return <NavLink tag={Link} className="text-dark" to="/account">{this.state.userEmail}</NavLink>
+        } 
+
+        return <NavLink tag={Link} className="text-dark" to="/login">Přihlásit</NavLink>
     }
 
     render() {
@@ -42,7 +64,7 @@ export class NavMenu extends Component {
                                 <NavLink tag={Link} className="text-dark" to="/" onClick={() => this.CloseDetail()}>Home</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/login">Přihlásit</NavLink>
+                                {this.RenderLoginNavLink()}
                             </NavItem>
                         </ul>
                     </Collapse>

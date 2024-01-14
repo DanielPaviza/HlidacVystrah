@@ -84,7 +84,26 @@ namespace hlidacVystrah.Services
             if(user == null || user.password != this.HashPassword(data.Password))
                 return new UserLoginResponse { ResponseCode = StatusCodes.Status401Unauthorized };
 
-            return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK };
+            user.login_token = this.GenerateLoginToken();
+            user.login_token_expire = DateTime.Now.AddHours(3);
+            _context.SaveChanges();
+
+            return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email, LoginToken = user.login_token };
+        }
+
+        public UserLoginResponse TokenLogin(LoginTokenDataDto data) 
+        {
+            UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+            if (user == null)
+                return new UserLoginResponse { ResponseCode = StatusCodes.Status401Unauthorized };
+
+            if(user.login_token_expire < DateTime.Now)
+                return new UserLoginResponse { ResponseCode = StatusCodes.Status400BadRequest };
+
+            user.login_token_expire = DateTime.Now.AddHours(3);
+            _context.SaveChanges();
+
+            return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email };
         }
 
         public BaseResponse Register(RegisterDataDto data) {
@@ -135,7 +154,18 @@ namespace hlidacVystrah.Services
             } while (_context.User.Any(u => u.activation_token == token));
 
             return token;
-        }        
+        }
+
+        private string GenerateLoginToken()
+        {
+            string token;
+            do
+            {
+                token = this.GenerateToken();
+            } while (_context.User.Any(u => u.login_token == token));
+
+            return token;
+        }
         
         private string GeneratePasswordResetToken()
         {

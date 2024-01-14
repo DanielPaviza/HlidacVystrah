@@ -95,7 +95,7 @@ export class Search extends Component {
                     onChange={(event) => this.FilterLocalityList(event.target.value)}
                     onFocus={() => this.HandleInputFocus()}
                     onBlur={() => this.HandleInputBlur()}
-                    autocomplete="off"
+                    autoComplete="off"
                 ></input>
                 {this.state.listOpened &&
                     <div className='list w-100 border border-top-0'>

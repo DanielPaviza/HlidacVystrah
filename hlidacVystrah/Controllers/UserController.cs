@@ -31,6 +31,13 @@ namespace hlidacVystrah.Controllers
         public UserLoginResponse Get([FromBody] LoginDataDto data)
         {
             return _userService.Login(data);
+        }        
+        
+        // GET api/user/login
+        [HttpPost("tokenlogin")]
+        public UserLoginResponse Get([FromBody] LoginTokenDataDto data)
+        {
+            return _userService.TokenLogin(data);
         }
 
         // GET api/user/resetpassword

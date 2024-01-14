@@ -96,7 +96,9 @@ export class ResetPassword extends Component {
                             {this.RenderResponseText()}
                             {this.state.emailError && this.helper.RenderInformationText('Email nemá správný formát (email@priklad.xx)', true)}
                             <button className='ms-auto border p-2 rounded my-2' onClick={() => this.ResetPassword()}>Odeslat</button>
-                            <a href='/login' className='ms-1 d-flex justify-content-center'>Přihlašte se zde</a>
+                            <span className='d-flex justify-content-center'>
+                                <a href='/login' className='fit-content'>Přihlašte se zde</a>
+                            </span>
                         </div>
                         {this.state.loading && <Spinner />}
                     </div>

@@ -76,17 +76,14 @@ export class Login extends Component {
             case 401:
                 return this.formHelper.RenderInformationText("Nesprávné přihlašovací údaje!", true);
             case 403:
-                return <>
+                return <span className='d-flex align-items-center'>
                     {this.formHelper.RenderInformationText("Nejdříve si účet aktivujte!", true)}
-                    <InfoBox />
-                </>
+                    <InfoBox text={'Na zadaný email byl zaslán aktivační odkaz.'} />
+                </span>
             case 500:
                 return this.formHelper.RenderInformationText("Něco se nepovedlo. Zkuste to později.", true);
             default:
-                return <span className='d-flex align-items-center'>
-                    {this.formHelper.RenderInformationText("Nejdříve si účet aktivujte!", true)}
-                    <InfoBox text={'Na zadaný email jste obrželi aktivační odkaz.'} />
-                </span>
+                return;
         }
     }
 

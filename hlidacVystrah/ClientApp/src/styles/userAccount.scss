@@ -2,5 +2,88 @@
 @import "vars";
 
 #userAccount {
-    
+    min-height: calc(100vh - 56px);
+
+    #spinner {
+        background-color: $gray !important;
+    }
+
+    .accountSettings {
+        &>span button {
+            background-color: $gray;
+            font-size: 15px;
+
+            &:first-child {
+                border-top-left-radius: 6px;
+
+                &.borderBottom {
+                    border-bottom-left-radius: 6px;
+                }
+            }
+
+            &:last-child {
+                border-top-right-radius: 6px;
+
+                &.borderBottom {
+                    border-bottom-right-radius: 6px;
+                }
+            }
+
+            &:hover {
+                background-color: $grayDarker;
+            }
+
+            &.noBottomBorder {
+                border-bottom: none !important;
+            }
+
+            &.darkerBg {
+                background-color: $grayDarker;
+            }
+        }
+
+        .accountSettingsContent {
+            margin-top: -1px;
+            background-color: $gray;
+            border-radius: 6px;
+            border-top-left-radius: 0;
+
+            .close {
+                cursor: pointer;
+                top: 6px;
+                right: 6px;
+                font-size: 20px;
+            }
+
+            .toggler {
+                cursor: pointer;
+                position: absolute;
+                top: 50%;
+                transform: translate(0%, -46%);
+                right: 4px;
+                font-size: 19px;
+            }
+
+            input {
+                width: 260px;
+            }
+
+            button {
+                &.whiteBg {
+                    background-color: white;
+                }
+
+                &:hover {
+                    border: 1px solid rgba($black, 0.4) !important;
+                }
+
+                &.deleteAccount {
+                    &:hover {
+                        background-color: rgba($red, 0.01);
+                        border: 1px solid rgba($red, 0.6)!important;
+                    }
+                }
+            }
+        }
+    }
 }

@@ -39,11 +39,18 @@ export class NavMenu extends Component {
             return this.props.CloseDetail();
     }
 
+    LogOff = () => {
+        localStorage.removeItem("loginToken");
+        window.location.href = '/';
+    }
+
     RenderLoginNavLink = () => {
 
-        if (this.state.userEmail) {
+        if (this.props.logOff)
+            return <NavLink tag={Link} className="text-dark" onClick={() => this.LogOff()}>Odhlásit</NavLink>
+
+        if (this.state.userEmail)
             return <NavLink tag={Link} className="text-dark" to="/account">{this.state.userEmail}</NavLink>
-        } 
 
         return <NavLink tag={Link} className="text-dark" to="/login">Přihlásit</NavLink>
     }

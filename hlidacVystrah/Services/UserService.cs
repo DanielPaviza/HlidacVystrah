@@ -28,16 +28,59 @@ namespace hlidacVystrah.Services
             _mailService = mailService;
         }
 
+        public BaseResponse DeleteAccount(DeleteAccountDto data)
+        {
+
+            UserTable? user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+            if (user == null)
+                return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+            
+            try
+            {
+                _context.User.Remove(user);
+                _context.SaveChanges();
+            } catch(Exception ex) {
+                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
+
+            return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
+        }
+
+        public BaseResponse SetNewPasswordLoggedIn(NewPasswordLoggedInDto data)
+        {
+            UserTable? user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+            if (user == null || data.Password.Length < passwordMinLength)
+                return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+
+            try
+            {
+                user.password = this.HashPassword(data.Password);
+                _context.SaveChanges();
+
+            } catch(Exception ex) {
+                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
+
+            return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
+        }
+
         public BaseResponse SetNewPassword(NewPasswordDto data)
         {
 
             UserTable? user = _context.User.FirstOrDefault(u => u.password_reset_token == data.PasswordResetToken);
-            if(user == null || user.password_reset_token_expire < DateTime.Now)
+            if(user == null || user.password_reset_token_expire < DateTime.Now || data.Password.Length < passwordMinLength)
                 return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
 
-            user.password = this.HashPassword(data.Password);
-            user.password_reset_token = "";
-            _context.SaveChanges();
+            try
+            {
+                user.password = this.HashPassword(data.Password);
+                user.password_reset_token = "";
+                _context.SaveChanges();
+
+            } catch(Exception ex)
+            {
+                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
 
             return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
@@ -48,8 +91,16 @@ namespace hlidacVystrah.Services
             if (user == null || user.isActive)
                 return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
 
-            user.isActive = true;
-            _context.SaveChanges();
+            try
+            {
+                user.isActive = true;
+                _context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
 
             return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
@@ -87,14 +138,25 @@ namespace hlidacVystrah.Services
             if(!user.isActive)
                 return new UserLoginResponse { ResponseCode = StatusCodes.Status403Forbidden };
 
-            user.login_token = this.GenerateLoginToken();
-            user.login_token_expire = DateTime.Now.AddHours(3);
-            _context.SaveChanges();
+            if(user.login_token == null || user.login_token_expire < DateTime.Now)
+            {
+                try
+                {
+                    user.login_token = this.GenerateLoginToken();
+                    user.login_token_expire = DateTime.Now.AddHours(3);
+                    _context.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+                    return new UserLoginResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+                }
+            }
 
             return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email, LoginToken = user.login_token };
         }
 
-        public UserLoginResponse TokenLogin(LoginTokenDataDto data) 
+        public UserLoginResponse TokenLogin(LoginTokenDto data) 
         {
             UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
             if (user == null)
@@ -103,8 +165,16 @@ namespace hlidacVystrah.Services
             if(user.login_token_expire < DateTime.Now)
                 return new UserLoginResponse { ResponseCode = StatusCodes.Status400BadRequest };
 
-            user.login_token_expire = DateTime.Now.AddHours(3);
-            _context.SaveChanges();
+            try
+            {
+                user.login_token_expire = DateTime.Now.AddHours(3);
+                _context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                return new UserLoginResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
 
             return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email };
         }

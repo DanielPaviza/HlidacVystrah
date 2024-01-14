@@ -5,7 +5,7 @@ import { Register } from "./components/Register";
 import { ResetPassword } from "./components/ResetPassword";
 import { NotFound } from "./components/NotFound";
 import { UserAccount } from "./components/UserAccount";
-import NewPassword from "./components/NewPassword";
+import { NewPassword } from "./components/NewPassword";
 import ActivateAccount from "./components/ActivateAccount";
 
 const AppRoutes = [

@@ -35,7 +35,7 @@ namespace hlidacVystrah.Controllers
         
         // GET api/user/login
         [HttpPost("tokenlogin")]
-        public UserLoginResponse Get([FromBody] LoginTokenDataDto data)
+        public UserLoginResponse Get([FromBody] LoginTokenDto data)
         {
             return _userService.TokenLogin(data);
         }
@@ -59,6 +59,20 @@ namespace hlidacVystrah.Controllers
         public BaseResponse Get([FromBody] NewPasswordDto data)
         {
             return _userService.SetNewPassword(data);
+        }  
+        
+        // GET api/user/newpasswordloggedin
+        [HttpPost("newpasswordloggedin")]
+        public BaseResponse Get([FromBody] NewPasswordLoggedInDto data)
+        {
+            return _userService.SetNewPasswordLoggedIn(data);
+        }
+
+        // GET api/user/deleteaccount
+        [HttpPost("deleteaccount")]
+        public BaseResponse Get([FromBody] DeleteAccountDto data)
+        {
+            return _userService.DeleteAccount(data);
         }
     }
 }

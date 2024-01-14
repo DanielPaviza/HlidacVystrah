@@ -2,6 +2,7 @@
 import { NavMenu } from './NavMenu';
 import { Footer } from './Footer';
 import '../styles/userForm.scss';
+import '../styles/activateAccount.scss';
 import { Spinner } from './Spinner';
 import { useSearchParams } from 'react-router-dom';
 import UserFormHelper from './UserFormHelper';
@@ -60,12 +61,12 @@ function ActivateAccount() {
                         <Spinner />
                         :
                         <span className='d-flex justify-content-center mt-3'>
-                        <a href='/login' className='ms-1'>Přihlašte se</a>
+                        <a href='/login' className=''>Přihlašte se</a>
                         </span>
                     }
                 </div>
             </div>
-            <Footer />
+            <Footer background={'lightGray'} />
         </>
     );
 }

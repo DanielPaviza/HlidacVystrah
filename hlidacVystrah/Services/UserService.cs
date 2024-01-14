@@ -46,7 +46,7 @@ namespace hlidacVystrah.Services
                     Text = severity.text
                 }).ToList();
 
-                List<CertainityDto> certainityList = _context.Severity.Select(certainity => new CertainityDto
+                List<CertainityDto> certainityList = _context.Certainity.Select(certainity => new CertainityDto
                 {
                     Id = certainity.id,
                     Text = certainity.text
@@ -56,7 +56,7 @@ namespace hlidacVystrah.Services
                 {
                     Cisorp = locality.id,
                     Name = locality.name
-                }).ToList();
+                }).OrderBy(localityDto => localityDto.Name).ToList();
 
                 return new EventNotificationOptions
                 {

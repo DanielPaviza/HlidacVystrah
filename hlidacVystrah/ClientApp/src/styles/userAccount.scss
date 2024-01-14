@@ -8,8 +8,20 @@
         background-color: $gray !important;
     }
 
+    .notificationSettings {
+        .selectBox {
+            width: 48%;
+        }
+
+        @media (min-width: 768px) {
+            .selectBox {
+                width: 24%;
+            }
+        }
+    }
+
     .accountSettings {
-        &>span button {
+        & > span button {
             background-color: $gray;
             font-size: 15px;
 
@@ -80,7 +92,7 @@
                 &.deleteAccount {
                     &:hover {
                         background-color: rgba($red, 0.01);
-                        border: 1px solid rgba($red, 0.6)!important;
+                        border: 1px solid rgba($red, 0.6) !important;
                     }
                 }
             }

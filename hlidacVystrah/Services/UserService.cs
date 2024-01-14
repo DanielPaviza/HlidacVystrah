@@ -84,6 +84,9 @@ namespace hlidacVystrah.Services
             if(user == null || user.password != this.HashPassword(data.Password))
                 return new UserLoginResponse { ResponseCode = StatusCodes.Status401Unauthorized };
 
+            if(!user.isActive)
+                return new UserLoginResponse { ResponseCode = StatusCodes.Status403Forbidden };
+
             user.login_token = this.GenerateLoginToken();
             user.login_token_expire = DateTime.Now.AddHours(3);
             _context.SaveChanges();

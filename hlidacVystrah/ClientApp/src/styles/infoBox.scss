@@ -1,0 +1,35 @@
+﻿
+@import "vars";
+
+.infoBox {
+    cursor: pointer;
+
+    .questionmark {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        padding-top: 1px;
+        border: 1px solid $black;
+        font-size: 13px;
+    }
+
+    .infoContainer {
+        top: calc(100% - 0px);
+        left: -186px;
+        width: 200px;
+        font-size: 14px;
+
+        div {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 0px solid transparent;
+            border-bottom: 10px solid $grayDarker; /* Change the color as needed */
+        }
+
+        span {
+            background-color: $grayDarker;
+            border-top-right-radius: 0 !important;
+        }
+    }
+}

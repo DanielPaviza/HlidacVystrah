@@ -5,10 +5,6 @@
     background: $gray;
     min-height: calc(100vh - 40px);
 
-    span {
-        width: fit-content;
-    }
-
     & > div {
         background: white;
         margin-top: -10%;

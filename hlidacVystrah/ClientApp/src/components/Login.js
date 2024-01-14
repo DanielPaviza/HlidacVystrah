@@ -5,6 +5,7 @@ import '../styles/userForm.scss';
 import '../styles/spinnerAbsolute.scss';
 import axios from "axios";
 import { Spinner } from './Spinner';
+import { InfoBox } from './InfoBox';
 import UserFormHelper from './UserFormHelper';
 import UserLoginHelper from './UserLoginHelper';
 
@@ -63,7 +64,7 @@ export class Login extends Component {
                 }
                     
             }).finally(() => {
-                this.setState({ loading: false })
+                this.setState({ loading: false, password: "" });
             });
     }
 
@@ -74,10 +75,18 @@ export class Login extends Component {
                 return this.formHelper.RenderInformationText("Přihlášení proběhlo úspěšně!", false);
             case 401:
                 return this.formHelper.RenderInformationText("Nesprávné přihlašovací údaje!", true);
+            case 403:
+                return <>
+                    {this.formHelper.RenderInformationText("Nejdříve si účet aktivujte!", true)}
+                    <InfoBox />
+                </>
             case 500:
                 return this.formHelper.RenderInformationText("Něco se nepovedlo. Zkuste to později.", true);
             default:
-                return;
+                return <span className='d-flex align-items-center'>
+                    {this.formHelper.RenderInformationText("Nejdříve si účet aktivujte!", true)}
+                    <InfoBox text={'Na zadaný email jste obrželi aktivační odkaz.'} />
+                </span>
         }
     }
 
@@ -102,12 +111,12 @@ export class Login extends Component {
                             ></i>
                         </span>
                         {this.RenderResponseText()}
-                        <a href='/resetpassword' className='d-flex mt-1'>Zapomněli jste heslo?</a>
+                        <a href='/resetpassword' className='d-flex mt-1 fit-content'>Zapomněli jste heslo?</a>
                         <button className='ms-auto border p-2 rounded my-2' onClick={() => this.Login()}>Přihlásit</button>
-                        <span className='mt-2 d-flex justify-content-center'>
+                        <div className='mt-2 d-flex justify-content-center mx-auto'>
                             Nemáte účet?
                             <a href='/register' className='ms-1'>Zaregistrujte se</a>
-                        </span>
+                        </div>
                         {this.state.loading && <Spinner />}
                     </div>
                 </div>

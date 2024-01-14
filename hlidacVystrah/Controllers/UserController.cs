@@ -74,5 +74,11 @@ namespace hlidacVystrah.Controllers
         {
             return _userService.DeleteAccount(data);
         }
+
+        [HttpGet("eventnotificationoptions")]
+        public EventNotificationOptions Get()
+        {
+            return _userService.GetEventNotificationOptions();
+        }
     }
 }

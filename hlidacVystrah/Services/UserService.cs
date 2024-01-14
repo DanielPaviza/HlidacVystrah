@@ -28,6 +28,53 @@ namespace hlidacVystrah.Services
             _mailService = mailService;
         }
 
+        public EventNotificationOptions GetEventNotificationOptions()
+        {
+
+            try
+            {
+                List<EventTypeDto> eventTypeList = _context.EventType.Select(eventType => new EventTypeDto
+                {
+                    Id = eventType.id,
+                    Name = eventType.name,
+                    ImgPath = eventType.img_path
+                }).ToList();
+
+                List<SeverityDto> severityList = _context.Severity.Select(severity => new SeverityDto
+                {
+                    Id = severity.id,
+                    Text = severity.text
+                }).ToList();
+
+                List<CertainityDto> certainityList = _context.Severity.Select(certainity => new CertainityDto
+                {
+                    Id = certainity.id,
+                    Text = certainity.text
+                }).ToList();
+
+                List<LocalityDto> localityList = _context.Locality.Select(locality => new LocalityDto
+                {
+                    Cisorp = locality.id,
+                    Name = locality.name
+                }).ToList();
+
+                return new EventNotificationOptions
+                {
+                    ResponseCode = StatusCodes.Status200OK,
+                    EventTypeList = eventTypeList,
+                    SeverityList = severityList,
+                    CertainityList = certainityList,
+                    LocalityList = localityList
+                };
+
+            } catch (Exception ex)
+            {
+                return new EventNotificationOptions { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
+
+           
+        }
+
         public BaseResponse DeleteAccount(DeleteAccountDto data)
         {
 

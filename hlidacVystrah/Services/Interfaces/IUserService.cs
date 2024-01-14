@@ -20,5 +20,7 @@ namespace hlidacVystrah.Services.Interfaces
         UserLoginResponse TokenLogin(LoginTokenDto data);
 
         BaseResponse DeleteAccount(DeleteAccountDto data);
+
+        EventNotificationOptions GetEventNotificationOptions();
     }
 }

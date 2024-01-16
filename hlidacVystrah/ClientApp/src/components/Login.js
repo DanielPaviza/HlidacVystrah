@@ -22,7 +22,9 @@ export class Login extends Component {
             loading: false,
             loggedIn: false,
             loggedUserEmail: null,
-            response: null
+            response: null,
+            emailInvalidFormat: false,
+            passwordEmpty: false
         }
 
         this.formHelper = new UserFormHelper();
@@ -42,8 +44,20 @@ export class Login extends Component {
 
     Login = () => {
 
-        this.setState({ loading: true })
+        let emailInvalidFormat = !this.formHelper.EmailValid(this.state.email);
+        let passwordEmpty = this.state.password == "";
 
+        this.setState((prevState) => ({
+            ...prevState,
+            emailInvalidFormat: emailInvalidFormat,
+            passwordEmpty: passwordEmpty
+        }));
+
+        if (emailInvalidFormat || passwordEmpty)
+            return;
+
+        this.setState((prevState) => ({ loading: true }));
+            
         axios
             .post("/api/user/login", {
                 Email: this.state.email,
@@ -100,7 +114,7 @@ export class Login extends Component {
                 <div id="login" className='d-flex justify-content-center align-items-center'>
                     <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded position-relative'>
                         <h2 className='mb-3 mx-auto'>Přihlášení</h2>
-                        <span className='mb-2 d-flex align-items-center justify-content-between'>
+                        <span className='mb-2 d-flex align-items-center mx-auto'>
                             <i className="fa-solid fa-envelope me-2"></i>
                             <input
                                 className='p-1'
@@ -111,7 +125,7 @@ export class Login extends Component {
                                 onChange={(e) => this.setState((prevState) => ({ ...prevState, email: e.target.value }))}
                             />
                         </span>
-                        <span className='mb-2 d-flex align-items-center justify-content-between position-relative'>
+                        <span className='mb-2 d-flex align-items-center mx-auto position-relative'>
                             <i className="fa-solid fa-lock me-2"></i>
                             <input
                                 className='p-1'
@@ -126,6 +140,8 @@ export class Login extends Component {
                             ></i>
                         </span>
                         {this.RenderResponseText()}
+                        {this.state.emailInvalidFormat && this.formHelper.RenderInformationText('Email nemá správný formát (email@priklad.xx)', true)}
+                        {this.state.passwordEmpty && this.formHelper.RenderInformationText("Vyplňte heslo!", true)}
                         <a href='/resetpassword' className='d-flex mt-1 fit-content'>Zapomněli jste heslo?</a>
                         <button className='ms-auto border p-2 rounded my-2' onClick={() => this.Login()}>Přihlásit</button>
                         <div className='mt-2 d-flex justify-content-center mx-auto'>

@@ -5,6 +5,16 @@
     background: $gray;
     min-height: calc(100vh - 40px);
 
+    .formInfo {
+        font-size: 14px;
+
+        @media (min-width: 768px) {
+            & {
+                font-size: 16px;
+            }
+        }
+    }
+
     & > div {
         background: white;
         margin-top: -10%;
@@ -15,7 +25,7 @@
 
         button {
             font-size: 15px;
-                
+
             &:hover {
                 border: 1px solid $black !important;
             }

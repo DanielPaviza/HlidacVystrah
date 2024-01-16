@@ -87,6 +87,11 @@ export class Login extends Component {
         }
     }
 
+    InputOnPressEnter = (event) => {
+        if (event.key === 'Enter')
+            this.Login();
+    }
+
     render() {
 
         return (
@@ -97,11 +102,24 @@ export class Login extends Component {
                         <h2 className='mb-3 mx-auto'>Přihlášení</h2>
                         <span className='mb-2 d-flex align-items-center justify-content-between'>
                             <i className="fa-solid fa-envelope me-2"></i>
-                            <input className='p-1' type='text' placeholder='E-mail' value={this.state.email} onChange={(e) => this.setState((prevState) => ({ ...prevState, email: e.target.value }))} />
+                            <input
+                                className='p-1'
+                                type='text'
+                                placeholder='E-mail'
+                                value={this.state.email}
+                                onKeyDown={(e) => this.InputOnPressEnter(e)}
+                                onChange={(e) => this.setState((prevState) => ({ ...prevState, email: e.target.value }))}
+                            />
                         </span>
                         <span className='mb-2 d-flex align-items-center justify-content-between position-relative'>
                             <i className="fa-solid fa-lock me-2"></i>
-                            <input className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo' value={this.state.password} onChange={(e) => this.setState((prevState) => ({ ...prevState, password: e.target.value }))} />
+                            <input
+                                className='p-1'
+                                type={`${this.state.passwordVisible ? 'text' : 'password'}`}
+                                placeholder='Heslo' value={this.state.password}
+                                onKeyDown={(e) => this.InputOnPressEnter(e)}
+                                onChange={(e) => this.setState((prevState) => ({ ...prevState, password: e.target.value }))}
+                            />
                             <i
                                 className={`toggler fa-regular fa-eye${this.state.passwordVisible ? '-slash' : ''}`}
                                 onClick={() => this.HandleTogglePassword()}

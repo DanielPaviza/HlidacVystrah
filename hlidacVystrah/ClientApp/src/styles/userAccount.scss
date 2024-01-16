@@ -9,6 +9,7 @@
     }
 
     .notificationSettings {
+
         .selectBox {
             width: 48%;
         }
@@ -17,6 +18,10 @@
             .selectBox {
                 width: 24%;
             }
+        }
+
+        .horLine {
+            border-bottom: 2px solid $grayDarker;
         }
     }
 

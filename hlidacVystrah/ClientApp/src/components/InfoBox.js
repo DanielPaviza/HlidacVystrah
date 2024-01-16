@@ -16,15 +16,15 @@ export class InfoBox extends Component {
 
         return (
             <div
-                className='infoBox position-relative'
+                className='infoBox position-relative d-flex align-items-center justify-content-center ms-2'
                 onMouseOver={() => this.setState((prevState) => ({ ...prevState, opened: true }))}
                 onMouseLeave={() => this.setState((prevState) => ({ ...prevState, opened: false }))}
             >
-                <div className='questionmark ms-1 d-flex align-items-center justify-content-center fw-bold'>?</div>
+                <i className="fa-solid fa-circle-info"></i>
                 {this.state.opened && 
                     <div className='infoContainer position-absolute d-flex flex-column align-items-end'>
-                        <div className=''></div> 
                         <span className='rounded p-2'>{this.props.text}</span>    
+                        <div className=''></div> 
                     </div>
                 }
             </div>

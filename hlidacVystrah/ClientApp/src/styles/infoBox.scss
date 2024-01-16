@@ -3,19 +3,11 @@
 
 .infoBox {
     cursor: pointer;
-
-    .questionmark {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        padding-top: 1px;
-        border: 1px solid $black;
-        font-size: 13px;
-    }
+    color: $black;
 
     .infoContainer {
-        top: calc(100% - 0px);
-        left: -176px;
+        bottom: calc(100% - 0px);
+        left: -180px;
         width: 190px;
         font-size: 14px;
 
@@ -24,12 +16,13 @@
             height: 0;
             border-left: 10px solid transparent;
             border-right: 0px solid transparent;
-            border-bottom: 10px solid $grayDarker; /* Change the color as needed */
+            border-top: 10px solid $gray; /* Change the color as needed */
         }
 
         span {
-            background-color: $grayDarker;
-            border-top-right-radius: 0 !important;
+            background-color: $gray;
+            border-bottom-right-radius: 0 !important;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
         }
     }
 }

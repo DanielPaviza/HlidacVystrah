@@ -27,7 +27,7 @@ export class HomeController extends Component {
             eventListLoading: true,
             map: [],
             loggedIn: false,
-            loggedUserEmail: null
+            loggedUserEmail: null,
         };
 
         this.history = new SiteHistory(this.HandleCloseDetail);
@@ -47,7 +47,7 @@ export class HomeController extends Component {
         this.setState((prevState) => ({
             ...prevState,
             eventOpened: true,
-            selectedEventId: id
+            selectedEventId: id,
         }));
     }
 
@@ -60,15 +60,20 @@ export class HomeController extends Component {
             ...prevState,
             localityOpened: true,
             selectedLocalityId: id,
-            selectedLocalityIsRegion: isRegion
+            selectedLocalityIsRegion: isRegion,
         }));
+    }
+
+    HandleOpenHome = () => {
+        this.HandleCloseDetail();
+        this.history.AddHomeRecord(this.HandleOpenHome);
     }
 
     HandleCloseDetail = () => {
         this.setState((prevState) => ({
             ...prevState,
             eventOpened: false,
-            localityOpened: false
+            localityOpened: false,
         }));
     }
 
@@ -171,12 +176,7 @@ export class HomeController extends Component {
                     <NavMenu CloseDetail={this.HandleCloseDetail} />
                     <div className='container mt-3'>
                         <span className='d-flex justify-content-between '>
-                            {
-                                (this.state.eventOpened || this.state.localityOpened) ?
-                                    <BackButton history={this.history} CloseDetail={this.HandleCloseDetail} />
-                                    :
-                                    <span></span>
-                            }
+                            <BackButton history={this.history} NavigateHome={this.HandleOpenHome} />
                             {this.RenderTimestamp()}
                         </span>
                         

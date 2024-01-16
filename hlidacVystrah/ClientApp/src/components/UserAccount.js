@@ -8,7 +8,6 @@ import { Footer } from './Footer';
 import NewPasswordForm from './NewPasswordForm';
 import axios from "axios";
 import UserFormHelper from './UserFormHelper';
-import { Prev } from '../../../../node_modules/react-bootstrap/esm/PageItem';
 
 export class UserAccount extends Component {
     static displayName = UserAccount.name;
@@ -208,56 +207,58 @@ export class UserAccount extends Component {
             <div className='mt-4 notificationSettings'>
                 <h3>Správa upozornění</h3>
                 <p className='fw-bold'>Sledované výstrahy</p>
+                <div className='horLine col-12 mb-3' />
+                <div className=''>
+                    <p className='fw-bold mb-2'>Přidat sledovanou výstrahu</p>
+                    <div className='d-flex flex-wrap justify-content-between'>
+                        <div className='selectBox d-flex flex-column'>
+                            <label>Typ výstrahy</label>
+                            <select className='border'>
+                                {this.state.eventTypeOptions.map((option) => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.name}
 
-                <p className='fw-bold mb-2'>Přidat sledovanou výstrahu</p>
-                <div className='d-flex flex-wrap justify-content-between'>
-                    <div className='selectBox d-flex flex-column'>
-                        <label>Typ výstrahy</label>
-                        <select className='border'>
-                            {this.state.eventTypeOptions.map((option) => (
-                                <option key={option.id} value={option.id}>
-                                    {option.name}
-
-                                </option>
-                            ))}
-                        </select>
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className='selectBox d-flex flex-column '>
+                            <label>Závažnost</label>
+                            <select className='border'>
+                                <option value={null}>Jakákoliv</option>
+                                {this.state.severityOptions.map((option) => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.text}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
+                            <label>Pravděpodobnost</label>
+                            <select className='border'>
+                                <option value={null}>Jakákoliv</option>
+                                {this.state.certainityOptions.map((option) => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.text}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
+                            <label>Lokalita</label>
+                            <select className='border'>
+                                {this.state.localityOptions.map((option) => (
+                                    <option key={option.cisorp} value={option.cisorp}>
+                                        {option.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
-                    <div className='selectBox d-flex flex-column '>
-                        <label>Závažnost</label>
-                        <select className='border'>
-                            <option value={null}>Jakákoliv</option>
-                            {this.state.severityOptions.map((option) => (
-                                <option key={option.id} value={option.id}>
-                                    {option.text}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
-                        <label>Pravděpodobnost</label>
-                        <select className='border'>
-                            <option value={null}>Jakákoliv</option>
-                            {this.state.certainityOptions.map((option) => (
-                                <option key={option.id} value={option.id}>
-                                    {option.text}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
-                        <label>Lokalita</label>
-                        <select className='border'>
-                            {this.state.localityOptions.map((option) => (
-                                <option key={option.cisorp} value={option.cisorp}>
-                                    {option.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    <span className='d-flex justify-content-end mt-3'>
+                        <button className='border p-2 rounded'>Přidat</button>
+                    </span>
                 </div>
-                <span className='d-flex justify-content-end mt-3'>
-                    <button className='border p-2 rounded'>Přidat</button>
-                </span>
             </div>
         );
     }

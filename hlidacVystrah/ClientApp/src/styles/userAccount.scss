@@ -35,9 +35,9 @@
             background-color: white;
             border-radius: 6px;
             border-top-left-radius: 0;
+            border-top-right-radius: 0;
             border: 1px solid $grayDarker;
             border-top: none;
-            border-right: none;
 
             .toggler {
                 cursor: pointer;
@@ -53,7 +53,7 @@
             }
 
             button {
-                border: none !important;
+                border: 1px solid transparent!important;
                 background-color: $gray;
 
                 &:hover {

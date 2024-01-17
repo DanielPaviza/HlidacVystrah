@@ -11,7 +11,7 @@ namespace hlidacVystrah.Model.Response
 
         public int? IdSeverity { get; set; }
 
-        public int? IdCertainity { get; set; }
+        public int? Idcertainty { get; set; }
 
         public string IdArea { get; set; }
 

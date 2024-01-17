@@ -78,7 +78,7 @@ namespace hlidacVystrah.Services
                     {
                         EventType = _context.EventType.Where(el => el.id == et.id_event_type).First().name,
                         Severity = _context.Severity.Where(el => el.id == et.id_severity).First().text,
-                        Certainty = _context.Certainity.Where(el => el.id == et.id_certainity).First().text,
+                        Certainty = _context.Certainty.Where(el => el.id == et.id_certainty).First().text,
                         Onset = et.onset,
                         Expires = et.expires,
                         Description = et.description,

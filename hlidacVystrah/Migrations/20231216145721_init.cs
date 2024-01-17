@@ -11,7 +11,7 @@ namespace hlidacVystrah.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "certainity",
+                name: "certainty",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -20,7 +20,7 @@ namespace hlidacVystrah.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_certainity", x => x.id);
+                    table.PrimaryKey("PK_certainty", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -31,7 +31,7 @@ namespace hlidacVystrah.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     id_event_type = table.Column<int>(type: "int", nullable: false),
                     id_severity = table.Column<int>(type: "int", nullable: false),
-                    id_certainity = table.Column<int>(type: "int", nullable: false),
+                    id_certainty = table.Column<int>(type: "int", nullable: false),
                     onset = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     expires = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -115,7 +115,7 @@ namespace hlidacVystrah.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "certainity");
+                name: "certainty");
 
             migrationBuilder.DropTable(
                 name: "event");

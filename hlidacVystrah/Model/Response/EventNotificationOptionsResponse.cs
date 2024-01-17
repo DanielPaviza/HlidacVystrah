@@ -11,7 +11,7 @@ namespace hlidacVystrah.Model.Response
 
         public List<SeverityDto> SeverityList { get; set; } = new();
 
-        public List<CertainityDto> CertainityList { get; set; } = new();
+        public List<certaintyDto> certaintyList { get; set; } = new();
 
         public Dictionary<string, List<LocalityDto>> LocalityList { get; set; } = new();
     }

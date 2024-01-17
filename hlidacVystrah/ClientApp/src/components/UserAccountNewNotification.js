@@ -17,7 +17,7 @@ export class UserAccountNewNotification extends Component {
 
             eventTypeOptions: [],
             severityOptions: [],
-            certainityOptions: [],
+            certaintyOptions: [],
             localityOptions: [],
         };
 
@@ -31,15 +31,15 @@ export class UserAccountNewNotification extends Component {
     GetNewNotificationPayload = () => {
         let idEventType = document.getElementById("selectEventType").value;
         let idSeverity = document.getElementById("selectSeverity").value;
-        let idCertainity = document.getElementById("selectCertainity").value;
+        let idcertainty = document.getElementById("selectcertainty").value;
         let idArea = document.getElementById("selectArea").value.split(':')[0];
         let isRegion = document.getElementById("selectArea").value.split(':')[1];
 
         if (idSeverity == "Jakákoliv")
             idSeverity = null;
 
-        if (idCertainity == "Jakákoliv")
-            idCertainity = null;
+        if (idcertainty == "Jakákoliv")
+            idcertainty = null;
 
         isRegion = isRegion == "0" ? false : true;
 
@@ -47,7 +47,7 @@ export class UserAccountNewNotification extends Component {
             "LoginToken": "44ENRJrmnnUbqDY5YZk/y2AQtXsive+gk99NZyTVZqI=",
             "IdEventType": idEventType,
             "IdSeverity": idSeverity,
-            "IdCertainity": idCertainity,
+            "Idcertainty": idcertainty,
             "IdArea": idArea,
             "IsRegion": isRegion,
         };
@@ -65,7 +65,7 @@ export class UserAccountNewNotification extends Component {
                     optionsResponse: data.responseCode,
                     eventTypeOptions: data.eventTypeList,
                     severityOptions: data.severityList,
-                    certainityOptions: data.certainityList,
+                    certaintyOptions: data.certaintyList,
                     localityOptions: data.localityList
                 }));
             })
@@ -160,9 +160,9 @@ export class UserAccountNewNotification extends Component {
                         </div>
                         <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
                             <label>Pravděpodobnost</label>
-                            <select id='selectCertainity' className='border'>
+                            <select id='selectcertainty' className='border'>
                                 <option value={null}>Jakákoliv</option>
-                                {this.state.certainityOptions.map((option) => (
+                                {this.state.certaintyOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
                                         {option.text}
                                     </option>

@@ -13,8 +13,10 @@ namespace hlidacVystrah.Model.Response
 
         public string? Severity { get; set; }
 
-        public string? Certainity { get; set; }
+        public string? Certainty { get; set; }
 
         public string Area { get; set; }
-    }
+
+        public string? EventImg { get; set; }
+     }
 }

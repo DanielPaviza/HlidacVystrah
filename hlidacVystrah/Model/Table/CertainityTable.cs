@@ -7,8 +7,8 @@ using System.Xml.Linq;
 namespace hlidacVystrah.Model
 {
 
-    [Table("certainity")]
-    public class CertainityTable
+    [Table("certainty")]
+    public class CertaintyTable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

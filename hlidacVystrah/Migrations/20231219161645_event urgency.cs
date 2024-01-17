@@ -43,7 +43,7 @@ namespace hlidacVystrah.Migrations
 
             migrationBuilder.AddColumn<string>(
                 name: "text",
-                table: "certainity",
+                table: "certainty",
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
@@ -103,7 +103,7 @@ namespace hlidacVystrah.Migrations
 
             migrationBuilder.DropColumn(
                 name: "text",
-                table: "certainity");
+                table: "certainty");
 
             migrationBuilder.AddColumn<string>(
                 name: "timestamp",

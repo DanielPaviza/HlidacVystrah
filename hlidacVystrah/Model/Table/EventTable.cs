@@ -18,7 +18,7 @@ namespace hlidacVystrah.Model
 
         public int id_severity { get; set; }
 
-        public int id_certainity { get; set; }
+        public int id_certainty { get; set; }
 
         public int id_urgency { get; set; }
 

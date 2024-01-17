@@ -121,12 +121,17 @@ export class UserAccountNotifications extends Component {
                     <tbody>
                         {this.state.notifications.map(notification => (
                             <tr key={notification.id} className='my-2'>
-                                <td className='del d-flex'>
+                                <td className='del'>
                                     <i className="fa-solid fa-xmark" onClick={() => this.NotificationDelete(notification.id) }></i>
                                 </td>
-                                <td>{notification.eventType}</td>
+                                <td className='d-flex align-items-center my-auto h-100'>
+                                    <span>{notification.eventType}</span>
+                                    <div>
+                                        <img src={`/images/${notification.eventImg}`} alt='obrázek typu jevu' className='ms-2 my-auto' />
+                                    </div>
+                                </td>
                                 <td>{notification.severity || 'Jakákoliv'}</td>
-                                <td>{notification.certainity || 'Jakákoliv'}</td>
+                                <td>{notification.certainty || 'Jakákoliv'}</td>
                                 <td>{notification.area}</td>
                             </tr>
                         ))}

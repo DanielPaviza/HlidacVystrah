@@ -22,7 +22,7 @@ namespace hlidacVystrah.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("hlidacVystrah.Model.CertainityTable", b =>
+            modelBuilder.Entity("hlidacVystrah.Model.certaintyTable", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -40,7 +40,7 @@ namespace hlidacVystrah.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("certainity");
+                    b.ToTable("certainty");
                 });
 
             modelBuilder.Entity("hlidacVystrah.Model.DpcTable", b =>
@@ -54,7 +54,7 @@ namespace hlidacVystrah.Migrations
                     b.Property<int>("id_area")
                         .HasColumnType("int");
 
-                    b.Property<int>("id_certainity")
+                    b.Property<int>("id_certainty")
                         .HasColumnType("int");
 
                     b.Property<int>("id_event_type")
@@ -108,7 +108,7 @@ namespace hlidacVystrah.Migrations
                     b.Property<string>("expires")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("id_certainity")
+                    b.Property<int>("id_certainty")
                         .HasColumnType("int");
 
                     b.Property<int>("id_event_type")
@@ -184,7 +184,7 @@ namespace hlidacVystrah.Migrations
                     b.Property<int>("id_area")
                         .HasColumnType("int");
 
-                    b.Property<int>("id_certainity")
+                    b.Property<int>("id_certainty")
                         .HasColumnType("int");
 
                     b.Property<int>("id_event_type")

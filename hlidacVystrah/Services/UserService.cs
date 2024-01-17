@@ -83,7 +83,7 @@ namespace hlidacVystrah.Services
                 {
                     id_event_type = data.IdEventType,
                     id_severity = data.IdSeverity,
-                    id_certainity = data.IdCertainity,
+                    id_certainty = data.Idcertainty,
                     id_area = Int32.Parse(data.IdArea),
                     isRegion = data.IsRegion
                 };
@@ -96,7 +96,7 @@ namespace hlidacVystrah.Services
                 NotificationTable matchingNotification = _context.Notification.FirstOrDefault(n =>
                     n.id_event_type == notificationTable.id_event_type &&
                     n.id_severity == notificationTable.id_severity &&
-                    n.id_certainity == notificationTable.id_certainity &&
+                    n.id_certainty == notificationTable.id_certainty &&
                     n.id_area == notificationTable.id_area &&
                     n.isRegion == notificationTable.isRegion
                 );
@@ -153,15 +153,16 @@ namespace hlidacVystrah.Services
                     NotificationTable notification = _context.Notification.SingleOrDefault(n => n.id == unt.id_notification);
                     string area = notification.isRegion ? _context.Region.First(r => r.id == notification.id_area).name : _context.Locality.First(l => l.id == notification.id_area).name;
                     string? severity = _context.Severity.FirstOrDefault(s => s.id == notification.id_severity)?.text;
-                    string? certainity = _context.Certainity.FirstOrDefault(c => c.id == notification.id_certainity)?.text;
+                    string? certainty = _context.Certainty.FirstOrDefault(c => c.id == notification.id_certainty)?.text;
 
                     userNotifications.Add(new NotificationDto
                     {
                         Id = unt.id,
                         EventType = _context.EventType.First(e => e.id == notification.id_event_type).name,
                         Severity = severity,
-                        Certainity = certainity,
+                        Certainty = certainty,
                         Area = area,
+                        EventImg = _context.EventType.First(e => e.id == notification.id_event_type).img_path
                     });
                 }
 
@@ -191,10 +192,10 @@ namespace hlidacVystrah.Services
                     Text = severity.text
                 }).ToList();
 
-                List<CertainityDto> certainityList = _context.Certainity.Select(certainity => new CertainityDto
+                List<certaintyDto> certaintyList = _context.Certainty.Select(certainty => new certaintyDto
                 {
-                    Id = certainity.id,
-                    Text = certainity.text
+                    Id = certainty.id,
+                    Text = certainty.text
                 }).ToList();
 
                 Dictionary<string, List<LocalityDto>> localityList = _context.Locality
@@ -220,7 +221,7 @@ namespace hlidacVystrah.Services
                     ResponseCode = StatusCodes.Status200OK,
                     EventTypeList = eventTypeList,
                     SeverityList = severityList,
-                    CertainityList = certainityList,
+                    certaintyList = certaintyList,
                     LocalityList = localityList
                 };
 

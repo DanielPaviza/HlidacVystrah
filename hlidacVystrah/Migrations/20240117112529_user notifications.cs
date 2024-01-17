@@ -18,7 +18,7 @@ namespace hlidacVystrah.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     id_event_type = table.Column<int>(type: "int", nullable: false),
                     id_severity = table.Column<int>(type: "int", nullable: false),
-                    id_certainity = table.Column<int>(type: "int", nullable: false),
+                    id_certainty = table.Column<int>(type: "int", nullable: false),
                     id_area = table.Column<int>(type: "int", nullable: false),
                     isRegion = table.Column<bool>(type: "bit", nullable: false)
                 },

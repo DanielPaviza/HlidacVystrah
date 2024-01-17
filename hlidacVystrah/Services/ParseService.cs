@@ -187,7 +187,7 @@ namespace hlidacVystrah.Services
                         {
                             id_event_type = Int32.Parse(_eventDto.EventType),
                             id_severity = _context.Severity.First(saved => saved.name == _eventDto.Severity).id,
-                            id_certainity = _context.Certainity.First(saved => saved.name == _eventDto.Certainty).id,
+                            id_certainty = _context.Certainty.First(saved => saved.name == _eventDto.Certainty).id,
                             id_urgency = _context.Urgency.First(saved => saved.name == _eventDto.Urgency).id,
                             onset = _eventDto.Onset,
                             expires = _eventDto.Expires,

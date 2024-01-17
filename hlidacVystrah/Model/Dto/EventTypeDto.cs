@@ -10,7 +10,7 @@ namespace hlidacVystrah.Model.Dto
 
         public string Name { get; set; }
 
-        public string ImgPath { get; set; }
+        public string? ImgPath { get; set; } = null;
 
     }
 }

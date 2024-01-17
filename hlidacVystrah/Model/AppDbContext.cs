@@ -20,6 +20,9 @@ namespace hlidacVystrah.Model
         public DbSet<UpdateTable> Update { get; set; }
         public DbSet<UrgencyTable> Urgency { get; set; }
         public DbSet<UserTable> User { get; set; }
+        public DbSet<NotificationTable> Notification { get; set; }
+        public DbSet<UserNotificationTable> UserNotification { get; set; }
+        public DbSet<DpcTable> Dpc { get; set; }
 
     }
 }

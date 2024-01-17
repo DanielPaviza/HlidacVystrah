@@ -4,7 +4,7 @@ using hlidacVystrah.Model.Dto;
 
 namespace hlidacVystrah.Model.Response
 {
-    public class EventNotificationOptions : BaseResponse
+    public class EventNotificationOptionsResponse : BaseResponse
     {
 
         public List<EventTypeDto> EventTypeList { get; set; } = new();
@@ -13,6 +13,6 @@ namespace hlidacVystrah.Model.Response
 
         public List<CertainityDto> CertainityList { get; set; } = new();
 
-        public List<LocalityDto> LocalityList { get; set; } = new();
+        public Dictionary<string, List<LocalityDto>> LocalityList { get; set; } = new();
     }
 }

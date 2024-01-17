@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hlidacVystrah.Model;
 
@@ -11,9 +12,11 @@ using hlidacVystrah.Model;
 namespace hlidacVystrah.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240117112529_user notifications")]
+    partial class usernotifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,34 +44,6 @@ namespace hlidacVystrah.Migrations
                     b.HasKey("id");
 
                     b.ToTable("certainity");
-                });
-
-            modelBuilder.Entity("hlidacVystrah.Model.DpcTable", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<int>("id_area")
-                        .HasColumnType("int");
-
-                    b.Property<int>("id_certainity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("id_event_type")
-                        .HasColumnType("int");
-
-                    b.Property<int>("id_severity")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isRegion")
-                        .HasColumnType("bit");
-
-                    b.HasKey("id");
-
-                    b.ToTable("dpc");
                 });
 
             modelBuilder.Entity("hlidacVystrah.Model.EventLocalityTable", b =>

@@ -21,64 +21,82 @@ namespace hlidacVystrah.Controllers
 
         // GET api/user/register
         [HttpPost("register")]
-        public BaseResponse Get([FromBody] RegisterDataDto data)
+        public BaseResponse Register([FromBody] EmailPasswordDto data)
         {
             return _userService.Register(data);
         }        
         
         // GET api/user/login
         [HttpPost("login")]
-        public UserLoginResponse Get([FromBody] LoginDataDto data)
+        public UserLoginResponse Login([FromBody] EmailPasswordDto data)
         {
             return _userService.Login(data);
         }        
         
         // GET api/user/login
         [HttpPost("tokenlogin")]
-        public UserLoginResponse Get([FromBody] LoginTokenDto data)
+        public UserLoginResponse TokenLogin([FromBody] LoginTokenDto data)
         {
             return _userService.TokenLogin(data);
         }
 
         // GET api/user/resetpassword
         [HttpPost("resetpassword")]
-        public BaseResponse Get([FromBody] ResetPasswordDto data)
+        public BaseResponse ResetPassword([FromBody] EmailDto data)
         {
             return _userService.ResetPassword(data);
         }
 
         // GET api/user/activateaccount
         [HttpPost("activateaccount")]
-        public BaseResponse Get([FromBody] ActivateAccountDto data)
+        public BaseResponse ActivateAccount([FromBody] ActivationTokenDto data)
         {
             return _userService.ActivateAccount(data);
         }        
         
         // GET api/user/newpassword
         [HttpPost("newpassword")]
-        public BaseResponse Get([FromBody] NewPasswordDto data)
+        public BaseResponse NewPassword([FromBody] NewPasswordDto data)
         {
             return _userService.SetNewPassword(data);
         }  
         
         // GET api/user/newpasswordloggedin
         [HttpPost("newpasswordloggedin")]
-        public BaseResponse Get([FromBody] NewPasswordLoggedInDto data)
+        public BaseResponse NewPasswordLoggedIn([FromBody] NewPasswordLoggedInDto data)
         {
             return _userService.SetNewPasswordLoggedIn(data);
         }
 
         // GET api/user/deleteaccount
         [HttpPost("deleteaccount")]
-        public BaseResponse Get([FromBody] DeleteAccountDto data)
+        public BaseResponse DeleteAccount([FromBody] LoginTokenDto data)
         {
             return _userService.DeleteAccount(data);
         }
 
-        [HttpGet("eventnotificationoptions")]
-        public EventNotificationOptions Get()
+        [HttpGet("notificationoptions")]
+        public EventNotificationOptionsResponse NotificationOptions()
         {
             return _userService.GetEventNotificationOptions();
+        }        
+        
+        [HttpPost("notifications")]
+        public NotificationResponse Notifications([FromBody] LoginTokenDto data)
+        {
+            return _userService.GetEventNotifications(data);
+        }
+
+        [HttpPost("addnotification")]
+        public BaseResponse NotificationAdd([FromBody] NotificationAddDto data)
+        {
+            return _userService.NotificationAdd(data);
+        }        
+        
+        [HttpPost("deletenotification")]
+        public BaseResponse NotificationDelete([FromBody] NotificationDeleteDto data)
+        {
+            return _userService.NotificationDelete(data);
         }
     }
 }

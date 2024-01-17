@@ -5,13 +5,13 @@ namespace hlidacVystrah.Services.Interfaces
 {
     public interface IUserService
     {
-        BaseResponse Register(RegisterDataDto data);
+        BaseResponse Register(EmailPasswordDto data);
 
-        UserLoginResponse Login(LoginDataDto data);
+        UserLoginResponse Login(EmailPasswordDto data);
 
-        BaseResponse ResetPassword(ResetPasswordDto data);
+        BaseResponse ResetPassword(EmailDto data);
 
-        BaseResponse ActivateAccount(ActivateAccountDto data);
+        BaseResponse ActivateAccount(ActivationTokenDto data);
 
         BaseResponse SetNewPassword(NewPasswordDto data);
 
@@ -19,8 +19,14 @@ namespace hlidacVystrah.Services.Interfaces
 
         UserLoginResponse TokenLogin(LoginTokenDto data);
 
-        BaseResponse DeleteAccount(DeleteAccountDto data);
+        BaseResponse DeleteAccount(LoginTokenDto data);
 
-        EventNotificationOptions GetEventNotificationOptions();
+        EventNotificationOptionsResponse GetEventNotificationOptions();
+
+        NotificationResponse GetEventNotifications(LoginTokenDto data);
+
+        BaseResponse NotificationAdd(NotificationAddDto data);
+
+        BaseResponse NotificationDelete(NotificationDeleteDto data);
     }
 }

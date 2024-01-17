@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace hlidacVystrah.Model.Dto
 {
-    public class NewPasswordLoggedInDto
+    public class NewPasswordLoggedInDto: LoginTokenDto
     {
         public string Password {  get; set; }
 

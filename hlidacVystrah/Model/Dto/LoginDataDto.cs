@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace hlidacVystrah.Model.Dto
 {
-    public class LoginDataDto
+    public class EmailPasswordDto
     {
 
         public string Email { get; set; }

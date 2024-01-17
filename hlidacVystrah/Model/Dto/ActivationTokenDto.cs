@@ -4,10 +4,10 @@ using System.Xml.Linq;
 
 namespace hlidacVystrah.Model.Dto
 {
-    public class ResetPasswordDto
+    public class ActivationTokenDto
     {
 
-        public string Email { get; set; }
+        public string ActivationToken { get; set; }
 
     }
 }

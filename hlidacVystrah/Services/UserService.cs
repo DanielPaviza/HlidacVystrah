@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 using hlidacVystrah.Model.Dto;
+using Microsoft.Extensions.Primitives;
 
 namespace hlidacVystrah.Services
 {
@@ -28,16 +29,160 @@ namespace hlidacVystrah.Services
             _mailService = mailService;
         }
 
-        public EventNotificationOptions GetEventNotificationOptions()
+        public BaseResponse NotificationDelete(NotificationDeleteDto data)
+        {
+            try
+            {
+                UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+                int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
+                if (authorizeTokenStatus != 200)
+                    return new BaseResponse { ResponseCode = authorizeTokenStatus };
+
+                UserNotificationTable userNotification = _context.UserNotification.FirstOrDefault(un =>
+                    un.id == data.IdNotification
+                );
+
+                if(userNotification == null)
+                    return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+
+                _context.UserNotification.Remove(userNotification);
+                _context.SaveChanges();
+
+                return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
+            } catch(Exception ex)
+            {
+                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
+        }
+
+        public BaseResponse NotificationAdd(NotificationAddDto data)
+        {
+            try
+            {
+                UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+                int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
+                if (authorizeTokenStatus != 200)
+                    return new BaseResponse { ResponseCode = authorizeTokenStatus };
+
+                if (data.IsRegion)
+                {
+
+                    RegionTable region = _context.Region.FirstOrDefault(r => r.name == data.IdArea);
+                    if (region == null)
+                        return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+
+                    data.IdArea = region.id.ToString();
+                }
+                else
+                {
+                    if (!_context.Locality.Any(l => l.id == Int32.Parse(data.IdArea)))
+                        return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                }
+
+                NotificationTable notificationTable = new NotificationTable
+                {
+                    id_event_type = data.IdEventType,
+                    id_severity = data.IdSeverity,
+                    id_certainity = data.IdCertainity,
+                    id_area = Int32.Parse(data.IdArea),
+                    isRegion = data.IsRegion
+                };
+
+                UserNotificationTable userNotificationTable = new UserNotificationTable
+                {
+                    id_user = user.id
+                };
+
+                NotificationTable matchingNotification = _context.Notification.FirstOrDefault(n =>
+                    n.id_event_type == notificationTable.id_event_type &&
+                    n.id_severity == notificationTable.id_severity &&
+                    n.id_certainity == notificationTable.id_certainity &&
+                    n.id_area == notificationTable.id_area &&
+                    n.isRegion == notificationTable.isRegion
+                );
+
+                if (matchingNotification == null)
+                {
+                    _context.Notification.Add(notificationTable);
+                    _context.SaveChanges();
+                    userNotificationTable.id_notification = notificationTable.id;
+                } else
+                {
+                    
+                    // if user has the same notification already tracked (duplicate)
+                    if(_context.UserNotification.Any(un => 
+                        un.id_user == user.id &&
+                        un.id_notification == matchingNotification.id
+                    ))
+                    {
+                        return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                    }
+
+                    userNotificationTable.id_notification = matchingNotification.id;
+                }
+
+                _context.UserNotification.Add(userNotificationTable);
+                _context.SaveChanges();
+
+                return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
+            } catch (Exception ex)
+            {
+                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
+        }
+
+        public NotificationResponse GetEventNotifications(LoginTokenDto data)
+        {
+
+            UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+            int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
+            if (authorizeTokenStatus != 200)
+                return new NotificationResponse { ResponseCode = authorizeTokenStatus };
+
+            try
+            {
+                List<UserNotificationTable> userNotificationTables = _context.UserNotification.Where(
+                    un => un.id_user == user.id
+                ).ToList();
+
+                List<NotificationDto> userNotifications = new();
+
+                foreach (UserNotificationTable unt in userNotificationTables)
+                {
+
+                    NotificationTable notification = _context.Notification.SingleOrDefault(n => n.id == unt.id_notification);
+                    string area = notification.isRegion ? _context.Region.First(r => r.id == notification.id_area).name : _context.Locality.First(l => l.id == notification.id_area).name;
+                    string? severity = _context.Severity.FirstOrDefault(s => s.id == notification.id_severity)?.text;
+                    string? certainity = _context.Certainity.FirstOrDefault(c => c.id == notification.id_certainity)?.text;
+
+                    userNotifications.Add(new NotificationDto
+                    {
+                        Id = unt.id,
+                        EventType = _context.EventType.First(e => e.id == notification.id_event_type).name,
+                        Severity = severity,
+                        Certainity = certainity,
+                        Area = area,
+                    });
+                }
+
+                return new NotificationResponse { ResponseCode = StatusCodes.Status200OK, Notifications = userNotifications };
+            }
+            catch (Exception ex)
+            {
+                return new NotificationResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
+        }
+
+        public EventNotificationOptionsResponse GetEventNotificationOptions()
         {
 
             try
             {
+
                 List<EventTypeDto> eventTypeList = _context.EventType.Select(eventType => new EventTypeDto
                 {
                     Id = eventType.id,
-                    Name = eventType.name,
-                    ImgPath = eventType.img_path
+                    Name = eventType.name
                 }).ToList();
 
                 List<SeverityDto> severityList = _context.Severity.Select(severity => new SeverityDto
@@ -52,13 +197,25 @@ namespace hlidacVystrah.Services
                     Text = certainity.text
                 }).ToList();
 
-                List<LocalityDto> localityList = _context.Locality.Select(locality => new LocalityDto
+                Dictionary<string, List<LocalityDto>> localityList = _context.Locality
+                    .GroupBy(el => _context.Region.First(r => r.id == el.id_region).name).ToList()
+                    .OrderBy(group => group.Key)
+                    .ToDictionary(
+                    group => group.Key,
+                    group => group.Select(locality => new LocalityDto
+                    {
+                        Cisorp = locality.id,
+                        Name = locality.name
+                    }).ToList()
+                );
+
+                List<LocalityDto> localityList2 = _context.Locality.Select(locality => new LocalityDto
                 {
                     Cisorp = locality.id,
                     Name = locality.name
                 }).OrderBy(localityDto => localityDto.Name).ToList();
 
-                return new EventNotificationOptions
+                return new EventNotificationOptionsResponse
                 {
                     ResponseCode = StatusCodes.Status200OK,
                     EventTypeList = eventTypeList,
@@ -69,21 +226,24 @@ namespace hlidacVystrah.Services
 
             } catch (Exception ex)
             {
-                return new EventNotificationOptions { ResponseCode = StatusCodes.Status500InternalServerError };
-            }
-
-           
+                return new EventNotificationOptionsResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            } 
         }
 
-        public BaseResponse DeleteAccount(DeleteAccountDto data)
+        public BaseResponse DeleteAccount(LoginTokenDto data)
         {
 
-            UserTable? user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
-            if (user == null)
-                return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
-            
+            UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+            int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
+            if (authorizeTokenStatus != 200)
+                return new BaseResponse { ResponseCode = authorizeTokenStatus };
+
             try
             {
+
+                List<UserNotificationTable> userNotifications = _context.UserNotification.Where(un => user.id == un.id).ToList();
+                _context.UserNotification.RemoveRange(userNotifications);
+
                 _context.User.Remove(user);
                 _context.SaveChanges();
             } catch(Exception ex) {
@@ -95,8 +255,13 @@ namespace hlidacVystrah.Services
 
         public BaseResponse SetNewPasswordLoggedIn(NewPasswordLoggedInDto data)
         {
-            UserTable? user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
-            if (user == null || data.Password.Length < passwordMinLength)
+
+            UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+            int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
+            if (authorizeTokenStatus != 200)
+                return new BaseResponse { ResponseCode = authorizeTokenStatus };
+
+            if(data.Password.Length < passwordMinLength)
                 return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
 
             try
@@ -132,7 +297,7 @@ namespace hlidacVystrah.Services
             return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
-        public BaseResponse ActivateAccount(ActivateAccountDto data)
+        public BaseResponse ActivateAccount(ActivationTokenDto data)
         {
             UserTable? user = _context.User.FirstOrDefault(u => u.activation_token == data.ActivationToken);
             if (user == null || user.isActive)
@@ -152,7 +317,7 @@ namespace hlidacVystrah.Services
             return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
-        public BaseResponse ResetPassword(ResetPasswordDto data)
+        public BaseResponse ResetPassword(EmailDto data)
         {
 
             UserTable? user = _context.User.FirstOrDefault(u => u.email == data.Email);
@@ -176,7 +341,7 @@ namespace hlidacVystrah.Services
             return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
-        public UserLoginResponse Login(LoginDataDto data)
+        public UserLoginResponse Login(EmailPasswordDto data)
         {
             UserTable user = _context.User.FirstOrDefault(u => u.email == data.Email);
             if(user == null || user.password != this.HashPassword(data.Password))
@@ -203,20 +368,33 @@ namespace hlidacVystrah.Services
             return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email, LoginToken = user.login_token };
         }
 
+        private bool AuthorizeUserToken(UserTable user)
+        {
+            return this.AuthorizeUserTokenStatusCode(user) == 200;
+        }
+
+        private int AuthorizeUserTokenStatusCode(UserTable user)
+        {
+            if (user == null)
+                return StatusCodes.Status401Unauthorized;
+
+            if (user.login_token_expire < DateTime.Now)
+                return StatusCodes.Status400BadRequest;
+
+            return StatusCodes.Status200OK;
+        }
+
         public UserLoginResponse TokenLogin(LoginTokenDto data) 
         {
             UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
-            if (user == null)
-                return new UserLoginResponse { ResponseCode = StatusCodes.Status401Unauthorized };
-
-            if(user.login_token_expire < DateTime.Now)
-                return new UserLoginResponse { ResponseCode = StatusCodes.Status400BadRequest };
+            int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
+            if (authorizeTokenStatus != 200)
+                return new UserLoginResponse { ResponseCode = authorizeTokenStatus };
 
             try
             {
                 user.login_token_expire = DateTime.Now.AddHours(3);
                 _context.SaveChanges();
-
             }
             catch (Exception ex)
             {
@@ -226,7 +404,7 @@ namespace hlidacVystrah.Services
             return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email };
         }
 
-        public BaseResponse Register(RegisterDataDto data) {
+        public BaseResponse Register(EmailPasswordDto data) {
 
             // Return bad request if the email isnt the right format or if the password isnt at least 6 characters long
             if(!this.EmailIsValid(data.Email) || data.Password.Length < passwordMinLength)

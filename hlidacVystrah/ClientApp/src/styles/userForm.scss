@@ -5,6 +5,12 @@
     background: $gray;
     min-height: calc(100vh - 40px);
 
+    .loginExpired {
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, calc(-100% - 6px));
+    }
+
     .formInfo {
         font-size: 14px;
 

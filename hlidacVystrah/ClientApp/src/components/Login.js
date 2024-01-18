@@ -28,14 +28,9 @@ export class Login extends Component {
         }
 
         this.formHelper = new UserFormHelper();
-        this.loginHelper = new UserLoginHelper();
     }
 
     componentDidMount() {
-        this.loginHelper.TokenLogin().then(tokenLoginResponse => {
-            if (tokenLoginResponse.loggedIn)
-                window.location.href = '/account'
-        });
     }
 
     HandleTogglePassword = () => {
@@ -65,16 +60,18 @@ export class Login extends Component {
             })
             .then((response) => {
 
+                let data = response.data;
                 this.setState((prevState) => ({
                     ...prevState,
-                    loggedIn: response.data.responseCode == 200,
-                    loggedUserEmail: response.data.email,
-                    response: response.data.responseCode
+                    loggedIn: data.responseCode == 200,
+                    loggedUserEmail: data.email,
+                    response: data.responseCode
                 }));
 
-                if (response.data.responseCode == 200) {
-                    localStorage.setItem("loginToken", response.data.loginToken)
-                    window.location.href = '/account';
+                if (data.responseCode == 200) {
+                    //CHECK IF USER ACCEPTED COOKIES
+                    localStorage.setItem("loginToken", data.loginToken)
+                    this.props.HandleUserLoggedIn(data.loginToken);
                 }
                     
             }).finally(() => {
@@ -113,6 +110,11 @@ export class Login extends Component {
                 <NavMenu />
                 <div id="login" className='d-flex justify-content-center align-items-center'>
                     <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded position-relative'>
+                        {this.props.loginExpired &&
+                            <span className='position-absolute loginExpired'>
+                                {this.formHelper.RenderInformationText("Přihlášení vypršelo!", true)}
+                            </span>    
+                        }
                         <h2 className='mb-3 mx-auto'>Přihlášení</h2>
                         <span className='mb-2 d-flex align-items-center mx-auto'>
                             <i className="fa-solid fa-envelope me-2"></i>

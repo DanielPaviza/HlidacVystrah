@@ -14,10 +14,6 @@ const AppRoutes = [
         element: <HomeController />
     },
     {
-        path: '/login',
-        element: <Login />
-    },
-    {
         path: '/register',
         element: <Register />
     },
@@ -32,6 +28,10 @@ const AppRoutes = [
     {
         path: '/activateaccount',
         element: <ActivateAccount />
+    },
+    {
+        path: '/login',
+        element: <UserAccount />
     },
     {
         path: '/account',

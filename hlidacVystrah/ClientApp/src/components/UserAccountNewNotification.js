@@ -44,7 +44,7 @@ export class UserAccountNewNotification extends Component {
         isRegion = isRegion == "0" ? false : true;
 
         return {
-            "LoginToken": "44ENRJrmnnUbqDY5YZk/y2AQtXsive+gk99NZyTVZqI=",
+            "LoginToken": this.props.loginToken,
             "IdEventType": idEventType,
             "IdSeverity": idSeverity,
             "Idcertainty": idcertainty,
@@ -59,6 +59,8 @@ export class UserAccountNewNotification extends Component {
             .then(response => {
 
                 let data = response.data;
+
+                this.props.HandleUserLoginExpired(data.responseCode);
 
                 this.setState((prevState) => ({
                     ...prevState,
@@ -97,6 +99,8 @@ export class UserAccountNewNotification extends Component {
 
                 let data = response.data;
 
+                this.props.HandleUserLoginExpired(data.responseCode);
+
                 this.setState((prevState) => ({
                     ...prevState,
                     createResponse: data.responseCode
@@ -122,8 +126,7 @@ export class UserAccountNewNotification extends Component {
         switch (this.state.createResponse) {
             case 200:
                 return this.formHelper.RenderInformationText("Výstraha úspěšně uložena", false);
-            case 400:
-            case 401:
+            case 409:
                 return this.formHelper.RenderInformationText("Výstraha je již uložena", true);
             case 500:
                 return this.formHelper.RenderInformationText("Něco se nepovedlo. Obnovte stránku.", true);

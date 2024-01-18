@@ -33,11 +33,13 @@ export class UserAccountNotifications extends Component {
         }));
 
         axios.post('/api/user/notifications',
-            { LoginToken: "44ENRJrmnnUbqDY5YZk/y2AQtXsive+gk99NZyTVZqI="}
+            { LoginToken: this.props.loginToken }
         )
             .then(response => {
 
                 let data = response.data;
+
+                this.props.HandleUserLoginExpired(data.responseCode);
 
                 this.setState((prevState) => ({
                     ...prevState,
@@ -78,7 +80,7 @@ export class UserAccountNotifications extends Component {
         }));
 
         axios.post('/api/user/deletenotification',
-            { LoginToken: "44ENRJrmnnUbqDY5YZk/y2AQtXsive+gk99NZyTVZqI=", IdNotification: id }
+            { LoginToken: this.props.loginToken, IdNotification: id }
         )
             .then(response => {
 
@@ -88,6 +90,8 @@ export class UserAccountNotifications extends Component {
                     ...prevState,
                     deleteResponse: data.responseCode
                 }));
+
+                this.props.HandleUserLoginExpired(data.responseCode);
 
                 this.GetNotifications();
             })
@@ -164,7 +168,11 @@ export class UserAccountNotifications extends Component {
                         <div className='horLine col-12 mb-3' />
                     </>
                 }
-                <UserAccountNewNotification GetNotifications={this.GetNotifications} />
+                <UserAccountNewNotification
+                    GetNotifications={this.GetNotifications}
+                    loginToken={this.props.loginToken}
+                    HandleUserLoginExpired={this.props.HandleUserLoginExpired}
+                />
             </div>
         );
     }

@@ -115,7 +115,7 @@ namespace hlidacVystrah.Services
                         un.id_notification == matchingNotification.id
                     ))
                     {
-                        return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                        return new BaseResponse { ResponseCode = StatusCodes.Status409Conflict };
                     }
 
                     userNotificationTable.id_notification = matchingNotification.id;
@@ -242,9 +242,9 @@ namespace hlidacVystrah.Services
             try
             {
 
-                List<UserNotificationTable> userNotifications = _context.UserNotification.Where(un => user.id == un.id).ToList();
+                List<UserNotificationTable> userNotifications = _context.UserNotification.Where(un => user.id == un.id_user).ToList();
                 _context.UserNotification.RemoveRange(userNotifications);
-
+                _context.SaveChanges();
                 _context.User.Remove(user);
                 _context.SaveChanges();
             } catch(Exception ex) {

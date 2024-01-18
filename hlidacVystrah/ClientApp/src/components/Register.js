@@ -39,7 +39,7 @@ export class Register extends Component {
 
         let passwordMismatch = this.state.password1 != this.state.password2;
         let passwordTooShort = this.state.password1.length < this.helper.minPasswordLength;
-        let emailError = !this.helper.EmailValid();
+        let emailError = !this.helper.EmailValid(this.state.email);
 
         this.setState((prevState) => ({
             ...prevState,

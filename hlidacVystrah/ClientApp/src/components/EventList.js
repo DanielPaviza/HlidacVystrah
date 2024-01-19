@@ -18,11 +18,11 @@ export class EventList extends Component {
 
         let events = this.GetEventsGrouped();
 
-        return this.props.events.length > 0 ? <>
+        return this.props.events.length < 0 ? <>
             {Object.keys(events).map(key => (
                 events[key].length > 0 && (
                     <div className='urgencyContainer mt-3' key={key}>
-                        <h3>{key}</h3>
+                        <h4>{key} jevy</h4>
                         <div className='d-flex flex-wrap'>
                             {events[key].map(event => (
                                 <div key={event.id} onClick={() => this.props.openEvent(event.id)} className='col-4 col-md-3 col-lg-2 d-flex justify-content-center align-items-center'>
@@ -37,8 +37,11 @@ export class EventList extends Component {
                 )
             ))}
         </>
-            :
-        <p className='mt-2 fw-bold'>Pro zvolenou lokalitu nejsou vydány žádné výstrahy</p>
+        :
+        <h4 className='noEvents mt-2 d-flex justify-content-center d-flex flex-column flex-md-row align-items-center'>
+                <span className='order-md-2'>V současné době nejsou pozorovány žádné jevy.</span>
+                <i className="fa-solid fa-check me-2 d-flex align-items-center order-md-1"></i>
+        </h4>
     }
 
     GetEventsGrouped() {
@@ -65,7 +68,7 @@ export class EventList extends Component {
         return (
             <div id='eventList' className='pb-5'>
                 <span className='d-flex align-items-start justify-content-between'>
-                    <h2 className='m-0'>Výstrahy</h2>
+                    <h3 className='m-0'>Aktuální výstrahy</h3>
                 </span>
                 {this.RenderEvents()}
             </div>

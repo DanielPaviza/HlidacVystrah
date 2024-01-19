@@ -24,13 +24,18 @@
             }
         }
 
-
         @media (max-width: 768px) {
             .event {
                 span {
                     font-size: 14px;
                 }
             }
+        }
+    }
+
+    .noEvents {
+        i {
+            color: $green;
         }
     }
 }

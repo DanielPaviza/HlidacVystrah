@@ -53,12 +53,13 @@ export class LocalityDetail extends Component {
 
         return (
             <section id="localityDetail">
+                <h2 className='mt-3 pb-1 mb-0 mt-lg-4 border-bottom fit-content'>Meteorologické výstrahy v {this.props.isRegion ? 'kraji' : 'obci'}</h2>
                 {this.props.isRegion ?
-                    <h2 className='mt-3 mt-md-4 mb-3 mb-md-4'>{this.localityInfo.region}</h2>
+                    <h3 className='pt-1 mb-3 mb-md-4'>{this.localityInfo.region}</h3>
                     :
                     <>
-                        <h2 className='mt-3 mt-md-4 mb-1'>{this.localityInfo.name}</h2>
-                        <h3 className='mb-3 mb-md-4 ' role="button" onClick={() => this.props.OpenLocalityDetail(this.localityInfo.region, true)}>{this.localityInfo.region}</h3>
+                        <h3 className='pt-1 mb-1'>{this.localityInfo.name}</h3>
+                        <h4 className='mb-3 mb-md-4' role="button" onClick={() => this.props.OpenLocalityDetail(this.localityInfo.region, true)}>{this.localityInfo.region}</h4>
                     </>
                 }
                 <MapEventList

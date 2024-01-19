@@ -158,6 +158,7 @@ export class HomeController extends Component {
         }
 
         return <section id='home'>
+            <h2 className='mt-3 mb-3 mt-lg-4 mb-lg-4'>Meteorologické výstrahy v České Republice</h2>
             <Search
                 localityList={this.state.localityList}
                 OpenLocalityDetail={this.HandleOpenLocality}
@@ -196,8 +197,7 @@ export class HomeController extends Component {
                         <span className='d-flex justify-content-between '>
                             <BackButton history={this.history} NavigateHome={this.HandleOpenHome} />
                             {this.RenderTimestamp()}
-                        </span>
-                        
+                        </span>  
                         {this.RenderPage()}
                     </div>
                     <Footer background={'lightGray'} />

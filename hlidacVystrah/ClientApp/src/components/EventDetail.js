@@ -72,7 +72,7 @@ export class EventDetail extends Component {
 
         return (
             <section id="eventDetail">
-                <h2 className='mt-4 mt-md-5 mb-3'>Detail výstrahy</h2>
+                <h2 className='mt-4 mt-md-5 mb-3'>Detail meteorologické výstrahy</h2>
                 <div className='detail d-flex flex-column'>
                     <div className='d-flex'>
                         <div className=''>

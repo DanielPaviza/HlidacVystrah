@@ -8,11 +8,17 @@ export class Search extends Component {
 
         this.state = {
             listOpened: false,
-            filteredLocalityList: this.props.localityList
+            filteredLocalityList: this.props.localityList,
+            searchText: ""
         };
     }
 
     FilterLocalityList = (val) => {
+
+        this.setState((prevState) => ({
+            ...prevState,
+            searchText: val
+        }));
 
         val = val.toLowerCase();
         let filteredNames = {};
@@ -20,7 +26,6 @@ export class Search extends Component {
         // filter region names
         Object.keys(this.props.localityList).forEach(key => {
             if (key.toLowerCase().includes(val)) {
-                //filteredNames[key] = [{ name: key, cisorp: key }];
                 filteredNames[key] = []
             }                
         });
@@ -42,13 +47,17 @@ export class Search extends Component {
             listOpened: true,
             filteredLocalityList: filteredNames
         }));
+    }
 
-        //console.log(filteredNames)
+    DeleteSearchText = () => {
+        this.setState((prevState) => ({
+            ...prevState,
+            searchText: "",
+            filteredLocalityList: this.props.localityList
+        }));
     }
 
     RenderLocalityList = () => {
-
-        //console.log(this.state.filteredLocalityList)
 
         return (
             Object.keys(this.state.filteredLocalityList).map(key => (
@@ -86,20 +95,30 @@ export class Search extends Component {
     render() {
 
         return (
-            <div id="search" className='d-flex flex-column mb-4 col-12 col-lg-10 col-xl-8 mx-auto'>
-                <label htmlFor='localitySearch' className='fw-bold'>Vyhledejte kraj/obci</label>
+            <div id="search" className='d-flex flex-column mb-3 col-12 col-lg-10 col-xl-8 mx-auto position-relative'>
                 <input
                     id='localitySearch'
                     type="text"
-                    className={`border p-1 ${this.state.listOpened && "opened"}`}
+                    className={`border p-1 ${this.state.listOpened && "opened"} ps-2`}
                     onChange={(event) => this.FilterLocalityList(event.target.value)}
                     onFocus={() => this.HandleInputFocus()}
                     onBlur={() => this.HandleInputBlur()}
                     autoComplete="off"
-                ></input>
+                    placeholder="Vyhledejte lokalitu"
+                    value={this.state.searchText}
+                />
+                {this.state.searchText.length > 0 &&
+                    <div className='position-absolute top-0 end-0 pe-2 h-100 d-flex align-items-center' onClick={() => this.DeleteSearchText() }>
+                        <i className="fa-solid fa-xmark"></i>
+                    </div>
+                }
                 {this.state.listOpened &&
                     <div className='list w-100 border border-top-0'>
-                        {this.RenderLocalityList()}
+                        {Object.keys(this.state.filteredLocalityList).length < 1 ?
+                            <div className='p-2'>Nebyla nalezena žádná lokalita</div>
+                            :
+                            this.RenderLocalityList()
+                        }
                     </div>    
                 }
             </div>

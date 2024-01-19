@@ -5,21 +5,20 @@ body {
     color: $black;
     font-family: 'Roboto', sans-serif;
 
-    h1, h2, h3 {
-        color: $black;
-        font-family: 'Roboto', sans-serif;
-    }
-
     h1 {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
     }
 
     h2 {
-        font-size: 1.7rem;
+        font-size: 1.56rem;
     }
 
     h3 {
-        font-size: 1.42rem;
+        font-size: 1.4rem;
+    }
+
+    h4 {
+        font-size: 1.2rem;
     }
 
     .green {
@@ -60,12 +59,30 @@ body {
     }
 
     .colorCircle {
-        width: 16px!important;
-        height: 16px!important;
+        width: 16px !important;
+        height: 16px !important;
         border-radius: 50%;
     }
 
     .fit-content {
         width: fit-content;
+    }
+
+    @media (min-width: 992px) {
+        h1 {
+            font-size: 1.4rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        h4 {
+            font-size: 1.3rem;
+        }
     }
 }

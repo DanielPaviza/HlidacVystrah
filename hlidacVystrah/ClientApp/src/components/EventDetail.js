@@ -13,7 +13,7 @@ export class EventDetail extends Component {
             this.props.CloseDetail();
 
         this.state = {
-            showDescription: false,
+            showDescription: true,
             showLocalityList: false
         };
 
@@ -36,10 +36,10 @@ export class EventDetail extends Component {
 
     RenderRegions = () => {
         return (
-            <div className='mt-2 affectedLocalities'>
+            <div className='mt-2 affectedLocalities ps-2'>
                 {Object.entries(this.event.localityList).map(([key, value]) => (
                     <div key={key} className='d-flex flex-column'>
-                        <span className='fw-bold' onClick={() => this.props.OpenLocalityDetail(key, true)}>{key}</span>
+                        <span className='fw-bold fit-content' onClick={() => this.props.OpenLocalityDetail(key, true)}>{key}</span>
                         <span>
                             {this.RenderLocalityList(value)}
                         </span>
@@ -78,29 +78,29 @@ export class EventDetail extends Component {
                         <div className=''>
                             <div className='d-flex flex-column short'>
                                 <span className='detailRow d-flex-inline'>
-                                    <span>Typ:</span>
+                                    <span className='fw-bold me-1'>Typ:</span>
                                     <span>{this.event.eventType}</span>
                                 </span>
                                 <span className='detailRow d-flex align-items-center'>
-                                    <span>Závažnost:</span>
+                                    <span className='fw-bold me-1'>Závažnost:</span>
                                     <span>{this.event.severity}</span>
                                     <div className={`ms-2 colorCircle ${this.props.GetEventColor(this.event.severity)}`}></div>
                                 </span>
                                 <span className='detailRow'>
-                                    <span>Pravděpodobnost:</span>
+                                    <span className='fw-bold me-1'>Pravděpodobnost:</span>
                                     <span>{this.event.certainty}</span>
                                 </span>
                                 <span className='detailRow'>
-                                    <span>Výskyt:</span>
+                                    <span className='fw-bold me-1'>Výskyt:</span>
                                     <span>{this.event.urgency}</span>
                                 </span>
                                 <span className='detailRow'>
-                                    <span>Začátek:</span>
+                                    <span className='fw-bold me-1'>Začátek:</span>
                                     <span>{this.event.onset}</span>
                                 </span>
                                 {this.event.expires &&
                                     <span className='detailRow'>
-                                        <span>Konec~:</span>
+                                        <span className='fw-bold me-1'>Konec~:</span>
                                         <span>{this.event.expires}</span>
                                     </span>
                                 }
@@ -112,8 +112,8 @@ export class EventDetail extends Component {
                     </div>
                     <div className='rollDown detailRow' onClick={() => this.ToggleShowDescription() }>
                         <span className='d-flex justify-content-between'>
-                            <span>Popis:</span>
-                            <i className={`fa-solid fa-arrow-${this.GetDescriptionArrowDirection()}`}></i>
+                            <span className='fw-bold me-1'>Popis:</span>
+                            <i className={`fa-solid fa-angles-${this.GetDescriptionArrowDirection()} d-flex align-items-center`}></i>
                         </span>
                         {this.state.showDescription &&
                             <div className='ms-2 mt-2 description'>
@@ -126,8 +126,8 @@ export class EventDetail extends Component {
                     </div>
                     <div className='rollDown detailRow' onClick={() => this.ToggleShowLocalityList()}>
                         <span className='d-flex justify-content-between'>
-                            <span>Postižené oblasti:</span>
-                            <i className={`fa-solid fa-arrow-${this.GetLocalityListArrowDirection()}`}></i>
+                            <span className='fw-bold me-1'>Postižené oblasti:</span>
+                            <i className={`fa-solid fa-angles-${this.GetLocalityListArrowDirection()} d-flex align-items-center`}></i>
                         </span>
                         {this.state.showLocalityList &&
                             this.RenderRegions()

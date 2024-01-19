@@ -2,16 +2,23 @@
 
 class SiteHistory {
 
-    constructor(closeDetails) {
-        this.history = [];
-        this.closeDetails = closeDetails;
+    constructor(CloseDetails, OpenEventDetail, OpenLocalityDetail, history) {
+        
+        this.CloseDetails = CloseDetails;
+        this.OpenEventDetail = OpenEventDetail;
+        this.OpenLocalityDetail = OpenLocalityDetail;
+
+        this.history = history;
+        this.NavigateToLast();
     }
 
-    AddRecord = (OpenFunction, id, isRegion) => {
+    AddRecord = (type, id = null) => {
 
-        let newRecord = { openFunction: OpenFunction, id: id, isRegion: isRegion };
-        if (this.RecordCanAdd(newRecord))
-            this.history.push(newRecord);
+        let record = { type: type, id: id }
+        if (this.RecordCanAdd(record)) {
+            this.history.push(record);
+            this.SaveHistory();
+        }
     }
 
     RecordCanAdd = (newRecord) => {
@@ -22,42 +29,62 @@ class SiteHistory {
         return !(newRecord.id == this.RecordGetLast().id);
     }
 
-    AddHomeRecord = (OpenFunction) => {
-
-        let newRecord = { openFunction: OpenFunction, id: null, isRegion: null };
-        if (this.RecordCanAdd(newRecord))
-            this.history.push(newRecord);
+    SaveHistory = () => {
+        localStorage.setItem("history", JSON.stringify(this.history));
     }
 
     RecordGetLast = () => {
 
         if (this.history.length < 1)
-            return { openFunction: null, id: null, isRegion: null };
+            return { type: "home", id: null };
 
         return this.history[this.history.length - 1];
     }
 
-    // returns bool true if current page is home
+    NavigateToLast = () => {
+        let lastSite = this.RecordGetLast();
+        this.HandleOpenSite(lastSite);
+    }
+
+    HandleOpenSite = (site) => {
+
+        switch (site.type) {
+            case "home":
+                this.CloseDetails();
+                break;
+            case "event":
+                this.OpenEventDetail(site.id);
+                break;
+            case "locality":
+                this.OpenLocalityDetail(site.id, false);
+                break;
+            case "region":
+                this.OpenLocalityDetail(site.id, true);
+                break;
+            default:
+                this.CloseDetails();
+        }
+    }
+
     NavigateBack = () => {
 
         if (this.history.length <= 1) {
             this.history = [];
-            this.closeDetails();
-            return true;
+            this.SaveHistory();
+            this.CloseDetails();
+            return;
         }
             
         this.history.pop();
         let lastSite = this.history.pop();
 
         // is home
-        if (lastSite.id == null && lastSite.isRegion == null) {
-            lastSite.openFunction();
-            return true;
+        if (lastSite.type == "home") {
+            this.CloseDetails();
+            return;
         }
 
-        lastSite.isRegion ? lastSite.openFunction(lastSite.id, lastSite.isRegion) : lastSite.openFunction(lastSite.id);
-
-        return false;
+        this.HandleOpenSite(lastSite);
     }
 }
 

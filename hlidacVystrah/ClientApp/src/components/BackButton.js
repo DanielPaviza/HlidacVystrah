@@ -5,15 +5,18 @@ export class BackButton extends Component {
 
     constructor(props) {
         super(props);
+
+        let lastRecord = this.props.history.RecordGetLast();
+
         this.state = {
-            isHome: true
+            isHome: lastRecord.type == "home"
         }
     }
 
     componentDidUpdate() {
 
         let lastRecord = this.props.history.RecordGetLast();
-        let isHome = (lastRecord.id == null && lastRecord.isRegion == null);
+        let isHome = (lastRecord.type == "home");
 
         // Only update the state if necessary
         if (isHome !== this.state.isHome) {

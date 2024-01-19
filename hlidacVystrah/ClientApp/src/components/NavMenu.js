@@ -36,7 +36,7 @@ export class NavMenu extends Component {
 
     CloseDetail = () => {
         if (window.location.pathname == '/')
-            return this.props.CloseDetail();
+            return this.props.NavigateHome();
     }
 
     RenderLoginNavLink = () => {

@@ -28,19 +28,35 @@ export class HomeController extends Component {
             map: [],
         };
 
-        this.history = new SiteHistory(this.HandleCloseDetail);
     }
 
     componentDidMount() {
         this.GetEventList();
         this.GetLocalityList();
         this.GetSvgMap();
+
+        this.history = this.InitializeSiteHistory();
+    }
+
+    InitializeSiteHistory = () => {
+
+        let savedHistory = JSON.parse(localStorage.getItem("history"));
+        if (!savedHistory)
+            savedHistory = [];
+
+        return new SiteHistory(
+            this.HandleCloseDetail,
+            this.HandleOpenEvent,
+            this.HandleOpenLocality,
+            savedHistory
+        );
     }
 
     HandleOpenEvent = (id) => {
 
         this.HandleCloseDetail();
-        this.history.AddRecord(this.HandleOpenEvent, id);
+        if (this.history)
+            this.history.AddRecord("event", id);
 
         this.setState((prevState) => ({
             ...prevState,
@@ -52,7 +68,10 @@ export class HomeController extends Component {
     HandleOpenLocality = (id, isRegion = false) => {
 
         this.HandleCloseDetail();
-        this.history.AddRecord(this.HandleOpenLocality, id, isRegion);
+
+        let historySiteName = isRegion ? "region" : "locality";
+        if(this.history)
+            this.history.AddRecord(historySiteName, id);
 
         this.setState((prevState) => ({
             ...prevState,
@@ -64,7 +83,8 @@ export class HomeController extends Component {
 
     HandleOpenHome = () => {
         this.HandleCloseDetail();
-        this.history.AddHomeRecord(this.HandleOpenHome);
+        if (this.history)
+            this.history.AddRecord("home");
     }
 
     HandleCloseDetail = () => {
@@ -171,7 +191,7 @@ export class HomeController extends Component {
                 <Loading />
                 :
                 <>
-                    <NavMenu CloseDetail={this.HandleCloseDetail} />
+                    <NavMenu CloseDetail={this.HandleCloseDetail} NavigateHome={this.HandleOpenHome} />
                     <div className='container mt-3'>
                         <span className='d-flex justify-content-between '>
                             <BackButton history={this.history} NavigateHome={this.HandleOpenHome} />

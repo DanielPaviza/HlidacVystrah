@@ -1,4 +1,3 @@
-using hlidacVystrah.Configuration;
 using hlidacVystrah.Model;
 using hlidacVystrah.Services;
 using hlidacVystrah.Services.Interfaces;

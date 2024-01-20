@@ -1,11 +1,9 @@
 ﻿
 using hlidacVystrah.Model;
 using hlidacVystrah.Services.Interfaces;
-using hlidacVystrah.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MailKit.Net.Smtp;
-using System.Web;
 
 namespace hlidacVystrah.Services
 {
@@ -21,13 +19,13 @@ namespace hlidacVystrah.Services
         private string CreateRegistrationLink(string activationToken)
         {
             string token = Uri.EscapeDataString(activationToken);
-            return string.Format("https://localhost:44408/activateAccount?token={0}", token);
+            return string.Format("/activateAccount?token={0}", token);
         }        
         
         private string CreatePasswordResetLink(string passwordResetToken)
         {
             string token = Uri.EscapeDataString(passwordResetToken);
-            return string.Format("https://localhost:44408/newpassword?token={0}", token);
+            return string.Format("/newpassword?token={0}", token);
         }
 
         private string GetCurrentDatetime()
@@ -52,9 +50,9 @@ namespace hlidacVystrah.Services
                     string filePath = Directory.GetCurrentDirectory() + "\\MailTemplates\\PasswordReset.html";
                     string emailTemplateText = File.ReadAllText(filePath);
 
-                    string link = this.CreatePasswordResetLink(passwordResetToken);
+                    string linkPath = this.CreatePasswordResetLink(passwordResetToken);
                     string timestamp = this.GetCurrentDatetime();
-                    emailTemplateText = string.Format(emailTemplateText, link, timestamp);
+                    emailTemplateText = string.Format(emailTemplateText, _mailSettings.BaseUrl, linkPath, timestamp);
 
                     emailMessage.Body = this.BuildEmailBody(emailTemplateText);
 
@@ -104,9 +102,9 @@ namespace hlidacVystrah.Services
                     string filePath = Directory.GetCurrentDirectory() + "\\MailTemplates\\Register.html";
                     string emailTemplateText = File.ReadAllText(filePath);
 
-                    string link = this.CreateRegistrationLink(activationToken);
+                    string linkPath = this.CreateRegistrationLink(activationToken);
                     string timestamp = this.GetCurrentDatetime();
-                    emailTemplateText = string.Format(emailTemplateText, link, timestamp);
+                    emailTemplateText = string.Format(emailTemplateText, _mailSettings.BaseUrl, linkPath, timestamp);
 
                     emailMessage.Body = this.BuildEmailBody(emailTemplateText);
 

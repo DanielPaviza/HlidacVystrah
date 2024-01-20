@@ -4,6 +4,17 @@
 #userAccount {
     min-height: calc(100vh - 56px);
 
+    .formInfo {
+        font-size: 14px;
+        display: flex;
+
+        @media (min-width: 768px) {
+            & {
+                font-size: 16px;
+            }
+        }
+    }
+
     .accountSettings {
         background-color: white;
 
@@ -53,7 +64,7 @@
             }
 
             button {
-                border: 1px solid transparent!important;
+                border: 1px solid transparent !important;
                 background-color: $gray;
 
                 &:hover {

@@ -8,5 +8,7 @@ namespace hlidacVystrah.Model.Response
         public string? Email { get; set; } = null;
 
         public string? LoginToken { get; set; } = null;
+
+        public bool IsActive { get; set; } = false;
     }
 }

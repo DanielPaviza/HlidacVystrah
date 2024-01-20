@@ -28,8 +28,14 @@ function ActivateAccount() {
                 })
                 .then((response) => {
                     setResponse(response.data.responseCode);
+                    if (response.data.responseCode == 200) {
+                        localStorage.setItem("loginToken", response.data.loginToken);
+                        setTimeout(() => {
+                            window.location.href = '/account';
+                        }, 1000);
+                    }
                 }).catch(err => {
-                    setResponse(400);
+                    setResponse(500);
                 }).finally(() => {
                     setLoading(false);
                 });

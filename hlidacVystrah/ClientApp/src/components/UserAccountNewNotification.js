@@ -123,6 +123,12 @@ export class UserAccountNewNotification extends Component {
     }
 
     RenderCreateResponse = () => {
+
+        if (this.state.createResponse != null)
+            setTimeout(() => {
+                this.setState((prevState) => ({ ...prevState, createResponse: null }))
+            }, this.formHelper.timeoutDuration);
+
         switch (this.state.createResponse) {
             case 200:
                 return this.formHelper.RenderInformationText("Výstraha úspěšně uložena", false);

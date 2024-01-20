@@ -31,7 +31,7 @@ namespace hlidacVystrah.Services
                 if (authorizeTokenStatus != 200)
                     return new BaseResponse { ResponseCode = authorizeTokenStatus };
 
-                UserNotificationTable userNotification = _context.UserNotification.FirstOrDefault(un =>
+                UserNotificationTable? userNotification = _context.UserNotification.FirstOrDefault(un =>
                     un.id == data.IdNotification
                 );
 
@@ -86,7 +86,7 @@ namespace hlidacVystrah.Services
                     id_user = user.id
                 };
 
-                NotificationTable matchingNotification = _context.Notification.FirstOrDefault(n =>
+                NotificationTable? matchingNotification = _context.Notification.FirstOrDefault(n =>
                     n.id_event_type == notificationTable.id_event_type &&
                     n.id_severity == notificationTable.id_severity &&
                     n.id_certainty == notificationTable.id_certainty &&
@@ -291,24 +291,24 @@ namespace hlidacVystrah.Services
             return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
-        public BaseResponse ActivateAccount(ActivationTokenDto data)
+        public ActivateAccount ActivateAccount(ActivationTokenDto data)
         {
             UserTable? user = _context.User.FirstOrDefault(u => u.activation_token == data.ActivationToken);
             if (user == null || user.isActive)
-                return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                return new ActivateAccount { ResponseCode = StatusCodes.Status400BadRequest };
 
             try
             {
                 user.isActive = true;
                 _context.SaveChanges();
-
+                this.UserSetNewLoginToken(user);
             }
             catch (Exception ex)
             {
-                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+                return new ActivateAccount { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
-            return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
+            return new ActivateAccount { ResponseCode = StatusCodes.Status200OK, LoginToken = user.login_token };
         }
 
         public BaseResponse ResetPassword(EmailDto data)
@@ -341,17 +341,11 @@ namespace hlidacVystrah.Services
             if(user == null || user.password != this.HashPassword(data.Password))
                 return new UserLoginResponse { ResponseCode = StatusCodes.Status401Unauthorized };
 
-            if(!user.isActive)
-                return new UserLoginResponse { ResponseCode = StatusCodes.Status403Forbidden };
-
             if(user.login_token == null || user.login_token_expire < DateTime.Now)
             {
                 try
                 {
-                    user.login_token = this.GenerateLoginToken();
-                    user.login_token_expire = DateTime.Now.AddHours(3);
-                    _context.SaveChanges();
-
+                    this.UserSetNewLoginToken(user);
                 }
                 catch (Exception ex)
                 {
@@ -359,21 +353,23 @@ namespace hlidacVystrah.Services
                 }
             }
 
-            return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email, LoginToken = user.login_token };
+            return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email, LoginToken = user.login_token, IsActive = user.isActive };
         }
 
-        private bool AuthorizeUserToken(UserTable user)
+        private void UserSetNewLoginToken(UserTable user)
         {
-            return this.AuthorizeUserTokenStatusCode(user) == 200;
+            user.login_token = this.GenerateLoginToken();
+            user.login_token_expire = DateTime.Now.AddHours(3);
+            _context.SaveChanges();
         }
 
-        private int AuthorizeUserTokenStatusCode(UserTable user)
+        private int AuthorizeUserTokenStatusCode(UserTable? user)
         {
             if (user == null)
                 return StatusCodes.Status401Unauthorized;
 
             if (user.login_token_expire < DateTime.Now)
-                return StatusCodes.Status400BadRequest;
+                return 440;
 
             return StatusCodes.Status200OK;
         }
@@ -395,7 +391,24 @@ namespace hlidacVystrah.Services
                 return new UserLoginResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
-            return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email };
+            return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email, IsActive = user.isActive };
+        }
+        public BaseResponse ReSendActivateAccountEmail(LoginTokenDto data)
+        {
+
+            UserTable? user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+            int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
+             if (authorizeTokenStatus != 200)
+                return new UserLoginResponse { ResponseCode = authorizeTokenStatus };
+
+            bool emailSent = _mailService.SendRegistrationMail(user.email, user.activation_token);
+            if(emailSent)
+            {
+                return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
+            } else
+            {
+                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
         }
 
         public BaseResponse Register(EmailPasswordDto data) {
@@ -420,21 +433,23 @@ namespace hlidacVystrah.Services
                 };
 
                 _context.User.Add(user);
+                _context.SaveChanges();
+                _mailService.SendRegistrationMail(user.email, user.activation_token);
 
+                return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
+                /*
                 bool emailSent = _mailService.SendRegistrationMail(user.email, user.activation_token);
-                
-                if(!emailSent)
+
+                if (!emailSent)
                     return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
 
-                _context.SaveChanges();
-
+                    _context.SaveChanges();
+                */
             }
             catch (Exception ex)
             {
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
-
-            return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
         private string GenerateActivationToken()

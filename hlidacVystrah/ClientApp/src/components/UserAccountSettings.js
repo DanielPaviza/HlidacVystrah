@@ -65,6 +65,12 @@ export class UserAccountSettings extends Component {
     }
 
     RenderDeleteAccountResponse = () => {
+
+        if (this.state.deleteAccountResponse != null)
+            setTimeout(() => {
+                this.setState((prevState) => ({ ...prevState, deleteAccountResponse: null }));
+            }, this.formHelper.timeoutDuration);
+
         switch (this.state.deleteAccountResponse) {
             case 200:
                 return this.formHelper.RenderInformationText("Účet byl úspěšně smazán!", false);
@@ -101,6 +107,10 @@ export class UserAccountSettings extends Component {
         return (
             <div className='mt-4 mb-4'>
                 <h3>Správa účtu</h3>
+                <div className='p-2 mt-2'>
+                    <span className='fw-bold me-1'>Váš email:</span>
+                    {this.props.userEmail}
+                </div>
                 <div className='accountSettings d-flex flex-column'>
                     <span className={`p-2 py-3 fw-bold d-flex justify-content-between align-items-center ${this.state.changePasswordOpened && 'borderLeft'}`} onClick={() => this.HandleToggleChangePassword()}>
                         <span>Změnit heslo</span>

@@ -4,6 +4,7 @@ import { UserAccountNewNotification } from './UserAccountNewNotification';
 import axios from "axios";
 import UserFormHelper from './UserFormHelper';
 import '../styles/notificationSettings.scss';
+import { Prev } from '../../../../node_modules/react-bootstrap/esm/PageItem';
 
 export class UserAccountNotifications extends Component {
     static displayName = UserAccountNotifications.name;
@@ -62,6 +63,12 @@ export class UserAccountNotifications extends Component {
     }
 
     RenderDeleteResponse = () => {
+
+        if (this.state.deleteResponse != null)
+            setTimeout(() => {
+                this.setState((prevState) => ({ ...prevState, deleteResponse: null }));
+            }, this.formHelper.timeoutDuration);
+
         switch (this.state.deleteResponse) {
             case 200:
                 return this.formHelper.RenderInformationText("Výstraha smazána", false);
@@ -106,6 +113,9 @@ export class UserAccountNotifications extends Component {
                     ...prevState,
                     loading: false
                 }));
+                setTimeout(() => {
+                    this.setState((prevState) => ({ ...prevState, deleteResponse: null }))
+                }, this.formHelper.timeoutDuration);
             });
     }
 

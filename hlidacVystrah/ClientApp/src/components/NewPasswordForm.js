@@ -80,6 +80,11 @@ function NewPasswordForm({ loggedIn }) {
 
     const RenderResponseText = () => {
 
+        if (response != null)
+            setTimeout(() => {
+                setResponse(null)
+            }, helper.timeoutDuration);
+
         switch (response) {
             case 200:
                 return helper.RenderInformationText("Heslo bylo úspěšně změněno!", false);
@@ -90,6 +95,14 @@ function NewPasswordForm({ loggedIn }) {
             default:
                 return;
         }
+    }
+
+    const HandleHidePasswordMismatch = () => {
+        setPasswordMismatch(false)
+    }
+
+    const HandleHidePasswordTooShort = () => {
+        setPasswordTooShort(false)
     }
 
     return (
@@ -107,8 +120,8 @@ function NewPasswordForm({ loggedIn }) {
                 <i className="fa-solid fa-lock me-2"></i>
                 <input className='p-1' type={`${passwordVisible ? 'text' : 'password'}`} placeholder='Heslo znovu' value={password2} onChange={(e) => setPassword2(e.target.value)} />
             </span>
-            {passwordMismatch && helper.RenderInformationText('Hesla se neshodují', true)}
-            {passwordTooShort && helper.RenderInformationText('Heslo musí obsahovat alespoň 6 znaků', true)}
+            {passwordMismatch && helper.RenderInformationText('Hesla se neshodují', true, HandleHidePasswordMismatch)}
+            {passwordTooShort && helper.RenderInformationText('Heslo musí obsahovat alespoň 6 znaků', true, HandleHidePasswordTooShort)}
             {RenderResponseText()}
             <button className={`ms-auto border p-2 rounded my-2 ${loggedIn && 'whiteBg'}`} onClick={() => SetNewPassword()}>Změnit</button>
             {!loggedIn && <a href='/login' className='ms-1 d-flex justify-content-center' title='Přihlášení'>Přihlašte se zde</a>}

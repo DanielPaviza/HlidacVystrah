@@ -76,10 +76,31 @@ export class Register extends Component {
                     password1: '',
                     password2: ''
                 }))
+            }).catch(() => {
+                this.setState((prevState) => ({ ...prevState, response: 500 }));
+            }).finally(() => {
+
             });
     }
 
+    HandleHidePasswordMismatch = () => {
+        this.setState((prevState) => ({ ...prevState, passwordMismatch: false }));
+    }
+
+    HandleHidePasswordTooShort = () => {
+        this.setState((prevState) => ({ ...prevState, passwordTooShort: false }));
+    }
+
+    HandleEmailError = () => {
+        this.setState((prevState) => ({ ...prevState, emailError: false }));
+    }
+
     RenderResponseText = () => {
+
+        if (this.state.response != null)
+            setTimeout(() => {
+                this.setState((prevState) => ({ ...prevState, response: null }));
+            }, this.helper.timeoutDuration);
 
         switch (this.state.response) {
             case 200:
@@ -117,9 +138,9 @@ export class Register extends Component {
                             <i className="fa-solid fa-lock me-2"></i>
                             <input className='p-1' type={`${this.state.passwordVisible ? 'text' : 'password'}`} placeholder='Heslo znovu' value={this.state.password2} onChange={(e) => this.setState((prevState) => ({ ...prevState, password2: e.target.value }))} />
                         </span>
-                        {this.state.passwordMismatch && this.helper.RenderInformationText('Hesla se neshodují', true)}
-                        {this.state.passwordTooShort && this.helper.RenderInformationText('Heslo musí obsahovat alespoň 6 znaků', true)}
-                        {this.state.emailError && this.helper.RenderInformationText('Email nemá správný formát (email@priklad.xx)', true)}
+                        {this.state.passwordMismatch && this.helper.RenderInformationText('Hesla se neshodují', true, this.HandleHidePasswordMismatch)}
+                        {this.state.passwordTooShort && this.helper.RenderInformationText('Heslo musí obsahovat alespoň 6 znaků', true, this.HandleHidePasswordTooShort)}
+                        {this.state.emailError && this.helper.RenderInformationText('Email nemá správný formát (email@priklad.xx)', true, this.HandleEmailError)}
                         {this.RenderResponseText()}
                         <button className='ms-auto border p-2 rounded my-2' onClick={() => this.Register()}>Registrovat</button>
                         <span className='mt-2 d-flex justify-content-center mx-auto'>

@@ -47,10 +47,17 @@ namespace hlidacVystrah.Controllers
 
         // GET api/user/activateaccount
         [HttpPost("activateaccount")]
-        public BaseResponse ActivateAccount([FromBody] ActivationTokenDto data)
+        public ActivateAccount ActivateAccount([FromBody] ActivationTokenDto data)
         {
             return _userService.ActivateAccount(data);
-        }        
+        }
+
+        // GET api/user/resendactivateaccountemail
+        [HttpPost("resendactivateaccountemail")]
+        public BaseResponse ReSendActivateAccountEmail([FromBody] LoginTokenDto data)
+        {
+            return _userService.ReSendActivateAccountEmail(data);
+        }
         
         // GET api/user/newpassword
         [HttpPost("newpassword")]

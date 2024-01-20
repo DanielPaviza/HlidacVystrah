@@ -1,17 +1,25 @@
 ﻿
 class UserFormHelper {
 
-    constructor(navigateHome) {
+    constructor() {
 
         this.minPasswordLength = 6;
         this.emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        this.timeoutDuration = 2500;
     }
 
     EmailValid(email) {
         return this.emailRegex.test(email);
     }
 
-    RenderInformationText = (text, isError) => {
+    RenderInformationText = (text, isError, HandleClose = null) => {
+
+        if (HandleClose != null)
+            setTimeout(() => {
+                HandleClose();
+            }, this.timeoutDuration);
+
         return (
             <span className='d-flex my-1 formInfo'>
                 <div className={`colorCircle ${isError ? 'red' : 'green'} me-1 mt-1`}></div>
@@ -19,6 +27,7 @@ class UserFormHelper {
             </span>
         );
     }
+
 }
 
 export default UserFormHelper;

@@ -8,6 +8,7 @@ import { Footer } from './Footer';
 import { UserAccountSettings } from './UserAccountSettings';
 import UserFormHelper from './UserFormHelper';
 import { UserAccountNotifications } from './UserAccountNotifications';
+import { UserAccountNotActive } from './UserAccountNotActive';
 
 export class UserAccount extends Component {
     static displayName = UserAccount.name;
@@ -20,6 +21,7 @@ export class UserAccount extends Component {
             userEmail: null,
             loginToken: "",
             tokenExpired: false,
+            isActive: false,
 
             changePasswordOpened: false,
             deleteAccountOpened: false,
@@ -34,6 +36,10 @@ export class UserAccount extends Component {
     }
 
     componentDidMount() {
+        this.TokenLogin();
+    }
+
+    TokenLogin = () => {
         this.loginHelper.TokenLogin().then(tokenLoginResponse => {
 
             this.setState((prevState) => ({
@@ -41,23 +47,20 @@ export class UserAccount extends Component {
                 loggedIn: tokenLoginResponse.loggedIn,
                 userEmail: tokenLoginResponse.userEmail,
                 loginToken: tokenLoginResponse.loginToken,
+                isActive: tokenLoginResponse.isActive,
                 loading: false
             }));
         });
     }
 
     HandleUserLoggedIn = (token) => {
-        this.setState((prevState) => ({
-            ...prevState,
-            loginToken: token,
-            loggedIn: true,
-            loginExpired: false
-        }));
+        localStorage.setItem("tokenLogin", token);
+        this.TokenLogin();
     }
 
     HandleUserLoginExpired = (statusCode, goHome = false) => {
 
-        if (statusCode != 400 && statusCode != 401)
+        if (statusCode != 440 && statusCode != 401)
             return;
 
         localStorage.removeItem("loginToken");
@@ -83,8 +86,14 @@ export class UserAccount extends Component {
                     <>
                         <NavMenu HandleUserLoginExpired={this.HandleUserLoginExpired} />
                         <div id="userAccount" className='container'>
-                            <UserAccountNotifications loginToken={this.state.loginToken} HandleUserLoginExpired={this.HandleUserLoginExpired} />
-                            <UserAccountSettings loginToken={this.state.loginToken} HandleUserLoginExpired={this.HandleUserLoginExpired} />
+                            {this.state.isActive ?
+                                <>
+                                    <UserAccountNotifications loginToken={this.state.loginToken} HandleUserLoginExpired={this.HandleUserLoginExpired} />
+                                    <UserAccountSettings loginToken={this.state.loginToken} HandleUserLoginExpired={this.HandleUserLoginExpired} userEmail={this.state.userEmail} />
+                                </>
+                                :
+                                <UserAccountNotActive userEmail={this.state.userEmail} loginToken={this.state.loginToken} HandleUserLoginExpired={this.HandleUserLoginExpired} />
+                            }
                         </div>
                         <Footer background={'lightGray'} />
                     </>

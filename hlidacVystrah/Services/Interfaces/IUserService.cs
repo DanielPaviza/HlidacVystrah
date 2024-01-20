@@ -1,5 +1,6 @@
 ﻿using hlidacVystrah.Model.Dto;
 using hlidacVystrah.Model.Response;
+using Microsoft.AspNetCore.Mvc;
 
 namespace hlidacVystrah.Services.Interfaces
 {
@@ -11,7 +12,7 @@ namespace hlidacVystrah.Services.Interfaces
 
         BaseResponse ResetPassword(EmailDto data);
 
-        BaseResponse ActivateAccount(ActivationTokenDto data);
+        ActivateAccount ActivateAccount(ActivationTokenDto data);
 
         BaseResponse SetNewPassword(NewPasswordDto data);
 
@@ -28,5 +29,7 @@ namespace hlidacVystrah.Services.Interfaces
         BaseResponse NotificationAdd(NotificationAddDto data);
 
         BaseResponse NotificationDelete(NotificationDeleteDto data);
+
+        BaseResponse ReSendActivateAccountEmail(LoginTokenDto data);
     }
 }

@@ -62,10 +62,23 @@ export class ResetPassword extends Component {
                     response: response.data.responseCode,
                     loading: false,
                 }))
+            }).catch(() => {
+                this.setState((prevState) => ({ ...prevState, response: 500 }));
+            }).finally(() => {
+
             });
     }
 
+    HandleEmailError = () => {
+        this.setState((prevState) => ({ ...prevState, emailError: false }));
+    }
+
     RenderResponseText = () => {
+
+        if (this.state.response != null)
+            setTimeout(() => {
+                this.setState((prevState) => ({ ...prevState, response: null }));
+            }, this.helper.timeoutDuration);
 
         switch (this.state.response) {
             case 200:
@@ -94,7 +107,7 @@ export class ResetPassword extends Component {
                                 <input className='p-1' type='text' placeholder='E-mail' value={this.state.email} onChange={(e) => this.setState((prevState) => ({ ...prevState, email: e.target.value }))} />
                             </span>
                             {this.RenderResponseText()}
-                            {this.state.emailError && this.helper.RenderInformationText('Email nemá správný formát (email@priklad.xx)', true)}
+                            {this.state.emailError && this.helper.RenderInformationText('Email nemá správný formát (email@priklad.xx)', true, this.HandleEmailError)}
                             <button className='ms-auto border p-2 rounded my-2' onClick={() => this.ResetPassword()}>Odeslat</button>
                             <span className='d-flex justify-content-center'>
                                 <a href='/login' className='fit-content' title='Přihlášení'>Přihlašte se zde</a>

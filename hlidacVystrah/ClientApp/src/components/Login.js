@@ -144,11 +144,11 @@ export class Login extends Component {
                         {this.RenderResponseText()}
                         {this.state.emailInvalidFormat && this.formHelper.RenderInformationText('Email nemá správný formát (email@priklad.xx)', true)}
                         {this.state.passwordEmpty && this.formHelper.RenderInformationText("Vyplňte heslo!", true)}
-                        <a href='/resetpassword' className='d-flex mt-1 fit-content'>Zapomněli jste heslo?</a>
+                        <a href='/resetpassword' className='d-flex mt-1 fit-content' title='Žádost o změnu hesla'>Zapomněli jste heslo?</a>
                         <button className='ms-auto border p-2 rounded my-2' onClick={() => this.Login()}>Přihlásit</button>
                         <div className='mt-2 d-flex justify-content-center mx-auto'>
                             Nemáte účet?
-                            <a href='/register' className='ms-1'>Zaregistrujte se</a>
+                            <a href='/register' className='ms-1' title='Registrace'>Zaregistrujte se</a>
                         </div>
                         {this.state.loading && <Spinner />}
                     </div>

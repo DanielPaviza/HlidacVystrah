@@ -18,7 +18,7 @@ export class NotFound extends Component {
                 <div id="notFound" className='container mt-5'>
                     <h2>Stránka nenalezena</h2>
                     <p>Pravděpodobně jste zadali neexistující adresu.</p>
-                    <a href='/'>Zpět na hlavní stranu</a>
+                    <a href='/' title='Meteorologické jevy v České republice'>Zpět na hlavní stranu</a>
                 </div>
                 <Footer />
             </>

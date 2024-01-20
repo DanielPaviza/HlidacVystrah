@@ -61,7 +61,7 @@ function ActivateAccount() {
                         <Spinner />
                         :
                         <span className='d-flex justify-content-center mt-3'>
-                        <a href='/login' className=''>Přihlašte se</a>
+                            <a href='/login' className='' title='Přihlášení'>Přihlašte se</a>
                         </span>
                     }
                 </div>

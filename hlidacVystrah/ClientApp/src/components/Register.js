@@ -124,7 +124,7 @@ export class Register extends Component {
                         <button className='ms-auto border p-2 rounded my-2' onClick={() => this.Register()}>Registrovat</button>
                         <span className='mt-2 d-flex justify-content-center mx-auto'>
                             Již máte účet?
-                            <a href='/login' className='ms-1'>Přihlašte se</a>
+                            <a href='/login' className='ms-1' title='Registrace'>Přihlašte se</a>
                         </span>
                         {this.state.loading && <Spinner />}
                     </div>

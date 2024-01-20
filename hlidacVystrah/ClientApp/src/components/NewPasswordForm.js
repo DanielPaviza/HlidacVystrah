@@ -111,7 +111,7 @@ function NewPasswordForm({ loggedIn }) {
             {passwordTooShort && helper.RenderInformationText('Heslo musí obsahovat alespoň 6 znaků', true)}
             {RenderResponseText()}
             <button className={`ms-auto border p-2 rounded my-2 ${loggedIn && 'whiteBg'}`} onClick={() => SetNewPassword()}>Změnit</button>
-            {!loggedIn && <a href='/login' className='ms-1 d-flex justify-content-center'>Přihlašte se zde</a>}
+            {!loggedIn && <a href='/login' className='ms-1 d-flex justify-content-center' title='Přihlášení'>Přihlašte se zde</a>}
             {loading && <Spinner />}
         </div>
     );

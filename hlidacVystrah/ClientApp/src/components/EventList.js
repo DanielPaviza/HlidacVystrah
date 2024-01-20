@@ -18,7 +18,7 @@ export class EventList extends Component {
 
         let events = this.GetEventsGrouped();
 
-        return this.props.events.length < 0 ? <>
+        return this.props.events.length > 0 ? <>
             {Object.keys(events).map(key => (
                 events[key].length > 0 && (
                     <div className='urgencyContainer mt-3' key={key}>

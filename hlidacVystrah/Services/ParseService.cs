@@ -1,16 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
 using System.Xml.Linq;
 using hlidacVystrah.Model;
-using System.ComponentModel;
-using System.Globalization;
-using System.Text;
-using System.IO;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
-using Microsoft.Extensions.Logging;
-using System;
 using hlidacVystrah.Model.Dto;
 
 namespace hlidacVystrah.Services

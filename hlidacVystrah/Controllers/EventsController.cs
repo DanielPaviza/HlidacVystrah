@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
-using hlidacVystrah.Services;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 

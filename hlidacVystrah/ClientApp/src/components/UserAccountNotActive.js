@@ -57,11 +57,6 @@ export class UserAccountNotActive extends Component {
 
     RenderResendEmailResponse = () => {
 
-        if (this.state.resendResponse != null)
-            setTimeout(() => {
-                this.setState((prevState) => ({ ...prevState, resendResponse: null }))
-            }, this.formHelper.timeoutDuration);
-
         switch (this.state.resendResponse) {
             case 200:
                 return this.formHelper.RenderInformationText("Aktivační email byl úspěšně odeslán!", false);

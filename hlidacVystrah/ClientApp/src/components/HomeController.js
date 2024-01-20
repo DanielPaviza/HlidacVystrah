@@ -8,7 +8,7 @@ import { Footer } from './Footer';
 import SiteHistory from './SiteHistory';
 import { BackButton } from './BackButton';
 import { Loading } from './Loading';
-
+import axios from "axios";
 export class HomeController extends Component {
     static displayName = HomeController.name;
 
@@ -206,44 +206,46 @@ export class HomeController extends Component {
     }
 
     async GetEventList() {
-        const response = await fetch('api/events');
-        const data = await response.json();
 
-        console.log(data);
+        axios.get('/api/events')
+            .then(response => {
 
-        if (data.responseCode == 200)
-            this.setState((prevState) => ({
-                ...prevState,
-                eventList: data.events,
-                eventListLoading: false,
-                timestamp: data.dataTimestamp,
-            }));
+                let data = response.data;
+
+                if (data.responseCode == 200)
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        eventList: data.events,
+                        eventListLoading: false,
+                        timestamp: data.dataTimestamp,
+                    }));
+            });
     }
 
     async GetLocalityList() {
-        const response = await fetch('api/localities');
-        const data = await response.json();
 
-        console.log(data);
+        axios.get('/api/localities')
+            .then(response => {
 
-        if (data.responseCode == 200)
-            this.setState((prevState) => ({
-                ...prevState,
-                localityList: data.localityList,
-                localityListLoading: false
-            }));
+                let data = response.data;
+                if (data.responseCode == 200)
+                    this.setState((prevState) => ({
+                        ...prevState,
+                        localityList: data.localityList,
+                        localityListLoading: false
+                    }));
+            });
     }
 
     async GetSvgMap() {
-        fetch('/images/map.svg')
+
+        axios.get('/images/map.svg')
             .then(response => {
-                if (!response.ok)
+
+                if (response.status != 200)
                     throw new Error('Network response was not ok');
 
-                return response.text()
-            })
-            .then(map => {
-
+                let map = response.data;
                 const parser = new DOMParser();
                 const svgDoc = parser.parseFromString(map, 'image/svg+xml');
                 let gs = Array.from(svgDoc.children[0].children[0].children);
@@ -255,6 +257,6 @@ export class HomeController extends Component {
             })
             .catch(error => {
                 console.error('Error during fetch:', error);
-            });
+            })
     }
 }

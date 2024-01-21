@@ -117,10 +117,9 @@ export class EventDetail extends Component {
                         </span>
                         {this.state.showDescription &&
                             <div className='ms-2 mt-2 description'>
-                                <span>{this.event.instruction}</span>
-                                <br />
-                                <br />
                                 <span>{this.event.description}</span>
+                                <br />
+                                <span>{this.event.instruction}</span>
                             </div>
                         }
                     </div>

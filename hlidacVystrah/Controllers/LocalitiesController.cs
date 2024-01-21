@@ -23,14 +23,12 @@ namespace hlidacVystrah.Controllers
             return _localitiesService.GetLocalityList();
         }
 
-        // GET api/localities/{cisorp}
-        [HttpGet("{cisorp}")]
-        public EventListResponse Get(int cisorp)
+        // GET api/localities/{id}
+        [HttpGet("{id}")]
+        public LocalityDetailResponse Get(int id)
         {
-            return _localitiesService.GetLocalityDetail(cisorp);
+            return _localitiesService.GetLocalityDetail(id);
         }
-
-
 
     }
 }

@@ -47,7 +47,7 @@ namespace hlidacVystrah.Services
             return list;
         }
 
-        public EventListResponse GetLocalityDetail(int cisorp)
+        public LocalityDetailResponse GetLocalityDetail(int id)
         {
 
             List<EventDto> events = new();
@@ -55,20 +55,28 @@ namespace hlidacVystrah.Services
 
             try {
 
+                LocalityTable? locality = _context.Locality.FirstOrDefault(l => l.id == id);
+                if (locality == null)
+                    return new LocalityDetailResponse { ResponseCode = StatusCodes.Status400BadRequest };
+
+                string? localityName = locality.name;
+                string regionName = _context.Region.First(r => r.id == locality.id_region).name;
+
                 lastUpdate = _context.Update.FirstOrDefault();
                 if (lastUpdate == null)
-                    return new EventListResponse { ResponseCode = StatusCodes.Status200OK };
+                    return new LocalityDetailResponse { ResponseCode = StatusCodes.Status200OK };
 
                 List<int> eventIds = _context.EventLocality.Where(
                         el => el.id_update == lastUpdate.id &&
-                        el.id_locality == cisorp
+                        el.id_locality == id
                     ).GroupBy(el => el.id_event).Select(_event => _event.Key).ToList();
                 
-                foreach (int id in eventIds)
+                foreach (int eventId in eventIds)
                 {
-                    EventTable et = _context.Event.Where(el => el.id == id).First();
+                    EventTable et = _context.Event.Where(el => el.id == eventId).First();
                     events.Add(new EventDto
                     {
+                        Id = null,
                         EventType = _context.EventType.Where(el => el.id == et.id_event_type).First().name,
                         Severity = _context.Severity.Where(el => el.id == et.id_severity).First().text,
                         Certainty = _context.Certainty.Where(el => el.id == et.id_certainty).First().text,
@@ -79,12 +87,13 @@ namespace hlidacVystrah.Services
                     });
                 }
 
-            } catch
-            {
-                return new EventListResponse { ResponseCode = StatusCodes.Status500InternalServerError };
-            }
+                return new LocalityDetailResponse { ResponseCode = StatusCodes.Status200OK, Events = events, DataTimestamp = lastUpdate.timestamp, LocalityName = localityName, RegionName = regionName };
 
-            return new EventListResponse { ResponseCode = StatusCodes.Status200OK, Events = events, DataTimestamp = lastUpdate.timestamp };
+            }
+            catch
+            {
+                return new LocalityDetailResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
         }
     }
 }

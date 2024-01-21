@@ -6,6 +6,6 @@ namespace hlidacVystrah.Services.Interfaces
     {
         LocalityListResponse GetLocalityList();
 
-        EventListResponse GetLocalityDetail(int cisorp);
+        LocalityDetailResponse GetLocalityDetail(int id);
     }
 }

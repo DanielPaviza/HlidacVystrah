@@ -68,21 +68,52 @@ body {
         width: fit-content;
     }
 
-    @media (min-width: 992px) {
-        h1 {
-            font-size: 1.4rem;
+    #login, #register, #resetpassword, #newpassword {
+        .formInfo {
+            animation-name: formInfoAnimation;
+            animation-duration: 5s;
+            transform: translate(0%, 0%);
+            span {
+                margin-top: -4px;
+            }
         }
 
-        h2 {
-            font-size: 1.8rem;
-        }
+        @keyframes formInfoAnimation {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 0%);
+            }
 
-        h3 {
-            font-size: 1.5rem;
-        }
+            10% {
+                opacity: 1;
+                transform: translate(0%, 0%);
+            }
 
-        h4 {
-            font-size: 1.3rem;
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
         }
     }
-}
+
+        @media (min-width: 992px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            h4 {
+                font-size: 1.3rem;
+            }
+        }
+    }

@@ -4,8 +4,6 @@ import { UserAccountNewNotification } from './UserAccountNewNotification';
 import axios from "axios";
 import UserFormHelper from './UserFormHelper';
 import '../styles/notificationSettings.scss';
-import { Prev } from '../../../../node_modules/react-bootstrap/esm/PageItem';
-
 export class UserAccountNotifications extends Component {
     static displayName = UserAccountNotifications.name;
 

@@ -6,32 +6,6 @@
     background: white;
     min-height: calc(100vh - 40px);
 
-    .formInfo {
-        animation-name: formInfoAnimation;
-        animation-duration: 5s;
-        transform: translate(0%, 0%);
-    }
-
-    @keyframes formInfoAnimation {
-        0% {
-            opacity: 0;
-            transform: translate(-50%, 0%);
-        }
-
-        10% {
-            opacity: 1;
-            transform: translate(0%, 0%);
-        }
-
-        80% {
-            opacity: 1;
-        }
-
-        100% {
-            opacity: 0;
-        }
-    }
-
     .loginExpired {
         top: 0;
         left: 50%;

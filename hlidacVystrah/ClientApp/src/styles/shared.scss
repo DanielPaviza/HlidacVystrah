@@ -68,14 +68,13 @@ body {
         width: fit-content;
     }
 
-    #login, #register, #resetpassword, #newpassword {
-        .formInfo {
-            animation-name: formInfoAnimation;
-            animation-duration: 5s;
-            transform: translate(0%, 0%);
-            span {
-                margin-top: -4px;
-            }
+    .formInfo {
+        animation-name: formInfoAnimation;
+        animation-duration: 5s;
+        transform: translate(0%, 0%);
+
+        span {
+            margin-top: -4px;
         }
 
         @keyframes formInfoAnimation {
@@ -84,7 +83,7 @@ body {
                 transform: translate(-50%, 0%);
             }
 
-            10% {
+            4% {
                 opacity: 1;
                 transform: translate(0%, 0%);
             }
@@ -99,21 +98,21 @@ body {
         }
     }
 
-        @media (min-width: 992px) {
-            h1 {
-                font-size: 1.4rem;
-            }
+    @media (min-width: 992px) {
+        h1 {
+            font-size: 1.4rem;
+        }
 
-            h2 {
-                font-size: 1.8rem;
-            }
+        h2 {
+            font-size: 1.8rem;
+        }
 
-            h3 {
-                font-size: 1.5rem;
-            }
+        h3 {
+            font-size: 1.5rem;
+        }
 
-            h4 {
-                font-size: 1.3rem;
-            }
+        h4 {
+            font-size: 1.3rem;
         }
     }
+}

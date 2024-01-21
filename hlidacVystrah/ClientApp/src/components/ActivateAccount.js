@@ -33,7 +33,7 @@ function ActivateAccount() {
                         localStorage.setItem("loginToken", response.data.loginToken);
                         setTimeout(() => {
                             window.location.href = '/account';
-                        }, 500);
+                        }, 1000);
                     }
                 }).catch(err => {
                     setResponse(500);

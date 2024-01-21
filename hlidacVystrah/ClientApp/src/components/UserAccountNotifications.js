@@ -164,7 +164,7 @@ export class UserAccountNotifications extends Component {
                 {this.state.notifications.length != 0 &&
                     <>
                         <p className='fw-bold'>Sledované výstrahy</p>
-                        {this.RenderDeleteResponse()}
+                        <span>{this.RenderDeleteResponse()}</span>
                         <div className='position-relative'>
                             {this.state.loading ?
                                 <Spinner />

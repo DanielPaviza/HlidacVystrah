@@ -39,8 +39,8 @@ export class UserAccount extends Component {
         this.TokenLogin();
     }
 
-    TokenLogin = () => {
-        this.loginHelper.TokenLogin().then(tokenLoginResponse => {
+    TokenLogin = (token) => {
+        this.loginHelper.TokenLogin(token).then(tokenLoginResponse => {
 
             this.setState((prevState) => ({
                 ...prevState,
@@ -53,9 +53,8 @@ export class UserAccount extends Component {
         });
     }
 
-    HandleUserLoggedIn = (token) => {
-        localStorage.setItem("tokenLogin", token);
-        this.TokenLogin();
+    HandleUserLogIn = (token) => {
+        this.TokenLogin(token);
     }
 
     HandleUserLoginExpired = (statusCode, goHome = false) => {
@@ -98,7 +97,7 @@ export class UserAccount extends Component {
                         <Footer background={'lightGray'} />
                     </>
                     :
-                    <Login HandleUserLoggedIn={this.HandleUserLoggedIn} loginExpired={this.state.loginExpired} />
+                    <Login HandleUserLogIn={this.HandleUserLogIn} loginExpired={this.state.loginExpired} />
         );
     }
 }

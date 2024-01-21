@@ -160,7 +160,9 @@ export class UserAccountNotifications extends Component {
         return (
             <div className='mt-4 notificationSettings'>
                 <h3 className='mb-4'>Správa upozornění</h3>
-
+                <p>
+                    V případě výskytu sledované výstrahy Vám ihned odešleme upozornění na Váš email.  
+                </p>
                 {this.state.notifications.length != 0 &&
                     <>
                         <p className='fw-bold'>Sledované výstrahy</p>

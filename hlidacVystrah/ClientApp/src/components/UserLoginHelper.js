@@ -2,9 +2,12 @@
 
 class UserLoginHelper {
 
-    TokenLogin = async () => {
+    TokenLogin = async (token = null) => {
+
         let defaultLoginResponse = { loggedIn: false, userEmail: null, loginToken: "", isActive: false };
-        let token = localStorage.getItem("loginToken");
+        if(token == null)
+            token = localStorage.getItem("loginToken");
+
         if (!token)
             return defaultLoginResponse;
 

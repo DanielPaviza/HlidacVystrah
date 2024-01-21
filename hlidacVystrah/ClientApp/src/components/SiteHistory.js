@@ -30,6 +30,7 @@ class SiteHistory {
     }
 
     SaveHistory = () => {
+        //COOKIE CHECK
         localStorage.setItem("history", JSON.stringify(this.history));
     }
 

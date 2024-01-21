@@ -68,8 +68,9 @@ export class Login extends Component {
                 }));
 
                 if (data.responseCode == 200) {
+                    //COOKIE CHECK
                     localStorage.setItem("loginToken", data.loginToken)
-                    this.props.HandleUserLoggedIn(data.loginToken);
+                    this.props.HandleUserLogIn(data.loginToken);
                 }
                     
             }).catch(() => {

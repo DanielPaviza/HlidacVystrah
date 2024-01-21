@@ -29,10 +29,11 @@ function ActivateAccount() {
                 .then((response) => {
                     setResponse(response.data.responseCode);
                     if (response.data.responseCode == 200) {
+                        //COOKIE CHECK
                         localStorage.setItem("loginToken", response.data.loginToken);
                         setTimeout(() => {
                             window.location.href = '/account';
-                        }, 1000);
+                        }, 500);
                     }
                 }).catch(err => {
                     setResponse(500);

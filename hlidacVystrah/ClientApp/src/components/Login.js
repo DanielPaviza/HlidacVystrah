@@ -122,12 +122,12 @@ export class Login extends Component {
         return (
             <>
                 <NavMenu />
-                <div id="login" className='d-flex justify-content-center align-items-center'>
+                <div id="login" className='d-flex justify-content-center align-items-center container'>
                     <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded position-relative'>
                         {this.props.loginExpired &&
                             <span className='position-absolute loginExpired'>
                                 {this.formHelper.RenderInformationText("Přihlášení vypršelo!", true)}
-                            </span>    
+                            </span>
                         }
                         <h2 className='mb-3 mx-auto'>Přihlášení</h2>
                         <span className='mb-2 d-flex align-items-center mx-auto'>

@@ -97,7 +97,7 @@ export class ResetPassword extends Component {
         return (
             <>
                 <NavMenu />
-                <div id="resetpassword" className='d-flex justify-content-center align-items-center'>
+                <div id="resetpassword" className='d-flex justify-content-center align-items-center container'>
                     <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded position-relative'>
                         <h2 className='mb-2 mx-auto'>Zapomněli jste heslo?</h2>
                         <p className='mb-4 w-100 d-inline-block'>Na zadaný email Vám přijde zpráva s odkazem na nastavení nového hesla.</p>

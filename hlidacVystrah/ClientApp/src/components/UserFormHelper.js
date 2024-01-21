@@ -6,7 +6,7 @@ class UserFormHelper {
         this.minPasswordLength = 6;
         this.emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        this.timeoutDuration = 2500;
+        this.timeoutDuration = 5000;
     }
 
     EmailValid(email) {

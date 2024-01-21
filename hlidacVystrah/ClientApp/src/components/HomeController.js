@@ -192,13 +192,15 @@ export class HomeController extends Component {
                 <Loading />
                 :
                 <>
-                    <NavMenu CloseDetail={this.HandleCloseDetail} NavigateHome={this.HandleOpenHome} />
-                    <div className='container mt-3'>
-                        <span className='d-flex justify-content-between '>
-                            <BackButton history={this.history} NavigateHome={this.HandleOpenHome} />
-                            {this.RenderTimestamp()}
-                        </span>  
-                        {this.RenderPage()}
+                    <div className='min-vh-100'>
+                        <NavMenu CloseDetail={this.HandleCloseDetail} NavigateHome={this.HandleOpenHome} />
+                        <div className='container mt-3'>
+                            <span className='d-flex justify-content-between '>
+                                <BackButton history={this.history} NavigateHome={this.HandleOpenHome} />
+                                {this.RenderTimestamp()}
+                            </span>
+                            {this.RenderPage()}
+                        </div>
                     </div>
                     <Footer background={'lightGray'} />
                 </>

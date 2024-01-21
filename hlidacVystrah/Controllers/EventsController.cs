@@ -22,19 +22,14 @@ namespace hlidacVystrah.Controllers
         {
             return _eventsService.GetEvents();
         }        
-        
-        // GET api/events/{id}
-        [HttpGet("{id}")]
-        public EventDetailResponse Get(int id)
-        {
-            return _eventsService.GetEventDetail(id);
-        }
 
+        /*
         // POST api/events/update
         [HttpPost("update")]
         public ParseResponse Post([FromHeader] string? authToken)
         {
             return _eventsService.UpdateEvents();
         }
+        */
     }
 }

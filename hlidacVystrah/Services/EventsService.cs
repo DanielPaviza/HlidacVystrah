@@ -106,32 +106,6 @@ namespace hlidacVystrah.Services
             };
         }
 
-        public EventDetailResponse GetEventDetail(int id)
-        {
-
-            EventTable? eventTable = _context.Event.FirstOrDefault(el => el.id == id);
-            if (eventTable == null)
-                return new EventDetailResponse { ResponseCode = StatusCodes.Status404NotFound };
-
-            try
-            {
-                EventDto eventDto = EventTableToDto(eventTable);
-                string timestamp = _context.Update.First(
-                        update => update.id == _context.EventLocality.First(el => el.id_event == eventDto.Id).id_update
-                    ).timestamp;
-
-                return new EventDetailResponse
-                {
-                    ResponseCode = StatusCodes.Status200OK,
-                    DataTimestamp = timestamp,
-                    Event = eventDto
-                };
-            } catch (Exception ex)
-            {
-                return new EventDetailResponse { ResponseCode = StatusCodes.Status500InternalServerError };
-            }
-        }
-
         private EventDto EventTableToDto(EventTable et)
         {
             return new EventDto

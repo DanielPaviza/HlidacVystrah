@@ -24,6 +24,7 @@ builder.Services.AddTransient<ILocalitiesService, LocalitiesService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.Configure<DownloadEventsEndpoint>(builder.Configuration.GetSection("DownloadEventsEndpoint"));
 
 var app = builder.Build();
 

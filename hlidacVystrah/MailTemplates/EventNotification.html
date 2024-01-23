@@ -1,0 +1,151 @@
+﻿<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Registrace</title>
+    <link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap' rel="stylesheet">
+    <style>
+        * {{
+            font-family: 'Roboto', sans-serif;
+            color: #292929;
+        }}
+        h1 {{
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }}
+        .eventImg {{
+            width: 64px;
+            height: 64px;
+        }}
+        h1 img {{
+            width: 48px;
+            height: 48px;
+            margin-left: 8px;
+        }}
+        a {{
+            text-decoration: none;
+            color: #292929;
+            font-weight: bold;
+        }}
+        .detail {{
+            display: flex;
+            flex-direction: column;
+        }}
+        .detail>div {{
+            display: flex;
+            align-items: center;
+        }}
+        .detail > div > div {{
+            display: flex;
+            flex-direction: column;
+            margin-right: 60px;
+        }}
+        .detail div span, .description {{
+            border-bottom: 1px solid #e8e8e8;
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }}      
+        .bold {{
+            font-weight: bold;
+            border: none!important;
+            margin-right: 4px;
+        }}
+        .description, .description span {{
+            border: none!important;
+        }}
+        .description div {{
+            margin-top: 4px;
+            padding: 4px;
+            padding-left: 16px;
+            padding-top: 8px;
+            border-top: 1px solid #e8e8e8;
+            max-width: 800px;
+        }}
+        .colorCircle {{
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-left: 6px; 
+        }}
+        .row {{
+            display: flex;
+            align-items: center;
+        }}
+        .Extrémní {{
+            background-color: #eb4242;
+        }}        
+        .Vysoká {{
+            background-color: #f79720;
+        }}        
+        .Nízká {{
+            background-color: #fcd40d;
+        }}        
+        .Minimální {{
+            background-color: #0aa147;
+        }}        
+        .Neznámá {{
+            background-color: #e8e8e8;
+        }}
+        @media screen and (max-width: 576px) {{
+            .eventImg {{
+                display: none;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <a href="{0}">
+        <h1>
+            Hlídač výstrah
+            <img src="{0}/images/logo.png" />
+        </h1>
+    </a>
+    <h2>Varování před jevem!</h2>
+    <p>
+        Byla vydána výstraha před Vaším sledovaným jevem. Detail vyskytutého jevu si můžete přečíst níže.
+    </p>
+    <div class="detail">
+        <h3>Informace o vyskytnutém jevu v {10}</h3>
+        <div>
+            <div>
+                <span class="row">
+                    <span class="bold">Typ:</span>
+                    {1}
+                </span>
+                <span class="row">
+                    <span class="bold">Závažnost:</span>
+                    {2}
+                    <div class="colorCircle {2}"></div>
+                </span>
+                <span class="row">
+                    <span class="bold">Pravděpodobnost:</span>
+                    {3}
+                </span>
+                <span class="row">
+                    <span class="bold">Výskyt:</span>
+                    {4}
+                </span>
+                <span class="row">
+                    <span class="bold">Začátek:</span>
+                    {5}
+                </span>
+                <span class="row">
+                    <span class="bold">Konec:</span>
+                    {6}
+                </span>
+            </div>
+            <img src="{0}/images/{9}" alt="jev image" class="eventImg"/>
+        </div>     
+        <span class="description">
+            <span class="bold">Popis:</span>
+            <div>
+                {7} Byla vydána výstraha před Vaším sledovaným jevem. Detail vyskytutého jevu si můžete přečíst níže.
+                </br>
+                </br>
+                {8}
+            </div>
+        </span>
+    </div>
+    <p>Vaše sledované jevy můžete po přihlášení spravovat <a href="{0}/account">zde</a>.</p>
+    </br
+    <p>S pozdravem, <a href="{0}">Hlídač výstrah</a></p>
+</body>

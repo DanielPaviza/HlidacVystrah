@@ -4,6 +4,10 @@ using hlidacVystrah.Model;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 using hlidacVystrah.Model.Dto;
+using hlidacVystrah.Migrations;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 
 namespace hlidacVystrah.Services
 {
@@ -11,68 +15,15 @@ namespace hlidacVystrah.Services
     public class ParseService : MasterService, IParseService
     {
 
-        public ParseService(AppDbContext context) : base(context)
+        private readonly IMailService _mailService;
+        private readonly DownloadEventsEndpoint _downloadEventsEndpoint;
+
+
+        public ParseService(AppDbContext context, IMailService mailService, IOptions<DownloadEventsEndpoint> downloadEventsEndpoint) : base(context)
         {
             _context = context;
-        }
-
-        private void ParseSvgMapOG() {
-
-            string xmlPath = @"D:\moje\programovani\absolutorium\hlidacVystrah\hlidacVystrah\ClientApp\src\map.svg";
-            try
-            {
-                XDocument xdoc = XDocument.Load(xmlPath);
-                XElement root = xdoc.Root;
-                XElement gRoot = root.Descendants().First();
-
-                List<XElement> gs = gRoot.Descendants().Where(
-                    el =>
-                        GetElName(el) == "g"
-                ).ToList();
-
-                foreach (XElement g in gs)
-                {
-                    string id = g.Attribute("id")?.Value;
-                    g.SetAttributeValue("cisorp", id.Split(':')[1]);
-                    g.Attribute("class").Remove();
-                    g.Attribute("id").Remove();
-                }
-
-                //xdoc.Save(xmlPath);
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
-        private void ParseSvgMap()
-        {
-            string xmlPath = @"D:\moje\programovani\absolutorium\hlidacVystrah\hlidacVystrah\ClientApp\public\images\map.svg";
-            try
-            {
-                XDocument xdoc = XDocument.Load(xmlPath);
-                XElement root = xdoc.Root;
-                XElement gRoot = root.Descendants().First();
-
-                List<XElement> gs = gRoot.Descendants().Where(
-                    el =>
-                        GetElName(el) == "g"
-                ).ToList();
-
-                foreach (XElement g in gs)
-                {
-                    string id = g.Attribute("cisorp").Value;
-                    g.SetAttributeValue("id", "cisorp_" + id.ToString());
-                    g.Attribute("cisorp").Remove();
-                }
-
-                xdoc.Save(xmlPath);
-            }
-            catch (Exception ex)
-            {
-
-            }
+            _mailService = mailService;
+            _downloadEventsEndpoint = downloadEventsEndpoint.Value;
         }
 
         private List<EventDto> GetReducedEvents(List<EventDto> events)
@@ -121,31 +72,31 @@ namespace hlidacVystrah.Services
             return eventsReduced;
         }
 
-        public ParseResponse UpdateEvents() {
-
-            bool saveToDb = true;
-            //string xmlPath = @"D:\moje\programovani\absolutorium\random\test_data\vyhled_nebezpecnych_jevu_vysoke_teploty.xml";
-            string xmlPath = "https://www.chmi.cz/files/portal/docs/meteo/om/bulletiny/XOCZ50_OKPR.xml";
-            UpdateCount count = new();
-
+        public ParseResponse UpdateEvents()
+        {
+            
+            bool saveToDb = false; // testing purposes
+            string dataUrl = this._downloadEventsEndpoint.Url;
             try
             {
-                XDocument xdoc = XDocument.Load(xmlPath);
+                XDocument xdoc = XDocument.Load(dataUrl);
                 XElement root = xdoc.Root;
 
                 string dataTimestamp = GetElementValue(root, "sent");
 
+                
                 // if already saved, dont save again
-                if(_context.Update.Any(el => el.timestamp == dataTimestamp))
-                {
-                    return new ParseResponse { ResponseCode = StatusCodes.Status200OK };
-                }
-
+                if(saveToDb)
+                    if (_context.Update.Any(el => el.timestamp == dataTimestamp))
+                        return new ParseResponse { ResponseCode = StatusCodes.Status200OK };
+                
+                // add update record
                 UpdateTable update = new UpdateTable { timestamp = dataTimestamp };
                 _context.Update.Add(update);
-                if(saveToDb)
+                if (saveToDb)
                     _context.SaveChanges();
 
+                // Get all events from the xml
                 List<EventDto> events = root.Descendants().Where(
                     el =>
                         GetElName(el) == "info" &&
@@ -161,75 +112,167 @@ namespace hlidacVystrah.Services
                     Expires = GetEventEndingTime(_event),
                     Description = GetElementValue(_event, "description"),
                     Instruction = GetElementValue(_event, "instruction"),
-                    LocalityList = this.GetEventLocalityList(_event)
+                    LocalityList = this.GetEventLocalityList(_event),
+                    ImgPath = _context.EventType.First(et => et.id == Int32.Parse(GetEventId(_event))).img_path
                 }).ToList();
 
                 // Reduce events (join similar together)
                 events = this.GetReducedEvents(events);
 
-                //TODO FILTER STEJNY
-                string fefeeef = "fefe";
+                UpdateCount count = new();
+                if (saveToDb)
+                    count = this.SaveEventRecords(events, update.id);
 
-                foreach (EventDto _eventDto in events)
-                {
-                    try
-                    {
+                this.SendEventNotificationsEmails(events);
 
-                        EventTable _event = new EventTable
-                        {
-                            id_event_type = Int32.Parse(_eventDto.EventType),
-                            id_severity = _context.Severity.First(saved => saved.name == _eventDto.Severity).id,
-                            id_certainty = _context.Certainty.First(saved => saved.name == _eventDto.Certainty).id,
-                            id_urgency = _context.Urgency.First(saved => saved.name == _eventDto.Urgency).id,
-                            onset = _eventDto.Onset,
-                            expires = _eventDto.Expires,
-                            description = _eventDto.Description,
-                            instruction = _eventDto.Instruction
-                        };
+                return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
 
-                        if(_context.Event.Local.Any(saved => saved == _event))
-                        {
-                            count.Event.Failed++;
-                            continue;
-                        }
-
-                        _context.Event.Add(_event);
-                        if (saveToDb)
-                            _context.SaveChanges();
-                        count.Event.Success++;
-
-                        foreach (LocalityDto locality in _eventDto.LocalityList["all"])
-                        {
-                            try
-                            {
-                                _context.EventLocality.Add(new EventLocalityTable
-                                {
-                                    id_event = _event.id,
-                                    id_locality = locality.Cisorp,
-                                    id_update = update.id
-                                });
-                                count.EventLocality.Success++;
-                            } catch
-                            {
-                                count.EventLocality.Failed++;
-                            }
-                        }
-
-                        if (saveToDb)
-                            _context.SaveChanges();
-                        
-                    } catch (Exception ex)
-                    {
-                        return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
-                    }
-                }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
+        }
 
-            return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
+        private bool SendEventNotificationsEmails(List<EventDto> events)
+        {
+
+            // for each event, save all fitting user notifications
+            foreach (EventDto e in events)
+            {
+
+                // user email with matching tracked event (user_notification)
+                var userNotifications = _context.UserNotification
+                    .Join(
+                        _context.Notification,
+                        un => un.id_notification,
+                        n => n.id,
+                        (un, n) => new { UserNotification = un, Notification = n }
+                    )
+                    .Join(
+                        _context.User,
+                        un => un.UserNotification.id_user,
+                        u => u.id,
+                        (un, u) => new { User = u, un.Notification }
+                    )
+                    .Where(joined =>
+                        joined.Notification.id_event_type == Int32.Parse(e.EventType) &&
+                        (joined.Notification.id_severity == null || joined.Notification.id_severity == _context.Severity.First(saved => saved.name == e.Severity).id) &&
+                        (joined.Notification.id_certainty == null || joined.Notification.id_certainty == _context.Certainty.First(saved => saved.name == e.Certainty).id)
+                    )
+                    .AsEnumerable()
+                    .Where(joined =>
+                        (joined.Notification.isRegion) ?
+                        e.LocalityList["all"].Any(el => _context.Locality.First(l => l.id == el.Cisorp).id_region == joined.Notification.id_area)
+                        :
+                        e.LocalityList["all"].Any(item => item.Cisorp == joined.Notification.id_area) 
+                    )
+                    .GroupBy(joined => joined.User.email)
+                    .Select(group => new
+                    {
+                        UserEmail = group.Key,
+                        Notifications = group.Select(item => item.Notification).ToList()
+                    })
+                    .ToList();
+
+                EventDto eventDtoReadable = new EventDto
+                {
+                    EventType = _context.EventType.First(et => et.id == Int32.Parse(e.EventType)).name,
+                    Severity = _context.Severity.First(s => s.name == e.Severity).text,
+                    Certainty = _context.Certainty.First(c => c.name == e.Certainty).text,
+                    Urgency = _context.Urgency.First(u => u.name == e.Urgency).text,
+                    Onset = this.TimestampToReadable(e.Onset),
+                    Expires = this.TimestampToReadable(e.Expires),
+                    Description = e.Description,
+                    Instruction = e.Instruction,
+                    ImgPath = e.ImgPath
+                };
+
+                foreach (var userNotification in userNotifications)
+                {
+                    string userEmail = userNotification.UserEmail;
+                    foreach (var notification in userNotification.Notifications)
+                    {
+
+                        string areaName;
+                        if (notification.isRegion)
+                        {
+                            areaName = _context.Region.First(r => r.id == notification.id_area).name;
+                        }
+                        else
+                        {
+                            LocalityTable locality = _context.Locality.First(l => l.id == notification.id_area);
+                            areaName = locality.name + ", " + _context.Region.First(r => r.id == locality.id_region).name;
+                        }
+
+                        this._mailService.SendEventNotificationMailAsync(userEmail, eventDtoReadable, areaName);
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private string TimestampToReadable(string? timestamp)
+        {
+            if (timestamp == null)
+                return "";
+
+            DateTimeOffset localTime = DateTimeOffset.Parse(timestamp);
+            return localTime.ToString("dd.MM.yyyy HH:mm:ss");
+        }
+
+        private UpdateCount SaveEventRecords(List<EventDto> events, int updateId)
+        {
+            UpdateCount count = new();
+
+            foreach (EventDto _eventDto in events)
+            {
+                EventTable _event = new EventTable
+                {
+                    id_event_type = Int32.Parse(_eventDto.EventType),
+                    id_severity = _context.Severity.First(saved => saved.name == _eventDto.Severity).id,
+                    id_certainty = _context.Certainty.First(saved => saved.name == _eventDto.Certainty).id,
+                    id_urgency = _context.Urgency.First(saved => saved.name == _eventDto.Urgency).id,
+                    onset = _eventDto.Onset,
+                    expires = _eventDto.Expires,
+                    description = _eventDto.Description,
+                    instruction = _eventDto.Instruction
+                };
+
+                // event record duplicate
+                if (_context.Event.Local.Any(saved => saved == _event))
+                {
+                    count.Event.Failed++;
+                    continue;
+                }
+
+                _context.Event.Add(_event);
+                _context.SaveChanges();
+                count.Event.Success++;
+
+                foreach (LocalityDto locality in _eventDto.LocalityList["all"])
+                {
+                    try
+                    {
+                        _context.EventLocality.Add(new EventLocalityTable
+                        {
+                            id_event = _event.id,
+                            id_locality = locality.Cisorp,
+                            id_update = updateId
+                        });
+                        count.EventLocality.Success++;
+                    }
+                    catch
+                    {
+                        count.EventLocality.Failed++;
+                    }
+                }
+
+                _context.SaveChanges();
+            }
+
+            return count;
         }
 
         public ParseResponse SaveLocalities() {

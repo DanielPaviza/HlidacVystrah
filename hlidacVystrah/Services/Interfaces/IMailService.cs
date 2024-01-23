@@ -1,4 +1,5 @@
 ﻿using hlidacVystrah.Model;
+using hlidacVystrah.Model.Dto;
 using hlidacVystrah.Model.Response;
 
 namespace hlidacVystrah.Services.Interfaces
@@ -9,5 +10,6 @@ namespace hlidacVystrah.Services.Interfaces
 
         bool SendPasswordResetMail(string email, string passwordResetToken);
 
+        Task<bool> SendEventNotificationMailAsync(string email, EventDto eventDetail, string areaName);
     }
 }

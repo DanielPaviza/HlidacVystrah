@@ -180,7 +180,7 @@ export class HomeController extends Component {
             <div className='d-flex justify-content-end'>
                 <div className='d-flex flex-column'>
                     <span className='border-bottom'>Poslední aktualizace</span>
-                    <span>{this.state.timestamp}</span>
+                    <span>{this.state.timestamp == null ? "Nikdy" : this.state.timestamp}</span>
                 </div>
             </div>
         )

@@ -23,13 +23,12 @@ namespace hlidacVystrah.Controllers
             return _eventsService.GetEvents();
         }        
 
-        /*
         // POST api/events/update
         [HttpPost("update")]
-        public ParseResponse Post([FromHeader] string? authToken)
+        public ParseResponse Post()
         {
             return _eventsService.UpdateEvents();
         }
-        */
+
     }
 }

@@ -15,7 +15,6 @@ namespace hlidacVystrah.Services
         private readonly IMailService _mailService;
         private readonly DownloadEventsEndpoint _downloadEventsEndpoint;
 
-
         public ParseService(AppDbContext context, IMailService mailService, IOptions<DownloadEventsEndpoint> downloadEventsEndpoint) : base(context)
         {
             _context = context;

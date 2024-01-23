@@ -9,6 +9,8 @@ namespace hlidacVystrah.Model.Response
 
         public string? LocalityName { get; set; } = null;
 
-        public string RegionName { get; set; }
+        public string? RegionName { get; set; } = null;
+
+        public int Cisorp {  get; set; }
     }
 }

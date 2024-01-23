@@ -57,14 +57,14 @@ namespace hlidacVystrah.Services
 
                 LocalityTable? locality = _context.Locality.FirstOrDefault(l => l.id == id);
                 if (locality == null)
-                    return new LocalityDetailResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                    return new LocalityDetailResponse { ResponseCode = StatusCodes.Status400BadRequest, Cisorp = id };
 
                 string? localityName = locality.name;
                 string regionName = _context.Region.First(r => r.id == locality.id_region).name;
 
                 lastUpdate = _context.Update.FirstOrDefault();
                 if (lastUpdate == null)
-                    return new LocalityDetailResponse { ResponseCode = StatusCodes.Status200OK };
+                    return new LocalityDetailResponse { ResponseCode = StatusCodes.Status200OK, Cisorp = id };
 
                 List<int> eventIds = _context.EventLocality
                     .Join(
@@ -86,18 +86,19 @@ namespace hlidacVystrah.Services
                     events.Add(new EventDto
                     {
                         Id = null,
-                        EventType = _context.EventType.Where(el => el.id == et.id_event_type).First().name,
-                        Severity = _context.Severity.Where(el => el.id == et.id_severity).First().text,
-                        Certainty = _context.Certainty.Where(el => el.id == et.id_certainty).First().text,
+                        EventType = _context.EventType.First(el => el.id == et.id_event_type).name,
+                        Severity = _context.Severity.First(el => el.id == et.id_severity).text,
+                        Certainty = _context.Certainty.First(el => el.id == et.id_certainty).text,
                         Onset = et.onset,
                         Expires = et.expires,
                         Description = et.description,
-                        Instruction = et.instruction
+                        Instruction = et.instruction,
+                        Urgency = _context.Urgency.First(u => u.id == et.id_urgency).text,
+                        ImgPath = _context.EventType.First(el => el.id == et.id_event_type).img_path
                     });
                 }
 
-                return new LocalityDetailResponse { ResponseCode = StatusCodes.Status200OK, Events = events, DataTimestamp = lastUpdate.timestamp, LocalityName = localityName, RegionName = regionName };
-
+                return new LocalityDetailResponse { ResponseCode = StatusCodes.Status200OK, Events = events, DataTimestamp = lastUpdate.timestamp, LocalityName = localityName, RegionName = regionName, Cisorp = id };
             }
             catch
             {

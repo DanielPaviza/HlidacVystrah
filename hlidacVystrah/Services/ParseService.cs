@@ -235,7 +235,8 @@ namespace hlidacVystrah.Services
                     onset = _eventDto.Onset,
                     expires = _eventDto.Expires,
                     description = _eventDto.Description,
-                    instruction = _eventDto.Instruction
+                    instruction = _eventDto.Instruction,
+                    id_update = updateId
                 };
 
                 // event record duplicate
@@ -256,8 +257,7 @@ namespace hlidacVystrah.Services
                         _context.EventLocality.Add(new EventLocalityTable
                         {
                             id_event = _event.id,
-                            id_locality = locality.Cisorp,
-                            id_update = updateId
+                            id_locality = locality.Cisorp
                         });
                         count.EventLocality.Success++;
                     }

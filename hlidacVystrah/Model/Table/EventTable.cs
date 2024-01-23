@@ -30,5 +30,6 @@ namespace hlidacVystrah.Model
 
         public string instruction { get; set; }
 
+        public int id_update { get; set; }
     }
 }

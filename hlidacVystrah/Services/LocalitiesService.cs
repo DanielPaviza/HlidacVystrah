@@ -66,11 +66,20 @@ namespace hlidacVystrah.Services
                 if (lastUpdate == null)
                     return new LocalityDetailResponse { ResponseCode = StatusCodes.Status200OK };
 
-                List<int> eventIds = _context.EventLocality.Where(
-                        el => el.id_update == lastUpdate.id &&
-                        el.id_locality == id
-                    ).GroupBy(el => el.id_event).Select(_event => _event.Key).ToList();
-                
+                List<int> eventIds = _context.EventLocality
+                    .Join(
+                        _context.Event,
+                        el => el.id_event,
+                        e => e.id,
+                        (el, e) => new { EventLocality = el, Event = e }
+                    )
+                    .Where(joined => 
+                        joined.Event.id_update == lastUpdate.id &&
+                        joined.EventLocality.id_locality == id
+                    )
+                    .Select(joined => joined.Event.id)
+                    .ToList();
+
                 foreach (int eventId in eventIds)
                 {
                     EventTable et = _context.Event.Where(el => el.id == eventId).First();

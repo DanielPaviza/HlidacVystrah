@@ -3,6 +3,7 @@ using hlidacVystrah.Model;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 using hlidacVystrah.Model.Dto;
+using System.Linq;
 
 namespace hlidacVystrah.Services
 {
@@ -46,9 +47,17 @@ namespace hlidacVystrah.Services
                 if (lastUpdate == null)
                     return new EventListResponse { ResponseCode = StatusCodes.Status200OK };
 
-                List<IGrouping<int, EventLocalityTable>> eventsGrouped = _context.EventLocality.Where(
-                        el => el.id_update == lastUpdate.id
-                    ).GroupBy(el => el.id_event).ToList();
+                List<IGrouping<int, EventLocalityTable>> eventsGrouped = _context.EventLocality
+                    .Join(
+                        _context.Event,
+                        el => el.id_event,
+                        e => e.id,
+                        (el, e) => new { EventLocality = el, Event = e }
+                    )
+                    .Where(joined => joined.Event.id_update == lastUpdate.id)
+                    .Select(joined =>joined.EventLocality)
+                    .GroupBy(joined => joined.id_event)
+                    .ToList();
 
                 foreach (var _event in eventsGrouped)
                 {

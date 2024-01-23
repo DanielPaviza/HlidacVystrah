@@ -14,9 +14,11 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true) // Development settings
     .AddEnvironmentVariables();
 
+
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
 ));
+
 
 builder.Services.AddTransient<IEventsService, EventsService>();
 builder.Services.AddTransient<IParseService, ParseService>();

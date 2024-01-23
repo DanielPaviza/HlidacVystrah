@@ -85,7 +85,7 @@ namespace hlidacVystrah.Services
                     EventTable et = _context.Event.Where(el => el.id == eventId).First();
                     events.Add(new EventDto
                     {
-                        Id = null,
+                        Id = et.id,
                         EventType = _context.EventType.First(el => el.id == et.id_event_type).name,
                         Severity = _context.Severity.First(el => el.id == et.id_severity).text,
                         Certainty = _context.Certainty.First(el => el.id == et.id_certainty).text,

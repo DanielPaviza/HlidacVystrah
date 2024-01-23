@@ -12,8 +12,8 @@ using hlidacVystrah.Model;
 namespace hlidacVystrah.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240121130014_final")]
-    partial class final
+    [Migration("20240123204058_clean")]
+    partial class clean
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,9 +60,6 @@ namespace hlidacVystrah.Migrations
                     b.Property<int>("id_locality")
                         .HasColumnType("int");
 
-                    b.Property<int>("id_update")
-                        .HasColumnType("int");
-
                     b.HasKey("id");
 
                     b.ToTable("event_locality");
@@ -90,6 +87,9 @@ namespace hlidacVystrah.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("id_severity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("id_update")
                         .HasColumnType("int");
 
                     b.Property<int>("id_urgency")

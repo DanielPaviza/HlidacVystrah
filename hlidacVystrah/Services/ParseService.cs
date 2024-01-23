@@ -4,10 +4,7 @@ using hlidacVystrah.Model;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 using hlidacVystrah.Model.Dto;
-using hlidacVystrah.Migrations;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
 
 namespace hlidacVystrah.Services
 {

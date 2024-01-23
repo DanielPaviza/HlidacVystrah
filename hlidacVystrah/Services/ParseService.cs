@@ -75,7 +75,7 @@ namespace hlidacVystrah.Services
         public ParseResponse UpdateEvents()
         {
             
-            bool saveToDb = false; // testing purposes
+            bool saveToDb = true; // testing purposes
             string dataUrl = this._downloadEventsEndpoint.Url;
             try
             {
@@ -84,7 +84,6 @@ namespace hlidacVystrah.Services
 
                 string dataTimestamp = GetElementValue(root, "sent");
 
-                
                 // if already saved, dont save again
                 if(saveToDb)
                     if (_context.Update.Any(el => el.timestamp == dataTimestamp))
@@ -126,7 +125,6 @@ namespace hlidacVystrah.Services
                 this.SendEventNotificationsEmails(events);
 
                 return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
-
             }
             catch (Exception e)
             {

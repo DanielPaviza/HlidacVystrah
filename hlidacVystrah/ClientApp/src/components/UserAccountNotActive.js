@@ -74,16 +74,16 @@ export class UserAccountNotActive extends Component {
                 <h2>Účet není aktivován</h2>
                 <span className='mt-1'>Při registraci jsme na email <span className='fw-bold'>{this.props.userEmail}</span> odeslali zprávu s odkazem, na kterém svůj učet aktivujete.</span>
                 <span className=''>Pokud email nevidíte, zkotrolujte složku Spam.</span>
-                {this.RenderResendEmailResponse()}
                 {!this.state.emailSent && 
                     <>
                         <span className='mt-2'>Pokud jste aktivační email neobrželi do pár minut od odeslání, je možné ho odeslat znovu tlačítkem níže.</span>
                         <div className='position-relative mt-2'>
                             <button className='d-flex fit-content border p-2 rounded' onClick={() => this.ResendActivationEmail()}>Znovu odeslat aktivační email</button>
-                            <div className='mt-5'>{this.state.reSendLoading && <Spinner />}</div>
+                            <div className='pt-5'>{this.state.reSendLoading && <Spinner />}</div>
                         </div>
                     </>    
                 }
+                {this.RenderResendEmailResponse()}
             </div>
         );
     }

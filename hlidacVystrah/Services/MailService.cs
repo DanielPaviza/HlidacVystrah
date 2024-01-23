@@ -58,10 +58,8 @@ namespace hlidacVystrah.Services
 
                     emailMessage.Body = this.BuildEmailBody(emailTemplateText);
 
-                    this.SendMail(emailMessage);
+                    return this.SendMail(emailMessage);
                 }
-
-                return true;
             }
             catch (Exception ex)
             {
@@ -78,20 +76,28 @@ namespace hlidacVystrah.Services
             return emailBodyBuilder.ToMessageBody();
         }
 
-        private void SendMail(MimeMessage emailMessage)
+        private bool SendMail(MimeMessage emailMessage)
         {
-            using SmtpClient mailClient = new SmtpClient();
-            mailClient.Connect(_mailSettings.Server, _mailSettings.Port, SecureSocketOptions.StartTls);
-            mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
-            mailClient.Send(emailMessage);
-            mailClient.Disconnect(true);
+            try
+            {
+                using SmtpClient mailClient = new SmtpClient();
+                mailClient.Connect(_mailSettings.Server, _mailSettings.Port, true);
+                mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
+                mailClient.Send(emailMessage);
+                mailClient.Disconnect(true);
+
+                return true;
+            } catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         private async Task SendMailAsync(MimeMessage emailMessage)
         {
             using SmtpClient mailClient = new SmtpClient();
 
-            await mailClient.ConnectAsync(_mailSettings.Server, _mailSettings.Port, SecureSocketOptions.StartTls);
+            await mailClient.ConnectAsync(_mailSettings.Server, _mailSettings.Port, true);
             await mailClient.AuthenticateAsync(_mailSettings.UserName, _mailSettings.Password);
             await mailClient.SendAsync(emailMessage);
             await mailClient.DisconnectAsync(true);
@@ -163,10 +169,8 @@ namespace hlidacVystrah.Services
 
                     emailMessage.Body = this.BuildEmailBody(emailTemplateText);
 
-                    this.SendMail(emailMessage);
+                    return this.SendMail(emailMessage);
                 }
-
-                return true;
             }
             catch (Exception ex)
             {

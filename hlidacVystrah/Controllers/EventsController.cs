@@ -24,8 +24,8 @@ namespace hlidacVystrah.Controllers
         }        
 
         // POST api/events/update
-        [HttpPost("update")]
-        public ParseResponse Post()
+        [HttpGet("update")]
+        public ParseResponse Update()
         {
             return _eventsService.UpdateEvents();
         }

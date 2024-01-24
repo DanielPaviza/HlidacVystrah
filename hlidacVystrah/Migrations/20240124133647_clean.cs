@@ -109,7 +109,8 @@ namespace hlidacVystrah.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     id_log_type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    id_log_service = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     session = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     timestamp = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -117,6 +118,28 @@ namespace hlidacVystrah.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_log", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "log_service",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_log_service", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "log_type",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_log_type", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -248,6 +271,12 @@ namespace hlidacVystrah.Migrations
 
             migrationBuilder.DropTable(
                 name: "log");
+
+            migrationBuilder.DropTable(
+                name: "log_service");
+
+            migrationBuilder.DropTable(
+                name: "log_type");
 
             migrationBuilder.DropTable(
                 name: "notification");

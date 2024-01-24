@@ -12,7 +12,7 @@ using hlidacVystrah.Model;
 namespace hlidacVystrah.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240124022058_clean")]
+    [Migration("20240124133647_clean")]
     partial class clean
     {
         /// <inheritdoc />
@@ -168,6 +168,16 @@ namespace hlidacVystrah.Migrations
                     b.ToTable("locality");
                 });
 
+            modelBuilder.Entity("hlidacVystrah.Model.LogServiceTable", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("log_service");
+                });
+
             modelBuilder.Entity("hlidacVystrah.Model.LogTable", b =>
                 {
                     b.Property<int>("id")
@@ -176,11 +186,15 @@ namespace hlidacVystrah.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<string>("id_log_service")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("id_log_type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("location")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -199,6 +213,16 @@ namespace hlidacVystrah.Migrations
                     b.HasKey("id");
 
                     b.ToTable("log");
+                });
+
+            modelBuilder.Entity("hlidacVystrah.Model.LogTypeTable", b =>
+                {
+                    b.Property<string>("id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("log_type");
                 });
 
             modelBuilder.Entity("hlidacVystrah.Model.NotificationTable", b =>

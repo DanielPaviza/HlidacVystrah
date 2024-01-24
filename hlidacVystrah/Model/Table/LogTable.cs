@@ -24,6 +24,8 @@ namespace hlidacVystrah.Model
 
         public string session { get; set; }
 
+        public string? client_info { get; set; } = null;
+
         public string timestamp { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
     }

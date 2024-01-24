@@ -3,9 +3,6 @@ using hlidacVystrah.Model;
 using hlidacVystrah.Model.Dto;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 
 namespace hlidacVystrah.Services
 {

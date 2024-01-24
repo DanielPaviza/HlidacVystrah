@@ -221,24 +221,26 @@ export class Logs extends Component {
                 <thead className='border-bottom '>
                     <tr className='col-12'>
                         {this.state.showId && <th className='col-1'>Id</th>}
-                        <th className='col-2'>Timestamp</th>
+                        <th className='col-1'>Timestamp</th>
                         <th className='col-1'>Type</th>
-                        <th className='col-2'>Service</th>
+                        <th className='col-1'>Service</th>
                         <th className='col-2'>Name</th>
-                        <th className='col-5'>Message</th>
+                        <th className='col-3'>Message</th>
                         {this.state.showSession && <th className='col-1 overflow-auto'>Session</th>}
+                        <th className='col-3'>Client info</th>
                     </tr>
                 </thead>
                 <tbody>
                     {this.state.logs.map(log => (
                         <tr key={log.id} className='col-12'>
                             {this.state.showId && <td className='col-1 fw-bold'>{log.id}</td>}
-                            <td className='col-2'>{log.timestamp}</td>
+                            <td className='col-1'>{log.timestamp}</td>
                             <td className={`col-1 ${log.id_log_type}`}>{log.id_log_type}</td>
-                            <td className='col-2 '>{log.id_log_service}</td>
-                            <td className='col-2 '>{log.name}</td>
-                            <td className='col-5'>{log.text}</td>
-                            {this.state.showSession && <td className='col-1 overflow-auto'>{log.session}</td>}
+                            <td className='col-1'>{log.id_log_service}</td>
+                            <td className='col-2'>{log.name}</td>
+                            <td className='col-3'>{log.text}</td>
+                            {this.state.showSession && <td className='col-1'>{log.session}</td>}
+                            <td className='col-3'>{log.client_info}</td>
                         </tr>
                     ))}
                 </tbody>

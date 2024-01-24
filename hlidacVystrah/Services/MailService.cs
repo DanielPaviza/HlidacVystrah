@@ -6,16 +6,17 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using hlidacVystrah.Model.Dto;
+using Microsoft.EntityFrameworkCore;
 
 namespace hlidacVystrah.Services
 {
 
-    public class MailService : IMailService
+    public class MailService :IMailService
     {
         private readonly MailSettings _mailSettings;
         private readonly ILogService _logService;
 
-        public MailService(IOptions<MailSettings> mailSettings, ILogService logService)
+        public MailService(IOptions<MailSettings> mailSettings, ILogService logService, AppDbContext context)
         {
             _mailSettings = mailSettings.Value;
             _logService = logService;

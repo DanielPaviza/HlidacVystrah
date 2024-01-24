@@ -12,29 +12,47 @@ namespace hlidacVystrah.Services
     public class LogService : MasterService, ILogService
     {
 
-        IWebHostEnvironment _enviroment;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IWebHostEnvironment _enviroment;
         private string session;
+
         public string Service { get; set; } = "LogService";
 
-        public LogService(AppDbContext context, IWebHostEnvironment enviroment) : base(context)
+
+        public LogService(IWebHostEnvironment enviroment, AppDbContext context, IHttpContextAccessor httpContextAccessor) : base(context)
         {
-            _context = context;
+            _httpContextAccessor = httpContextAccessor;
             session = this.GenerateSessionNumber();
             _enviroment = enviroment;
+            _context = context;
         }
 
-        private async Task Write(string logType, string text, string name)
+        private void Write(string logType, string text, string name)
         {
-            _context.Log.Add(
-                new LogTable { 
-                    id_log_type = logType, 
-                    id_log_service = this.Service,
-                    name = name, 
-                    text = text,
-                    session = this.session 
-                }
-            );
-            _context.SaveChangesAsync();
+
+            try
+            {
+                string? clientInfoString = null;
+                var httpContext = _httpContextAccessor.HttpContext;
+
+                if (httpContext != null)
+                    clientInfoString = httpContext.Request.Headers["User-Agent"].ToString();
+
+                _context.Log.Add(
+                    new LogTable
+                    {
+                        id_log_type = logType,
+                        id_log_service = this.Service,
+                        name = name,
+                        text = text,
+                        client_info = clientInfoString,
+                        session = this.session
+                    }
+                );
+                _context.SaveChanges();
+            } catch( Exception ex ) {
+                //this.Write("Error", ex.Message, "Log write");
+            }      
         }
 
         public void WriteInfo(string text, string name) {

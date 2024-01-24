@@ -1,4 +1,5 @@
-﻿using hlidacVystrah.Model.Dto;
+﻿using hlidacVystrah.Model;
+using hlidacVystrah.Model.Dto;
 using hlidacVystrah.Model.Response;
 
 namespace hlidacVystrah.Services.Interfaces

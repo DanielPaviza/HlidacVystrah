@@ -293,11 +293,11 @@ namespace hlidacVystrah.Services
             return count;
         }
 
-        public ParseResponse SaveLocalities() {
+        public ParseResponse SaveLocalityList() {
 
             string xmlPath = "D:\\moje\\programovani\\absolutorium\\random\\kraje_okresy.xml";
 
-            string LOG_NAME = $"SaveLocalities from {xmlPath}";
+            string LOG_NAME = $"SaveLocalityList from {xmlPath}";
 
             UpdateCount count = new();
 
@@ -360,7 +360,7 @@ namespace hlidacVystrah.Services
             }
 
             _context.SaveChanges();
-            this._logService.WriteSuccess($"Localities saved. Success: {count.Locality.Success}, Failed: {count.Locality.Failed}", LOG_NAME);
+            this._logService.WriteSuccess($"Locality list saved. Success: {count.Locality.Success}, Failed: {count.Locality.Failed}", LOG_NAME);
 
             return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
         }
@@ -369,7 +369,7 @@ namespace hlidacVystrah.Services
 
             string xmlPath = "D:\\moje\\programovani\\absolutorium\\random\\kraje_okresy.xml";
 
-            string LOG_NAME = $"SaveLocalities from {xmlPath}";
+            string LOG_NAME = $"SaveRegions from {xmlPath}";
 
             UpdateCount count = new();
 
@@ -436,9 +436,9 @@ namespace hlidacVystrah.Services
                 el => GetElName(el) == "area"
             ).ToList();
 
-            Dictionary<string, List<LocalityDto>> localities = new Dictionary<string, List<LocalityDto>>();
+            Dictionary<string, List<LocalityDto>> localityList = new Dictionary<string, List<LocalityDto>>();
 
-            localities["all"] = areas.Descendants().Where(
+            localityList["all"] = areas.Descendants().Where(
                 area => GetElName(area) == "geocode"
             ).Select(locality => new LocalityDto
             {
@@ -446,7 +446,7 @@ namespace hlidacVystrah.Services
             })
             .ToList();
 
-            return localities;
+            return localityList;
         }
 
         private string GetElName(XElement el)

@@ -209,7 +209,7 @@ export class HomeController extends Component {
 
     async GetEventList() {
 
-        axios.get('/api/events')
+        axios.get('/api/event/list')
             .then(response => {
 
                 let data = response.data;
@@ -226,7 +226,7 @@ export class HomeController extends Component {
 
     async GetLocalityList() {
 
-        axios.get('/api/localities')
+        axios.get('/api/locality/list')
             .then(response => {
 
                 let data = response.data;

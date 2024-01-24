@@ -6,24 +6,24 @@ namespace hlidacVystrah.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EventsController : ControllerBase
+    public class EventController : ControllerBase
     {
 
         IEventService _eventService;
 
-        public EventsController(IEventService eventsService)
+        public EventController(IEventService eventsService)
         {
             _eventService = eventsService;
         }
 
-        // GET api/events
-        [HttpGet]
+        // GET api/event/list
+        [HttpGet("list")]
         public EventListResponse Get()
         {
             return _eventService.GetEvents();
         }        
 
-        // POST api/events/update
+        // POST api/event/list/update
         [HttpGet("update")]
         public ParseResponse Update()
         {

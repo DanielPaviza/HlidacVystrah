@@ -6,24 +6,24 @@ namespace hlidacVystrah.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LocalitiesController : ControllerBase
+    public class LocalityController : ControllerBase
     {
 
         ILocalityService _localityService;
 
-        public LocalitiesController(ILocalityService localitiesService)
+        public LocalityController(ILocalityService localityService)
         {
-            _localityService = localitiesService;
+            _localityService = localityService;
         }
 
-        // GET api/localities
-        [HttpGet]
+        // GET api/locality/list
+        [HttpGet("list")]
         public LocalityListResponse Get()
         {
             return _localityService.GetLocalityList();
         }
 
-        // GET api/localities/{id}
+        // GET api/locality/{id}
         [HttpGet("{id}")]
         public LocalityDetailResponse Get(int id)
         {

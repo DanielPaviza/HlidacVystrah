@@ -10,5 +10,8 @@ namespace hlidacVystrah.Model.Response
 
         public int AllLogsCount { get; set; }
 
+        public List<string> ServiceNames { get; set; } = new();
+
+        public List<string> LogTypes { get; set; } = new();
     }
 }

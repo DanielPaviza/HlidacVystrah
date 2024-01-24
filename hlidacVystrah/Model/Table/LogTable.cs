@@ -16,7 +16,9 @@ namespace hlidacVystrah.Model
 
         public string id_log_type {  get; set; }
 
-        public string location { get; set; }
+        public string id_log_service { get; set; }
+
+        public string name { get; set; }
 
         public string text { get; set; }
 

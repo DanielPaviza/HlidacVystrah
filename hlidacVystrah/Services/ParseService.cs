@@ -14,16 +14,20 @@ namespace hlidacVystrah.Services
 
         private readonly IMailService _mailService;
         private readonly DownloadEventsEndpoint _downloadEventsEndpoint;
+        private readonly ILogService _logService;
 
-        public ParseService(AppDbContext context, IMailService mailService, IOptions<DownloadEventsEndpoint> downloadEventsEndpoint) : base(context)
+        public ParseService(AppDbContext context, IMailService mailService, IOptions<DownloadEventsEndpoint> downloadEventsEndpoint, ILogService logService) : base(context)
         {
             _context = context;
             _mailService = mailService;
             _downloadEventsEndpoint = downloadEventsEndpoint.Value;
+            _logService = logService;
+            _logService.Service = "ParseService";
         }
 
         private List<EventDto> GetReducedEvents(List<EventDto> events)
         {
+
             // FILTER EVENTS AND JOIN SIMILAR TOGETHER
             // some events differ only in description, localityList, onset
             List<EventDto> eventsReduced = new();
@@ -70,9 +74,13 @@ namespace hlidacVystrah.Services
 
         public ParseResponse UpdateEvents()
         {
-            
+
+            string LOG_NAME = "UpdateEvents";
+            this._logService.WriteInfo("Start", LOG_NAME);
+
             bool saveToDb = true; // testing purposes
             string dataUrl = this._downloadEventsEndpoint.Url;
+            
             try
             {
                 XDocument xdoc = XDocument.Load(dataUrl);
@@ -83,13 +91,19 @@ namespace hlidacVystrah.Services
                 // if already saved, dont save again
                 if(saveToDb)
                     if (_context.Update.Any(el => el.timestamp == dataTimestamp))
+                    {
+                        this._logService.WriteSuccess("No new data, but ok.", LOG_NAME);
                         return new ParseResponse { ResponseCode = StatusCodes.Status200OK };
-                
+                    }
+
                 // add update record
                 UpdateTable update = new UpdateTable { timestamp = dataTimestamp };
                 _context.Update.Add(update);
                 if (saveToDb)
+                {
+                    this._logService.WriteInfo($"Update {dataTimestamp} added", LOG_NAME);
                     _context.SaveChanges();
+                }
 
                 // Get all events from the xml
                 List<EventDto> events = root.Descendants().Where(
@@ -116,20 +130,28 @@ namespace hlidacVystrah.Services
 
                 UpdateCount count = new();
                 if (saveToDb)
+                {
                     count = this.SaveEventRecords(events, update.id);
+                    this._logService.WriteInfo($"Event records saved. Events added: {count.Event.Success}, failed: {count.Event.Failed}", LOG_NAME);
+                }
 
                 this.SendEventNotificationsEmails(events);
 
+                this._logService.WriteSuccess("ok", LOG_NAME);
                 return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
             }
             catch (Exception e)
             {
+                this._logService.WriteError(e.Message, LOG_NAME);
                 return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
         }
 
         private bool SendEventNotificationsEmails(List<EventDto> events)
         {
+
+            string LOG_NAME = "SendEventNotificationsEmails";
+            this._logService.WriteInfo("Start", LOG_NAME);
 
             // for each event, save all fitting user notifications
             foreach (EventDto e in events)
@@ -204,6 +226,8 @@ namespace hlidacVystrah.Services
                 }
             }
 
+            this._logService.WriteSuccess("Emails sent", LOG_NAME);
+
             return true;
         }
 
@@ -272,6 +296,9 @@ namespace hlidacVystrah.Services
         public ParseResponse SaveLocalities() {
 
             string xmlPath = "D:\\moje\\programovani\\absolutorium\\random\\kraje_okresy.xml";
+
+            string LOG_NAME = $"SaveLocalities from {xmlPath}";
+
             UpdateCount count = new();
 
             try {
@@ -328,10 +355,12 @@ namespace hlidacVystrah.Services
                     count.Locality.Success++;
                 }
             } catch (Exception ex) {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
             _context.SaveChanges();
+            this._logService.WriteSuccess($"Localities saved. Success: {count.Locality.Success}, Failed: {count.Locality.Failed}", LOG_NAME);
 
             return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
         }
@@ -339,6 +368,9 @@ namespace hlidacVystrah.Services
         private ParseResponse SaveRegions() {
 
             string xmlPath = "D:\\moje\\programovani\\absolutorium\\random\\kraje_okresy.xml";
+
+            string LOG_NAME = $"SaveLocalities from {xmlPath}";
+
             UpdateCount count = new();
 
             try
@@ -388,10 +420,12 @@ namespace hlidacVystrah.Services
             }
             catch (Exception ex)
             {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return new ParseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
             _context.SaveChanges();
+            this._logService.WriteSuccess($"Regions saved. Success: ${count.Region.Success}, Failed: ${count.Region.Failed}", LOG_NAME);
 
             return new ParseResponse { ResponseCode = StatusCodes.Status200OK, Count = count };
         }

@@ -17,34 +17,56 @@ namespace hlidacVystrah.Services
         {
             _context = context;
             _logService = logService;
+            _logService.Service = "AdmService";
         }
 
         public LogsResponse GetLogs(LogsDto data)
         {
 
-            if(!_context.Admin.Any(a => a.token == data.LoginToken))
+            string LOG_NAME = "GetLogs";
+
+            try
             {
-                _logService.WriteInfo("AdmService GetLogs()", "unauthorized");
-                return new LogsResponse { ResponseCode = StatusCodes.Status401Unauthorized };
-            }
-                
+                AdminTable admin = _context.Admin.FirstOrDefault(a => a.token == data.LoginToken);
+                if(admin == null)
+                {
+                    _logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
+                    return new LogsResponse { ResponseCode = StatusCodes.Status401Unauthorized };
+                }
 
-            if(data.PageSize < 1 || data.PageNumber < 1)
+                LOG_NAME += $" - Admin {admin.id}";
+
+                if (data.PageSize < 1 || data.PageNumber < 1)
+                {
+                    _logService.WriteError("PageSize or PageNumber is negative.", LOG_NAME);
+                    return new LogsResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                }
+
+                int allLogsCount = _context.Log.Count();
+                int recordsToSkip = (data.PageNumber - 1) * data.PageSize;
+                List<LogTable> paginatedLogs = _context.Log.OrderByDescending(log => log.timestamp)
+                                         .Skip(recordsToSkip)
+                                         .Take(data.PageSize)
+                                         .ToList();
+
+                List<string> serviceNames = _context.LogService.ToList().Select(ls => ls.id).ToList();
+                List<string> logTypes = _context.LogType.ToList().Select(lt => lt.id).ToList();
+
+                _logService.WriteSuccessDev("ok", LOG_NAME);
+                return new LogsResponse
+                {
+                    ResponseCode = StatusCodes.Status200OK,
+                    Logs = paginatedLogs,
+                    AllLogsCount = allLogsCount,
+                    ServiceNames = serviceNames,
+                    LogTypes = logTypes
+                };
+            }
+            catch (Exception ex)
             {
-                _logService.WriteError("AdmService GetLogs()", "pagesize or pagenumber is negative");
-                return new LogsResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                _logService.WriteError(ex.Message, LOG_NAME);
+                return new LogsResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
-
-            int allLogsCount = _context.Log.Count();
-            int recordsToSkip = (data.PageNumber - 1) * data.PageSize;
-            List<LogTable> paginatedLogs = _context.Log.OrderByDescending(log => log.timestamp)
-                                     .Skip(recordsToSkip)
-                                     .Take(data.PageSize)
-                                     .ToList();
-
-            _logService.WriteSuccess("AdmService GetLogs()", "success");
-            return new LogsResponse { ResponseCode = StatusCodes.Status200OK, Logs = paginatedLogs, AllLogsCount = allLogsCount };
         }
-
     }
 }

@@ -9,25 +9,25 @@ namespace hlidacVystrah.Controllers
     public class EventsController : ControllerBase
     {
 
-        IEventsService _eventsService;
+        IEventService _eventService;
 
-        public EventsController(IEventsService eventsService)
+        public EventsController(IEventService eventsService)
         {
-            _eventsService = eventsService;
+            _eventService = eventsService;
         }
 
         // GET api/events
         [HttpGet]
         public EventListResponse Get()
         {
-            return _eventsService.GetEvents();
+            return _eventService.GetEvents();
         }        
 
         // POST api/events/update
         [HttpGet("update")]
         public ParseResponse Update()
         {
-            return _eventsService.UpdateEvents();
+            return _eventService.UpdateEvents();
         }
 
     }

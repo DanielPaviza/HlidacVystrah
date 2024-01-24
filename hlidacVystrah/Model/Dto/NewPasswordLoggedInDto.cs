@@ -8,7 +8,5 @@ namespace hlidacVystrah.Model.Dto
     {
         public string Password {  get; set; }
 
-        public string LoginToken { get; set; }
-
     }
 }

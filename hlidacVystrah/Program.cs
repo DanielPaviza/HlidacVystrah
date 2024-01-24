@@ -25,9 +25,9 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ), ServiceLifetime.Transient);
 
-builder.Services.AddTransient<IEventsService, EventsService>();
+builder.Services.AddTransient<IEventService, EventService>();
 builder.Services.AddTransient<IParseService, ParseService>();
-builder.Services.AddTransient<ILocalitiesService, LocalitiesService>();
+builder.Services.AddTransient<ILocalityService, LocalityService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddTransient<ILogService, LogService>();

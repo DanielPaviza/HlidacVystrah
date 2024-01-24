@@ -9,25 +9,25 @@ namespace hlidacVystrah.Controllers
     public class LocalitiesController : ControllerBase
     {
 
-        ILocalitiesService _localitiesService;
+        ILocalityService _localityService;
 
-        public LocalitiesController(ILocalitiesService localitiesService)
+        public LocalitiesController(ILocalityService localitiesService)
         {
-            _localitiesService = localitiesService;
+            _localityService = localitiesService;
         }
 
         // GET api/localities
         [HttpGet]
         public LocalityListResponse Get()
         {
-            return _localitiesService.GetLocalityList();
+            return _localityService.GetLocalityList();
         }
 
         // GET api/localities/{id}
         [HttpGet("{id}")]
         public LocalityDetailResponse Get(int id)
         {
-            return _localitiesService.GetLocalityDetail(id);
+            return _localityService.GetLocalityDetail(id);
         }
 
     }

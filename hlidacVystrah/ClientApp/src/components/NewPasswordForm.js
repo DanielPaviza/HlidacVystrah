@@ -89,6 +89,8 @@ function NewPasswordForm({ loggedIn }) {
             case 200:
                 return helper.RenderInformationText("Heslo bylo úspěšně změněno!", false);
             case 400:
+                return helper.RenderInformationText("Heslo nesplňuje požadavky!", true);
+            case 401:
                 return helper.RenderInformationText("Neplatný odkaz, nebo čas na změnu hesla již vypršel!", true);
             case 500:
                 return helper.RenderInformationText("Něco se nepovedlo. Zkuste to později.", true);

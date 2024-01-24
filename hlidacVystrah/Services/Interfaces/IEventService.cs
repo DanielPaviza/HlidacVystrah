@@ -2,7 +2,7 @@
 
 namespace hlidacVystrah.Services.Interfaces
 {
-    public interface IEventsService
+    public interface IEventService
     {
         EventListResponse GetEvents();
 

@@ -15,61 +15,90 @@ namespace hlidacVystrah.Services
 
         IMailService _mailService;
         private int passwordMinLength = 6;
+        private readonly ILogService _logService;
 
-        public UserService(AppDbContext context, IMailService mailService) : base(context)
+        public UserService(AppDbContext context, IMailService mailService, ILogService logService) : base(context)
         {
             _context = context;
             _mailService = mailService;
+            _logService = logService;
+            _logService.Service = "UserService";
         }
 
         public BaseResponse NotificationDelete(NotificationDeleteDto data)
         {
+
+            string LOG_NAME = "NotificationDelete";
+
             try
             {
                 UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
                 int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
-                if (authorizeTokenStatus != 200)
+                if (authorizeTokenStatus != 200) {
+                    this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                     return new BaseResponse { ResponseCode = authorizeTokenStatus };
+                }
+
+                LOG_NAME += $" - User {user.id}";
 
                 UserNotificationTable? userNotification = _context.UserNotification.FirstOrDefault(un =>
                     un.id == data.IdNotification
                 );
 
                 if(userNotification == null)
+                {
+                    this._logService.WriteInfo($"Notification {data.IdNotification} does not exist.", LOG_NAME);
                     return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                }
 
                 _context.UserNotification.Remove(userNotification);
                 _context.SaveChanges();
 
+                this._logService.WriteSuccess($"Deleted notification ${userNotification.id}", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
             } catch(Exception ex)
             {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
         }
 
         public BaseResponse NotificationAdd(NotificationAddDto data)
         {
+
+            string LOG_NAME = "NotificationAdd";
+
             try
             {
                 UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
                 int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
                 if (authorizeTokenStatus != 200)
+                {
+                    this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                     return new BaseResponse { ResponseCode = authorizeTokenStatus };
+                }
+
+                LOG_NAME += $" - User {user.id}";
 
                 if (data.IsRegion)
                 {
 
                     RegionTable region = _context.Region.FirstOrDefault(r => r.name == data.IdArea);
                     if (region == null)
+                    {
+                        this._logService.WriteInfo($"Attempt to add region that does not exist.", LOG_NAME);
                         return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                    }
 
                     data.IdArea = region.id.ToString();
                 }
                 else
                 {
                     if (!_context.Locality.Any(l => l.id == Int32.Parse(data.IdArea)))
+                    {
+                        this._logService.WriteInfo($"Attempt to add locality that does not exist.", LOG_NAME);
                         return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                    }
                 }
 
                 NotificationTable notificationTable = new NotificationTable
@@ -98,6 +127,7 @@ namespace hlidacVystrah.Services
                 {
                     _context.Notification.Add(notificationTable);
                     _context.SaveChanges();
+                    this._logService.WriteInfo($"Notification did not yet exist. New one created with id: {notificationTable.id}.", LOG_NAME);
                     userNotificationTable.id_notification = notificationTable.id;
                 } else
                 {
@@ -108,6 +138,7 @@ namespace hlidacVystrah.Services
                         un.id_notification == matchingNotification.id
                     ))
                     {
+                        this._logService.WriteInfo($"User already tracks notification {matchingNotification.id}.", LOG_NAME);
                         return new BaseResponse { ResponseCode = StatusCodes.Status409Conflict };
                     }
 
@@ -117,9 +148,11 @@ namespace hlidacVystrah.Services
                 _context.UserNotification.Add(userNotificationTable);
                 _context.SaveChanges();
 
+                this._logService.WriteSuccess($"Added user_notification ${userNotificationTable.id}", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
             } catch (Exception ex)
             {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
         }
@@ -127,10 +160,17 @@ namespace hlidacVystrah.Services
         public NotificationResponse GetEventNotifications(LoginTokenDto data)
         {
 
+            string LOG_NAME = "GetEventNotifications";
+
             UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
             int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
             if (authorizeTokenStatus != 200)
+            {
+                this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                 return new NotificationResponse { ResponseCode = authorizeTokenStatus };
+            }
+
+            LOG_NAME += $" - User {user.id}";
 
             try
             {
@@ -159,10 +199,12 @@ namespace hlidacVystrah.Services
                     });
                 }
 
+                this._logService.WriteSuccessDev($"ok", LOG_NAME);
                 return new NotificationResponse { ResponseCode = StatusCodes.Status200OK, Notifications = userNotifications };
             }
             catch (Exception ex)
             {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return new NotificationResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
         }
@@ -170,9 +212,10 @@ namespace hlidacVystrah.Services
         public EventNotificationOptionsResponse GetEventNotificationOptions()
         {
 
+            string LOG_NAME = "GetEventNotificationOptions";
+
             try
             {
-
                 List<EventTypeDto> eventTypeList = _context.EventType.Select(eventType => new EventTypeDto
                 {
                     Id = eventType.id,
@@ -209,6 +252,9 @@ namespace hlidacVystrah.Services
                     Name = locality.name
                 }).OrderBy(localityDto => localityDto.Name).ToList();
 
+
+                _logService.WriteSuccessDev("ok", LOG_NAME);
+
                 return new EventNotificationOptionsResponse
                 {
                     ResponseCode = StatusCodes.Status200OK,
@@ -220,6 +266,7 @@ namespace hlidacVystrah.Services
 
             } catch (Exception ex)
             {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return new EventNotificationOptionsResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             } 
         }
@@ -227,10 +274,17 @@ namespace hlidacVystrah.Services
         public BaseResponse DeleteAccount(LoginTokenDto data)
         {
 
+            string LOG_NAME = "DeleteAccount";
+
             UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
             int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
             if (authorizeTokenStatus != 200)
+            {
+                this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                 return new BaseResponse { ResponseCode = authorizeTokenStatus };
+            }
+
+            LOG_NAME += $" - User {user.id}";
 
             try
             {
@@ -241,22 +295,34 @@ namespace hlidacVystrah.Services
                 _context.User.Remove(user);
                 _context.SaveChanges();
             } catch(Exception ex) {
+                _logService.WriteError(ex.Message, LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
+            _logService.WriteSuccess("Account deleted.", LOG_NAME);
             return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
         public BaseResponse SetNewPasswordLoggedIn(NewPasswordLoggedInDto data)
         {
 
+            string LOG_NAME = "SetNewPasswordLoggedIn";
+
             UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
             int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
             if (authorizeTokenStatus != 200)
+            {
+                this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                 return new BaseResponse { ResponseCode = authorizeTokenStatus };
+            }
 
-            if(data.Password.Length < passwordMinLength)
+            LOG_NAME += $" - User {user.id}";
+
+            if (data.Password.Length < passwordMinLength)
+            {
+                this._logService.WriteInfo($"Password too short.", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+            }
 
             try
             {
@@ -264,18 +330,35 @@ namespace hlidacVystrah.Services
                 _context.SaveChanges();
 
             } catch(Exception ex) {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
+
+            this._logService.WriteSuccess("ok", LOG_NAME);
             return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
         public BaseResponse SetNewPassword(NewPasswordDto data)
         {
 
+            string LOG_NAME = "SetNewPassword";
+
             UserTable? user = _context.User.FirstOrDefault(u => u.password_reset_token == data.PasswordResetToken);
-            if(user == null || user.password_reset_token_expire < DateTime.Now || data.Password.Length < passwordMinLength)
+
+            if (user == null || user.password_reset_token_expire < DateTime.Now)
+            {
+                this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
+                return new BaseResponse { ResponseCode = StatusCodes.Status401Unauthorized };
+            }
+
+            LOG_NAME += $" - User {user.id}";
+
+            if (data.Password.Length < passwordMinLength)
+            {
+                this._logService.WriteError($"Password too short", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+            }
 
             try
             {
@@ -285,17 +368,32 @@ namespace hlidacVystrah.Services
 
             } catch(Exception ex)
             {
+                _logService.WriteError(ex.Message, LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
+            _logService.WriteSuccess("ok", LOG_NAME);
             return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
         public ActivateAccount ActivateAccount(ActivationTokenDto data)
         {
+
+            string LOG_NAME = "ActivateAccount";
+
             UserTable? user = _context.User.FirstOrDefault(u => u.activation_token == data.ActivationToken);
-            if (user == null || user.isActive)
+            if (user == null)
+            {
+                this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                 return new ActivateAccount { ResponseCode = StatusCodes.Status400BadRequest };
+            }
+
+            LOG_NAME += $" - User {user.id}";
+
+            if (user.isActive) {
+                this._logService.WriteInfo($"User already active.", LOG_NAME);
+                return new ActivateAccount { ResponseCode = StatusCodes.Status400BadRequest };
+            }
 
             try
             {
@@ -305,54 +403,80 @@ namespace hlidacVystrah.Services
             }
             catch (Exception ex)
             {
+                _logService.WriteError(ex.Message, LOG_NAME);
                 return new ActivateAccount { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
+            _logService.WriteSuccess("ok", LOG_NAME);
             return new ActivateAccount { ResponseCode = StatusCodes.Status200OK, LoginToken = user.login_token };
         }
 
         public BaseResponse ResetPassword(EmailDto data)
         {
 
+            string LOG_NAME = "ResetPassword";
+
             UserTable? user = _context.User.FirstOrDefault(u => u.email == data.Email);
             if(user == null)
+            {
+                _logService.WriteInfo($"Non existing email", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+            }
+
+            LOG_NAME += $" - User {user.id}";
 
             try
             {
                 user.password_reset_token = this.GeneratePasswordResetToken();
                 user.password_reset_token_expire = DateTime.Now.AddHours(24);
                 _context.SaveChanges();
+                _logService.WriteInfoDev("Password reset token generated", LOG_NAME);
             } catch (Exception ex)
             {
+                _logService.WriteError(ex.Message, LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
             bool emailSent = _mailService.SendPasswordResetMail(user.email, user.password_reset_token);
             if (!emailSent)
+            {
+                _logService.WriteError("Email send failed.", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
 
+            _logService.WriteSuccess("ok", LOG_NAME);
             return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
         public UserLoginResponse Login(EmailPasswordDto data)
         {
+
+            string LOG_NAME = "Login";
+
             UserTable user = _context.User.FirstOrDefault(u => u.email == data.Email);
             if(user == null || user.password != this.HashPassword(data.Password))
+            {
+                this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                 return new UserLoginResponse { ResponseCode = StatusCodes.Status401Unauthorized };
+            }
 
-            if(user.login_token == null || user.login_token_expire < DateTime.Now)
+            LOG_NAME += $" - User {user.id}";
+
+            if (user.login_token == null || user.login_token_expire < DateTime.Now)
             {
                 try
                 {
                     this.UserSetNewLoginToken(user);
+                    _logService.WriteInfoDev("New login token set.", LOG_NAME);
                 }
                 catch (Exception ex)
                 {
+                    _logService.WriteError(ex.Message, LOG_NAME);
                     return new UserLoginResponse { ResponseCode = StatusCodes.Status500InternalServerError };
                 }
             }
 
+            _logService.WriteSuccess("ok", LOG_NAME);
             return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email, LoginToken = user.login_token, IsActive = user.isActive };
         }
 
@@ -376,50 +500,80 @@ namespace hlidacVystrah.Services
 
         public UserLoginResponse TokenLogin(LoginTokenDto data) 
         {
+
+            string LOG_NAME = "TokenLogin";
+
             UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
             int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
             if (authorizeTokenStatus != 200)
+            {
+                this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                 return new UserLoginResponse { ResponseCode = authorizeTokenStatus };
+            }
+
+            LOG_NAME += $" - User {user.id}";
 
             try
             {
                 user.login_token_expire = DateTime.Now.AddHours(3);
+                _logService.WriteInfoDev("Login token expire extended by 3h", LOG_NAME);
                 _context.SaveChanges();
             }
             catch (Exception ex)
             {
+                _logService.WriteError(ex.Message, LOG_NAME);
                 return new UserLoginResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
+            _logService.WriteSuccess("ok", LOG_NAME);
             return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email, IsActive = user.isActive };
         }
         public BaseResponse ReSendActivateAccountEmail(LoginTokenDto data)
         {
 
+            string LOG_NAME = "ReSendActivateAccountEmail";
+
             UserTable? user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
             int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
              if (authorizeTokenStatus != 200)
+            {
+                this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                 return new UserLoginResponse { ResponseCode = authorizeTokenStatus };
+            }
+
+            LOG_NAME += $" - User {user.id}";
 
             bool emailSent = _mailService.SendRegistrationMail(user.email, user.activation_token);
             if(emailSent)
             {
+                this._logService.WriteSuccess($"ok", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
             } else
             {
+                _logService.WriteError("Email send failed.", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
         }
 
         public BaseResponse Register(EmailPasswordDto data) {
 
+            string LOG_NAME = "Register";
+
             // Return bad request if the email isnt the right format or if the password isnt at least 6 characters long
-            if(!this.EmailIsValid(data.Email) || data.Password.Length < passwordMinLength)
+            if (!this.EmailIsValid(data.Email) || data.Password.Length < passwordMinLength)
+            {
+                this._logService.WriteInfo($"Invalid information. Either invalid email or password too short.", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+            }
+
+            LOG_NAME += $" - User {data.Email}";
 
             // Return 409 conflict if the email is already registered
             if (_context.User.Any(user => user.email == data.Email))
+            {
+                this._logService.WriteInfo($"Email is already registered.", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status409Conflict };
+            }
 
             try
             {
@@ -436,18 +590,12 @@ namespace hlidacVystrah.Services
                 _context.SaveChanges();
                 _mailService.SendRegistrationMail(user.email, user.activation_token);
 
+                _logService.WriteSuccess("ok", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
-                /*
-                bool emailSent = _mailService.SendRegistrationMail(user.email, user.activation_token);
-
-                if (!emailSent)
-                    return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
-
-                    _context.SaveChanges();
-                */
             }
             catch (Exception ex)
             {
+                _logService.WriteError(ex.Message, LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
         }

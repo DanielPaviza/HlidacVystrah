@@ -2,7 +2,7 @@
 
 namespace hlidacVystrah.Services.Interfaces
 {
-    public interface ILocalitiesService
+    public interface ILocalityService
     {
         LocalityListResponse GetLocalityList();
 

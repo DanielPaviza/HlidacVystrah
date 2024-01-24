@@ -7,15 +7,21 @@ using hlidacVystrah.Model.Dto;
 namespace hlidacVystrah.Services
 {
 
-    public class LocalitiesService : MasterService, ILocalitiesService
+    public class LocalityService : MasterService, ILocalityService
     {
 
-        public LocalitiesService(AppDbContext context) : base(context)
+        private readonly ILogService _logService;
+
+        public LocalityService(AppDbContext context, ILogService logService) : base(context)
         {
             _context = context;
+            _logService = logService;
+            _logService.Service = "LocalityService";
         }
 
         public LocalityListResponse GetLocalityList() {
+
+            string LOG_NAME = "GetLocalityList";
 
             Dictionary<string, List<LocalityDto>> localityList = new();
 
@@ -26,9 +32,11 @@ namespace hlidacVystrah.Services
                 }
             } catch (Exception ex)
             {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return new LocalityListResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
+            this._logService.WriteSuccessDev("ok", LOG_NAME);
             return new LocalityListResponse { ResponseCode = StatusCodes.Status200OK, LocalityList = localityList };
         }
 
@@ -50,6 +58,8 @@ namespace hlidacVystrah.Services
         public LocalityDetailResponse GetLocalityDetail(int id)
         {
 
+            string LOG_NAME = $"GetLocalityDetail - id: {id}";
+
             List<EventDto> events = new();
             UpdateTable? lastUpdate;
 
@@ -57,14 +67,20 @@ namespace hlidacVystrah.Services
 
                 LocalityTable? locality = _context.Locality.FirstOrDefault(l => l.id == id);
                 if (locality == null)
+                {
+                    this._logService.WriteInfo($"Invalid cisorp: {id}", LOG_NAME);
                     return new LocalityDetailResponse { ResponseCode = StatusCodes.Status400BadRequest, Cisorp = id };
-
+                }
+                    
                 string? localityName = locality.name;
                 string regionName = _context.Region.First(r => r.id == locality.id_region).name;
 
                 lastUpdate = _context.Update.FirstOrDefault();
                 if (lastUpdate == null)
+                {
+                    this._logService.WriteInfo("No data yet, but ok.", LOG_NAME);
                     return new LocalityDetailResponse { ResponseCode = StatusCodes.Status200OK, Cisorp = id };
+                }
 
                 List<int> eventIds = _context.EventLocality
                     .Join(
@@ -98,10 +114,12 @@ namespace hlidacVystrah.Services
                     });
                 }
 
+                this._logService.WriteSuccessDev("ok", LOG_NAME);
                 return new LocalityDetailResponse { ResponseCode = StatusCodes.Status200OK, Events = events, DataTimestamp = lastUpdate.timestamp, LocalityName = localityName, RegionName = regionName, Cisorp = id };
             }
-            catch
+            catch(Exception ex)
             {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return new LocalityDetailResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
         }

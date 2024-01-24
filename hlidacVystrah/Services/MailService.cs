@@ -13,9 +13,13 @@ namespace hlidacVystrah.Services
     public class MailService : IMailService
     {
         private readonly MailSettings _mailSettings;
-        public MailService(IOptions<MailSettings> mailSettings)
+        private readonly ILogService _logService;
+
+        public MailService(IOptions<MailSettings> mailSettings, ILogService logService)
         {
             _mailSettings = mailSettings.Value;
+            _logService = logService;
+            _logService.Service = "MailService";
         }
 
         private string CreateRegistrationLink(string activationToken)
@@ -37,6 +41,9 @@ namespace hlidacVystrah.Services
 
         public bool SendPasswordResetMail(string email, string passwordResetToken)
         {
+
+            string LOG_NAME = $"SendPasswordResetMail - {email}";
+
             try
             {
                 using (MimeMessage emailMessage = new MimeMessage())
@@ -58,11 +65,16 @@ namespace hlidacVystrah.Services
 
                     emailMessage.Body = this.BuildEmailBody(emailTemplateText);
 
-                    return this.SendMail(emailMessage);
+                    this.SendMail(emailMessage);
                 }
+
+                _logService.WriteSuccess("ok", LOG_NAME);
+
+                return true;
             }
             catch (Exception ex)
             {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return false;
             }
         }
@@ -76,21 +88,13 @@ namespace hlidacVystrah.Services
             return emailBodyBuilder.ToMessageBody();
         }
 
-        private bool SendMail(MimeMessage emailMessage)
+        private void SendMail(MimeMessage emailMessage)
         {
-            try
-            {
-                using SmtpClient mailClient = new SmtpClient();
-                mailClient.Connect(_mailSettings.Server, _mailSettings.Port, true);
-                mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
-                mailClient.Send(emailMessage);
-                mailClient.Disconnect(true);
-
-                return true;
-            } catch (Exception ex)
-            {
-                return false;
-            }
+            using SmtpClient mailClient = new SmtpClient();
+            mailClient.Connect(_mailSettings.Server, _mailSettings.Port, true);
+            mailClient.Authenticate(_mailSettings.UserName, _mailSettings.Password);
+            mailClient.Send(emailMessage);
+            mailClient.Disconnect(true);
         }
 
         private async Task SendMailAsync(MimeMessage emailMessage)
@@ -104,6 +108,9 @@ namespace hlidacVystrah.Services
         }
         public async Task<bool> SendEventNotificationMailAsync(string email, EventDto eventDetail, string areaName)
         {
+
+            string LOG_NAME = $"SendEventNotificationMailAsync - {email}, Event id: {eventDetail.Id}";
+
             try
             {
                 using (var emailMessage = new MimeMessage())
@@ -138,16 +145,22 @@ namespace hlidacVystrah.Services
                     await SendMailAsync(emailMessage);
                 }
 
+                _logService.WriteSuccess("ok", LOG_NAME);
+
                 return true;
             }
             catch (Exception ex)
             {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return false;
             }
         }
 
         public bool SendRegistrationMail(string email, string activationToken)
         {
+
+            string LOG_NAME = $"SendRegistrationMail - {email}";
+
             try
             {
                 using (MimeMessage emailMessage = new MimeMessage())
@@ -169,11 +182,16 @@ namespace hlidacVystrah.Services
 
                     emailMessage.Body = this.BuildEmailBody(emailTemplateText);
 
-                    return this.SendMail(emailMessage);
+                    this.SendMail(emailMessage); 
                 }
+
+                _logService.WriteSuccess("ok", LOG_NAME);
+
+                return true;
             }
             catch (Exception ex)
             {
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return false;
             }
         }

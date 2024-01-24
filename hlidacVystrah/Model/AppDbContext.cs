@@ -24,7 +24,8 @@ namespace hlidacVystrah.Model
         public DbSet<NotificationTable> Notification { get; set; }
         public DbSet<UserNotificationTable> UserNotification { get; set; }
         public DbSet<LogTable> Log { get; set; }
+        public DbSet<LogTypeTable> LogType { get; set; }
+        public DbSet<LogServiceTable> LogService { get; set; }
         public DbSet<AdminTable> Admin { get; set; }
-
     }
 }

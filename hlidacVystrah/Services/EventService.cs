@@ -8,17 +8,18 @@ using System.Linq;
 namespace hlidacVystrah.Services
 {
 
-    public class EventsService : MasterService, IEventsService
+    public class EventService : MasterService, IEventService
     {
 
         private IParseService _parseService;
         private readonly ILogService _logService;
 
-        public EventsService(AppDbContext context, IParseService parseService, ILogService logService) : base(context)
+        public EventService(AppDbContext context, IParseService parseService, ILogService logService) : base(context)
         {
             _context = context;
             _parseService = parseService;
             _logService = logService;
+            _logService.Service = "EventService";
         }
 
         private string TimestampToReadable(string? timestamp) {
@@ -38,6 +39,8 @@ namespace hlidacVystrah.Services
 
         public EventListResponse GetEvents() {
 
+            string LOG_NAME = "GetEvents";
+
             List<EventDto> events = new();
             UpdateTable? lastUpdate;
 
@@ -47,8 +50,11 @@ namespace hlidacVystrah.Services
                lastUpdate = _context.Update.OrderByDescending(u => u.id).FirstOrDefault();
 
                 if (lastUpdate == null)
+                {
+                    _logService.WriteInfoDev("No update yet, but ok.", LOG_NAME);
                     return new EventListResponse { ResponseCode = StatusCodes.Status200OK };
-
+                }
+                    
                 List<IGrouping<int, EventLocalityTable>> eventsGrouped = _context.EventLocality
                     .Join(
                         _context.Event,
@@ -106,11 +112,11 @@ namespace hlidacVystrah.Services
 
             } catch (Exception ex)
             {
-                this._logService.WriteError("EventsService GetEvents()", ex.Message);
+                this._logService.WriteError(ex.Message, LOG_NAME);
                 return new EventListResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
-            this._logService.WriteSuccess("EventsService GetEvents()", "success");
+            this._logService.WriteSuccessDev("ok", LOG_NAME);
             return new EventListResponse
             {
                 ResponseCode = StatusCodes.Status200OK,

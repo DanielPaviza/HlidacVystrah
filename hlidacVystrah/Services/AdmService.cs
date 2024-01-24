@@ -4,6 +4,7 @@ using hlidacVystrah.Model.Dto;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 
 namespace hlidacVystrah.Services
@@ -42,9 +43,20 @@ namespace hlidacVystrah.Services
                     return new LogsResponse { ResponseCode = StatusCodes.Status400BadRequest };
                 }
 
-                int allLogsCount = _context.Log.Count();
+                if((data.FilterType != null && !_context.LogType.Any(lt => lt.id == data.FilterType)) || (data.FilterService != null && !_context.LogService.Any(ls => ls.id == data.FilterService)))
+                {
+                    _logService.WriteError("Invalid filter", LOG_NAME);
+                    return new LogsResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                }
+
+                List<LogTable> filteredLogs = _context.Log.Where(l =>
+                    (data.FilterType == null || l.id_log_type == data.FilterType) &&
+                    (data.FilterService == null || l.id_log_service == data.FilterService)
+                ).ToList(); 
+
+                int allLogsCount = filteredLogs.Count();
                 int recordsToSkip = (data.PageNumber - 1) * data.PageSize;
-                List<LogTable> paginatedLogs = _context.Log.OrderByDescending(log => log.timestamp)
+                List<LogTable> paginatedLogs = filteredLogs.OrderByDescending(log => log.timestamp)
                                          .Skip(recordsToSkip)
                                          .Take(data.PageSize)
                                          .ToList();
@@ -66,6 +78,36 @@ namespace hlidacVystrah.Services
             {
                 _logService.WriteError(ex.Message, LOG_NAME);
                 return new LogsResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
+        }
+
+        public LogsFilterOptionsResponse GetLogsFilterOptions(LoginTokenDto data)
+        {
+
+            string LOG_NAME = "GetLogsFilterOptions";
+
+            try
+            {
+
+                AdminTable admin = _context.Admin.FirstOrDefault(a => a.token == data.LoginToken);
+                if (admin == null)
+                {
+                    _logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
+                    return new LogsFilterOptionsResponse { ResponseCode = StatusCodes.Status401Unauthorized };
+                }
+
+                LOG_NAME += $" - Admin {admin.id}";
+
+                List<LogTypeTable> logTypes = _context.LogType.ToList();
+                List<LogServiceTable> logServices = _context.LogService.ToList();
+                _logService.WriteSuccessDev("ok", LOG_NAME);
+
+                return new LogsFilterOptionsResponse { ResponseCode = StatusCodes.Status200OK, LogServices = logServices, LogTypes = logTypes };
+            }
+            catch(Exception ex)
+            {
+                _logService.WriteError(ex.Message, LOG_NAME);
+                return new LogsFilterOptionsResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
         }
     }

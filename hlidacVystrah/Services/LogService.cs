@@ -25,7 +25,15 @@ namespace hlidacVystrah.Services
 
         private async Task Write(string logType, string text, string name)
         {
-            _context.Log.Add(new LogTable { id_log_type = logType, name = name, text = text, session = this.session });
+            _context.Log.Add(
+                new LogTable { 
+                    id_log_type = logType, 
+                    id_log_service = this.Service,
+                    name = name, 
+                    text = text,
+                    session = this.session 
+                }
+            );
             _context.SaveChangesAsync();
         }
 

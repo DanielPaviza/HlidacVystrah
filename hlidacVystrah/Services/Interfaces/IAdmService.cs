@@ -6,5 +6,7 @@ namespace hlidacVystrah.Services.Interfaces
     public interface IAdmService
     {
         LogsResponse GetLogs(LogsDto data);
+
+        LogsFilterOptionsResponse GetLogsFilterOptions(LoginTokenDto data);
     }
 }

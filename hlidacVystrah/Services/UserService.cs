@@ -507,7 +507,7 @@ namespace hlidacVystrah.Services
             int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
             if (authorizeTokenStatus != 200)
             {
-                this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
+                //this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                 return new UserLoginResponse { ResponseCode = authorizeTokenStatus };
             }
 

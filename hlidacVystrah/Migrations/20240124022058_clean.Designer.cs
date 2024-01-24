@@ -12,7 +12,7 @@ using hlidacVystrah.Model;
 namespace hlidacVystrah.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240123204058_clean")]
+    [Migration("20240124022058_clean")]
     partial class clean
     {
         /// <inheritdoc />
@@ -24,6 +24,26 @@ namespace hlidacVystrah.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("hlidacVystrah.Model.AdminTable", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("admin");
+                });
 
             modelBuilder.Entity("hlidacVystrah.Model.CertaintyTable", b =>
                 {
@@ -146,6 +166,39 @@ namespace hlidacVystrah.Migrations
                     b.HasKey("id");
 
                     b.ToTable("locality");
+                });
+
+            modelBuilder.Entity("hlidacVystrah.Model.LogTable", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("id_log_type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("session")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("timestamp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("log");
                 });
 
             modelBuilder.Entity("hlidacVystrah.Model.NotificationTable", b =>

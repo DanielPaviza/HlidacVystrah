@@ -12,6 +12,20 @@ namespace hlidacVystrah.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "admin",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_admin", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "certainty",
                 columns: table => new
                 {
@@ -86,6 +100,23 @@ namespace hlidacVystrah.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_locality", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "log",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    id_log_type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    session = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    timestamp = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_log", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -198,6 +229,9 @@ namespace hlidacVystrah.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "admin");
+
+            migrationBuilder.DropTable(
                 name: "certainty");
 
             migrationBuilder.DropTable(
@@ -211,6 +245,9 @@ namespace hlidacVystrah.Migrations
 
             migrationBuilder.DropTable(
                 name: "locality");
+
+            migrationBuilder.DropTable(
+                name: "log");
 
             migrationBuilder.DropTable(
                 name: "notification");

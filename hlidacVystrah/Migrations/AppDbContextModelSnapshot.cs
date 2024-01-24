@@ -183,6 +183,9 @@ namespace hlidacVystrah.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<string>("client_info")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("id_log_service")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

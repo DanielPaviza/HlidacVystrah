@@ -113,6 +113,7 @@ namespace hlidacVystrah.Migrations
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     session = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    client_info = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     timestamp = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>

@@ -12,7 +12,7 @@ using hlidacVystrah.Model;
 namespace hlidacVystrah.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240124133647_clean")]
+    [Migration("20240124171023_clean")]
     partial class clean
     {
         /// <inheritdoc />
@@ -185,6 +185,9 @@ namespace hlidacVystrah.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("client_info")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("id_log_service")
                         .IsRequired()

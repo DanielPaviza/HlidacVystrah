@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System.Xml.Linq;
 
 namespace hlidacVystrah.Model
@@ -22,6 +23,8 @@ namespace hlidacVystrah.Model
         public DbSet<UserTable> User { get; set; }
         public DbSet<NotificationTable> Notification { get; set; }
         public DbSet<UserNotificationTable> UserNotification { get; set; }
+        public DbSet<LogTable> Log { get; set; }
+        public DbSet<AdminTable> Admin { get; set; }
 
     }
 }

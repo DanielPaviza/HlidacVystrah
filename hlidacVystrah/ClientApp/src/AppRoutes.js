@@ -5,6 +5,7 @@ import { ResetPassword } from "./components/ResetPassword";
 import { NotFound } from "./components/NotFound";
 import { UserAccount } from "./components/UserAccount";
 import { NewPassword } from "./components/NewPassword";
+import { Logs } from "./components/Logs";
 import ActivateAccount from "./components/ActivateAccount";
 import { BrowserRouter as Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -50,9 +51,13 @@ const AppRoutes = [
         element: <UserAccount />
     },
     {
+        path: 'adm/logs',
+        element: <Logs />
+    },
+    {
         path: '*',
         element: <NotFound />
-    }
+    },
 ];
 
 export default AppRoutes;

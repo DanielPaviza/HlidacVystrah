@@ -12,11 +12,13 @@ namespace hlidacVystrah.Services
     {
 
         private IParseService _parseService;
+        private readonly ILogService _logService;
 
-        public EventsService(AppDbContext context, IParseService parseService) : base(context)
+        public EventsService(AppDbContext context, IParseService parseService, ILogService logService) : base(context)
         {
             _context = context;
             _parseService = parseService;
+            _logService = logService;
         }
 
         private string TimestampToReadable(string? timestamp) {
@@ -104,9 +106,11 @@ namespace hlidacVystrah.Services
 
             } catch (Exception ex)
             {
+                this._logService.WriteError("EventsService GetEvents()", ex.Message);
                 return new EventListResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
+            this._logService.WriteSuccess("EventsService GetEvents()", "success");
             return new EventListResponse
             {
                 ResponseCode = StatusCodes.Status200OK,

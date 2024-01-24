@@ -2,6 +2,7 @@ using hlidacVystrah.Model;
 using hlidacVystrah.Services;
 using hlidacVystrah.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,15 +15,23 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true) // Development settings
     .AddEnvironmentVariables();
 
+/*
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
 ));
+*/
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
+    builder.Configuration.GetConnectionString("DefaultConnection")
+    ), ServiceLifetime.Transient);
 
 builder.Services.AddTransient<IEventsService, EventsService>();
 builder.Services.AddTransient<IParseService, ParseService>();
 builder.Services.AddTransient<ILocalitiesService, LocalitiesService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddTransient<ILogService, LogService>();
+builder.Services.AddTransient<IAdmService, AdmService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.Configure<DownloadEventsEndpoint>(builder.Configuration.GetSection("DownloadEventsEndpoint"));
 

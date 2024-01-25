@@ -30,5 +30,6 @@ namespace hlidacVystrah.Model
 
         public DateTime? login_token_expire { get; set; }
 
+        public DateTime created_at {  get; set; }
     }
 }

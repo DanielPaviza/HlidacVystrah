@@ -6,9 +6,9 @@ namespace hlidacVystrah.Services.Interfaces
 {
     public interface IMailService
     {
-        bool SendRegistrationMail(string email, string activationToken);
+        bool SendRegistrationMail(UserTable user);
 
-        bool SendPasswordResetMail(string email, string passwordResetToken);
+        bool SendPasswordResetMail(UserTable user);
 
         Task<bool> SendEventNotificationMailAsync(string email, EventDto eventDetail, string areaName);
     }

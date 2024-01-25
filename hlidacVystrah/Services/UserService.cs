@@ -17,6 +17,7 @@ namespace hlidacVystrah.Services
         private int passwordMinLength = 6;
         private readonly ILogService _logService;
 
+
         public UserService(AppDbContext context, IMailService mailService, ILogService logService) : base(context)
         {
             _context = context;
@@ -437,7 +438,7 @@ namespace hlidacVystrah.Services
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
-            bool emailSent = _mailService.SendPasswordResetMail(user.email, user.password_reset_token);
+            bool emailSent = _mailService.SendPasswordResetMail(user);
             if (!emailSent)
             {
                 _logService.WriteError("Email send failed.", LOG_NAME);
@@ -543,7 +544,7 @@ namespace hlidacVystrah.Services
 
             LOG_NAME += $" - User id: {user.id}";
 
-            bool emailSent = _mailService.SendRegistrationMail(user.email, user.activation_token);
+            bool emailSent = _mailService.SendRegistrationMail(user);
             if(emailSent)
             {
                 this._logService.WriteSuccess($"ok", LOG_NAME);
@@ -583,12 +584,13 @@ namespace hlidacVystrah.Services
                     email = data.Email,
                     password = this.HashPassword(data.Password),
                     isActive = false,
-                    activation_token = this.GenerateActivationToken()
+                    activation_token = this.GenerateActivationToken(),
+                    created_at = DateTime.Now
                 };
 
                 _context.User.Add(user);
                 _context.SaveChanges();
-                _mailService.SendRegistrationMail(user.email, user.activation_token);
+                _mailService.SendRegistrationMail(user);
 
                 _logService.WriteSuccess("ok", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status200OK };

@@ -40,10 +40,10 @@ namespace hlidacVystrah.Services
             return DateTime.Now.ToString("dd.MM.yyyy HH:mm");
         }
 
-        public bool SendPasswordResetMail(string email, string passwordResetToken)
+        public bool SendPasswordResetMail(UserTable user)
         {
 
-            string LOG_NAME = $"SendPasswordResetMail - {email}";
+            string LOG_NAME = $"SendPasswordResetMail - {user.email}";
 
             try
             {
@@ -52,7 +52,7 @@ namespace hlidacVystrah.Services
                     MailboxAddress emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
                     emailMessage.From.Add(emailFrom);
 
-                    MailboxAddress emailTo = new MailboxAddress("", email);
+                    MailboxAddress emailTo = new MailboxAddress("", user.email);
                     emailMessage.To.Add(emailTo);
 
                     emailMessage.Subject = "Zapomenuté heslo";
@@ -60,7 +60,7 @@ namespace hlidacVystrah.Services
                     string filePath = Directory.GetCurrentDirectory() + "\\MailTemplates\\PasswordReset.html";
                     string emailTemplateText = File.ReadAllText(filePath);
 
-                    string linkPath = this.CreatePasswordResetLink(passwordResetToken);
+                    string linkPath = this.CreatePasswordResetLink(user.password_reset_token);
                     string timestamp = this.GetCurrentDatetime();
                     emailTemplateText = string.Format(emailTemplateText, _mailSettings.BaseUrl, linkPath, timestamp);
 
@@ -157,10 +157,10 @@ namespace hlidacVystrah.Services
             }
         }
 
-        public bool SendRegistrationMail(string email, string activationToken)
+        public bool SendRegistrationMail(UserTable user)
         {
 
-            string LOG_NAME = $"SendRegistrationMail - {email}";
+            string LOG_NAME = $"SendRegistrationMail - {user.email}";
 
             try
             {
@@ -169,7 +169,7 @@ namespace hlidacVystrah.Services
                     MailboxAddress emailFrom = new MailboxAddress(_mailSettings.SenderName, _mailSettings.SenderEmail);
                     emailMessage.From.Add(emailFrom);
 
-                    MailboxAddress emailTo = new MailboxAddress("", email);
+                    MailboxAddress emailTo = new MailboxAddress("", user.email);
                     emailMessage.To.Add(emailTo);
 
                     emailMessage.Subject = "Registrace účtu";
@@ -177,8 +177,10 @@ namespace hlidacVystrah.Services
                     string filePath = Directory.GetCurrentDirectory() + "\\MailTemplates\\Register.html";
                     string emailTemplateText = File.ReadAllText(filePath);
 
-                    string linkPath = this.CreateRegistrationLink(activationToken);
-                    string timestamp = this.GetCurrentDatetime();
+                    string linkPath = this.CreateRegistrationLink(user.activation_token);
+                    string registerDate = user.created_at.ToString().Split(' ')[0];
+                    string registerTime = user.created_at.ToString().Split(' ')[1];
+                    string timestamp = registerDate + ' ' + registerTime.Split(':')[0] + ':' + registerTime.Split(':')[1];
                     emailTemplateText = string.Format(emailTemplateText, _mailSettings.BaseUrl, linkPath, timestamp);
 
                     emailMessage.Body = this.BuildEmailBody(emailTemplateText);

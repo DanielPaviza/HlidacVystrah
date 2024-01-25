@@ -17,11 +17,6 @@
             height: 48px;
             margin-left: 8px;
         }}
-        h1 a {{
-            margin-left: 6px;
-            margin-right: 6px;
-            font-style: italic;
-        }}
         .button {{
             display: flex;
             justify-content: center;
@@ -31,6 +26,10 @@
             border-radius: 4px;
             background-color: #90f5b5;
             padding: 10px;
+        }}
+        button a {{
+            margin-left: 6px;
+            margin-right: 6px;
         }}
         .button:hover {{
             background-color: #3ebd88;
@@ -53,7 +52,9 @@
     <p>
         Aktivujte si účet <a href='{0}{1}'>zde</a>, nebo kliknutím na tlačítko níže.
     </p>
-    <a href='{0}{1}' target="_blank" class="button">Aktivovat</a>
+    <div class="button">
+        <a href='{0}{1}' target="_blank" class="">Aktivovat</a>
+    </div>
     </br>
     <p>Datum registrace: {2}</p>
     </br

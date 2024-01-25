@@ -101,7 +101,7 @@ namespace hlidacVystrah.Services
                 _context.Update.Add(update);
                 if (saveToDb)
                 {
-                    this._logService.WriteInfo($"Update {dataTimestamp} added", LOG_NAME);
+                    this._logService.WriteInfo($"Update {dataTimestamp} added.", LOG_NAME);
                     _context.SaveChanges();
                 }
 

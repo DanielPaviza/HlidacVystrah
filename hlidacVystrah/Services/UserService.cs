@@ -39,7 +39,7 @@ namespace hlidacVystrah.Services
                     return new BaseResponse { ResponseCode = authorizeTokenStatus };
                 }
 
-                LOG_NAME += $" - User {user.id}";
+                LOG_NAME += $" - User id: {user.id}";
 
                 UserNotificationTable? userNotification = _context.UserNotification.FirstOrDefault(un =>
                     un.id == data.IdNotification
@@ -47,14 +47,14 @@ namespace hlidacVystrah.Services
 
                 if(userNotification == null)
                 {
-                    this._logService.WriteInfo($"Notification {data.IdNotification} does not exist.", LOG_NAME);
+                    this._logService.WriteInfo($"Notification id: {data.IdNotification} does not exist.", LOG_NAME);
                     return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
                 }
 
                 _context.UserNotification.Remove(userNotification);
                 _context.SaveChanges();
 
-                this._logService.WriteSuccess($"Deleted notification ${userNotification.id}", LOG_NAME);
+                this._logService.WriteSuccess($"Deleted notification id: {userNotification.id}", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
             } catch(Exception ex)
             {
@@ -78,7 +78,7 @@ namespace hlidacVystrah.Services
                     return new BaseResponse { ResponseCode = authorizeTokenStatus };
                 }
 
-                LOG_NAME += $" - User {user.id}";
+                LOG_NAME += $" - User id: {user.id}";
 
                 if (data.IsRegion)
                 {
@@ -138,7 +138,7 @@ namespace hlidacVystrah.Services
                         un.id_notification == matchingNotification.id
                     ))
                     {
-                        this._logService.WriteInfo($"User already tracks notification {matchingNotification.id}.", LOG_NAME);
+                        this._logService.WriteInfo($"User already tracks notification id: {matchingNotification.id}.", LOG_NAME);
                         return new BaseResponse { ResponseCode = StatusCodes.Status409Conflict };
                     }
 
@@ -148,7 +148,7 @@ namespace hlidacVystrah.Services
                 _context.UserNotification.Add(userNotificationTable);
                 _context.SaveChanges();
 
-                this._logService.WriteSuccess($"Added user_notification ${userNotificationTable.id}", LOG_NAME);
+                this._logService.WriteSuccess($"Added user_notification id: {userNotificationTable.id}", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
             } catch (Exception ex)
             {
@@ -170,7 +170,7 @@ namespace hlidacVystrah.Services
                 return new NotificationResponse { ResponseCode = authorizeTokenStatus };
             }
 
-            LOG_NAME += $" - User {user.id}";
+            LOG_NAME += $" - User id: {user.id}";
 
             try
             {
@@ -284,7 +284,7 @@ namespace hlidacVystrah.Services
                 return new BaseResponse { ResponseCode = authorizeTokenStatus };
             }
 
-            LOG_NAME += $" - User {user.id}";
+            LOG_NAME += $" - User id: {user.id}";
 
             try
             {
@@ -299,7 +299,7 @@ namespace hlidacVystrah.Services
                 return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
-            _logService.WriteSuccess("Account deleted.", LOG_NAME);
+            _logService.WriteSuccess($"Account deleted.", LOG_NAME);
             return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
         }
 
@@ -316,7 +316,7 @@ namespace hlidacVystrah.Services
                 return new BaseResponse { ResponseCode = authorizeTokenStatus };
             }
 
-            LOG_NAME += $" - User {user.id}";
+            LOG_NAME += $" - User id: {user.id}";
 
             if (data.Password.Length < passwordMinLength)
             {
@@ -352,7 +352,7 @@ namespace hlidacVystrah.Services
                 return new BaseResponse { ResponseCode = StatusCodes.Status401Unauthorized };
             }
 
-            LOG_NAME += $" - User {user.id}";
+            LOG_NAME += $" - User id: {user.id}";
 
             if (data.Password.Length < passwordMinLength)
             {
@@ -388,7 +388,7 @@ namespace hlidacVystrah.Services
                 return new ActivateAccount { ResponseCode = StatusCodes.Status400BadRequest };
             }
 
-            LOG_NAME += $" - User {user.id}";
+            LOG_NAME += $" - User id: {user.id}";
 
             if (user.isActive) {
                 this._logService.WriteInfo($"User already active.", LOG_NAME);
@@ -423,7 +423,7 @@ namespace hlidacVystrah.Services
                 return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
             }
 
-            LOG_NAME += $" - User {user.id}";
+            LOG_NAME += $" - User id: {user.id}";
 
             try
             {
@@ -460,7 +460,7 @@ namespace hlidacVystrah.Services
                 return new UserLoginResponse { ResponseCode = StatusCodes.Status401Unauthorized };
             }
 
-            LOG_NAME += $" - User {user.id}";
+            LOG_NAME += $" - User id: {user.id}";
 
             if (user.login_token == null || user.login_token_expire < DateTime.Now)
             {
@@ -511,7 +511,7 @@ namespace hlidacVystrah.Services
                 return new UserLoginResponse { ResponseCode = authorizeTokenStatus };
             }
 
-            LOG_NAME += $" - User {user.id}";
+            LOG_NAME += $" - User id: {user.id}";
 
             try
             {
@@ -541,7 +541,7 @@ namespace hlidacVystrah.Services
                 return new UserLoginResponse { ResponseCode = authorizeTokenStatus };
             }
 
-            LOG_NAME += $" - User {user.id}";
+            LOG_NAME += $" - User id: {user.id}";
 
             bool emailSent = _mailService.SendRegistrationMail(user.email, user.activation_token);
             if(emailSent)
@@ -566,7 +566,7 @@ namespace hlidacVystrah.Services
                 return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
             }
 
-            LOG_NAME += $" - User {data.Email}";
+            LOG_NAME += $" - User email: {data.Email}";
 
             // Return 409 conflict if the email is already registered
             if (_context.User.Any(user => user.email == data.Email))

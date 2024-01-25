@@ -74,7 +74,7 @@ namespace hlidacVystrah.Services
 
                 AdminTable admin = _context.Admin.First(a => a.id_user == user.id);
 
-                LOG_NAME += $" - Admin {admin.name} ({admin.id})";
+                LOG_NAME += $" - Admin '{admin.name}' id: ({admin.id})";
 
                 if (data.PageSize < 1 || data.PageNumber < 1)
                 {
@@ -138,7 +138,7 @@ namespace hlidacVystrah.Services
 
                 AdminTable admin = _context.Admin.First(a => a.id_user == user.id);
 
-                LOG_NAME += $" - Admin {admin.name} ({admin.id})";
+                LOG_NAME += $" - Admin '{admin.name}' id: ({admin.id})";
 
                 List<LogTypeTable> logTypes = _context.LogType.ToList();
                 List<LogServiceTable> logServices = _context.LogService.ToList();

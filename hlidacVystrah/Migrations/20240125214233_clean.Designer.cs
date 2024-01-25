@@ -12,7 +12,7 @@ using hlidacVystrah.Model;
 namespace hlidacVystrah.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240125203609_clean")]
+    [Migration("20240125214233_clean")]
     partial class clean
     {
         /// <inheritdoc />
@@ -364,6 +364,9 @@ namespace hlidacVystrah.Migrations
                     b.Property<string>("activation_token")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("email")
                         .IsRequired()

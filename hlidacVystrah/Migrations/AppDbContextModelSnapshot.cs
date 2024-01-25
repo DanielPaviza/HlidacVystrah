@@ -362,6 +362,9 @@ namespace hlidacVystrah.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("created_at")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

@@ -228,7 +228,8 @@ namespace hlidacVystrah.Migrations
                     password_reset_token_expire = table.Column<DateTime>(type: "datetime2", nullable: true),
                     activation_token = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     login_token = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    login_token_expire = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    login_token_expire = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

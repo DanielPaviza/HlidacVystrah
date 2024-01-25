@@ -53,10 +53,6 @@ export class UserAccount extends Component {
         });
     }
 
-    HandleUserLogIn = (token) => {
-        this.TokenLogin(token);
-    }
-
     HandleUserLoginExpired = (statusCode, goHome = false) => {
 
         if (statusCode != 440 && statusCode != 401)
@@ -97,7 +93,7 @@ export class UserAccount extends Component {
                         <Footer background={'lightGray'} />
                     </>
                     :
-                    <Login HandleUserLogIn={this.HandleUserLogIn} loginExpired={this.state.loginExpired} />
+                    <Login HandleUserLogIn={this.TokenLogin} loginExpired={this.state.loginExpired} />
         );
     }
 }

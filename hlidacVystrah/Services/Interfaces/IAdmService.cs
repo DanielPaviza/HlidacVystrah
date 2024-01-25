@@ -1,5 +1,6 @@
 ﻿using hlidacVystrah.Model.Dto;
 using hlidacVystrah.Model.Response;
+using Microsoft.AspNetCore.Mvc;
 
 namespace hlidacVystrah.Services.Interfaces
 {
@@ -8,5 +9,7 @@ namespace hlidacVystrah.Services.Interfaces
         LogsResponse GetLogs(LogsDto data);
 
         LogsFilterOptionsResponse GetLogsFilterOptions(LoginTokenDto data);
+
+        BaseResponse TokenLogin([FromBody] LoginTokenDto data);
     }
 }

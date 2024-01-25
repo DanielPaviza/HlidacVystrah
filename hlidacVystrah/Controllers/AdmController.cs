@@ -4,6 +4,7 @@ using hlidacVystrah.Services.Interfaces;
 using hlidacVystrah.Model;
 using System.Collections.Generic;
 using hlidacVystrah.Model.Dto;
+using hlidacVystrah.Services;
 
 namespace hlidacVystrah.Controllers
 {
@@ -17,6 +18,13 @@ namespace hlidacVystrah.Controllers
         public AdmController(IAdmService admService)
         {
             _admService = admService;
+        }
+
+        // POST api/adm/tokenlogin
+        [HttpPost("tokenlogin")]
+        public BaseResponse TokenLogin([FromBody] LoginTokenDto data)
+        {
+            return _admService.TokenLogin(data);
         }
 
         // POST api/adm/logs/

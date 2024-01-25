@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
 import '../styles/backButton.scss';
+
 export class BackButton extends Component {
     static displayName = BackButton.name;
 

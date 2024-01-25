@@ -3,6 +3,7 @@ using hlidacVystrah.Model;
 using hlidacVystrah.Model.Dto;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace hlidacVystrah.Services
 {
@@ -18,6 +19,43 @@ namespace hlidacVystrah.Services
             _logService.Service = "AdmService";
         }
 
+        public BaseResponse TokenLogin([FromBody] LoginTokenDto data)
+        {
+
+            string LOG_NAME = "TokenLogin";
+
+            try
+            {
+
+                UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+                int authorizeAdminStatusCode = this.AuthorizeUserAdminStatusCode(user);
+                if (authorizeAdminStatusCode != 200)
+                {
+                    this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
+                    return new LogsFilterOptionsResponse { ResponseCode = authorizeAdminStatusCode };
+                }
+
+                _logService.WriteSuccessDev("ok", LOG_NAME);
+                return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
+
+            } catch (Exception ex)
+            {
+                _logService.WriteError(ex.Message, LOG_NAME);
+                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+            }
+        }
+
+        private int AuthorizeUserAdminStatusCode(UserTable? user)
+        {
+            if (user == null || !_context.Admin.Any(a => a.id_user == user.id))
+                return StatusCodes.Status401Unauthorized;
+
+            if (user.login_token_expire < DateTime.Now)
+                return 440;
+
+            return StatusCodes.Status200OK;
+        }
+
         public LogsResponse GetLogs(LogsDto data)
         {
 
@@ -25,12 +63,16 @@ namespace hlidacVystrah.Services
 
             try
             {
-                AdminTable admin = _context.Admin.FirstOrDefault(a => a.login_token == data.LoginToken);
-                if(admin == null)
+
+                UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+                int authorizeAdminStatusCode = this.AuthorizeUserAdminStatusCode(user);
+                if (authorizeAdminStatusCode != 200)
                 {
-                    _logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
-                    return new LogsResponse { ResponseCode = StatusCodes.Status401Unauthorized };
+                    this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
+                    return new LogsResponse { ResponseCode = authorizeAdminStatusCode };
                 }
+
+                AdminTable admin = _context.Admin.First(a => a.id_user == user.id);
 
                 LOG_NAME += $" - Admin {admin.name} ({admin.id})";
 
@@ -86,12 +128,15 @@ namespace hlidacVystrah.Services
             try
             {
 
-                AdminTable admin = _context.Admin.FirstOrDefault(a => a.login_token == data.LoginToken);
-                if (admin == null)
+                UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+                int authorizeAdminStatusCode = this.AuthorizeUserAdminStatusCode(user);
+                if (authorizeAdminStatusCode != 200)
                 {
-                    _logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
-                    return new LogsFilterOptionsResponse { ResponseCode = StatusCodes.Status401Unauthorized };
+                    this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
+                    return new LogsFilterOptionsResponse { ResponseCode = authorizeAdminStatusCode };
                 }
+
+                AdminTable admin = _context.Admin.First(a => a.id_user == user.id);
 
                 LOG_NAME += $" - Admin {admin.name} ({admin.id})";
 

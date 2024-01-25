@@ -14,7 +14,7 @@ namespace hlidacVystrah.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
 
-        public string login_token { get; set; }
+        public int id_user { get; set; }
 
         public string update_events_token { get; set; }
 

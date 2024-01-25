@@ -97,7 +97,7 @@ export class Login extends Component {
 
         switch (this.state.response) {
             case 200:
-                return this.formHelper.RenderInformationText("Přihlášení proběhlo úspěšně!", false);
+                return this.props.isAdministration ? "" : this.formHelper.RenderInformationText("Přihlášení proběhlo úspěšně!", false);
             case 401:
                 return this.formHelper.RenderInformationText("Nesprávné přihlašovací údaje!", true);
             case 403:
@@ -129,7 +129,7 @@ export class Login extends Component {
                                 {this.formHelper.RenderInformationText("Přihlášení vypršelo!", true)}
                             </span>
                         }
-                        <h2 className='mb-3 mx-auto'>Přihlášení</h2>
+                        <h2 className='mb-3 mx-auto'>Přihlášení {this.props.isAdministration && " do administrace"}</h2>
                         <span className='mb-2 d-flex align-items-center mx-auto'>
                             <i className="fa-solid fa-envelope me-2"></i>
                             <input
@@ -158,12 +158,16 @@ export class Login extends Component {
                         {this.RenderResponseText()}
                         {this.state.emailInvalidFormat && this.formHelper.RenderInformationText('Email nemá správný formát (email@priklad.xx)', true, this.HandleHideEmailInvalidFormat)}
                         {this.state.passwordEmpty && this.formHelper.RenderInformationText("Vyplňte heslo!", true, this.HandleHidePasswordEmpty)}
-                        <a href='/resetpassword' className='d-flex mt-1 fit-content' title='Žádost o změnu hesla'>Zapomněli jste heslo?</a>
+                        {!this.props.isAdministration &&
+                            <a href='/resetpassword' className='d-flex mt-1 fit-content' title='Žádost o změnu hesla'>Zapomněli jste heslo?</a>
+                        }
                         <button className='ms-auto border p-2 rounded my-2' onClick={() => this.Login()}>Přihlásit</button>
-                        <div className='mt-2 d-flex justify-content-center mx-auto'>
-                            Nemáte účet?
-                            <a href='/register' className='ms-1' title='Registrace'>Zaregistrujte se</a>
-                        </div>
+                        {this.props.isAdministration != true &&
+                            <div className='mt-2 d-flex justify-content-center mx-auto'>
+                                Nemáte účet?
+                                <a href='/register' className='ms-1' title='Registrace'>Zaregistrujte se</a>
+                            </div>
+                        }
                         {this.state.loading && <Spinner />}
                     </div>
                 </div>

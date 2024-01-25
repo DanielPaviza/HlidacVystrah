@@ -27,6 +27,28 @@ class UserLoginHelper {
             return defaultLoginResponse;
         }
     };
+
+    AdminTokenLogin = async (token = null) => {
+
+        if (token == null)
+            token = localStorage.getItem("loginToken");
+
+        if (!token)
+            return false;
+
+        try {
+            const response = await axios.post("/api/adm/tokenlogin", {
+                LoginToken: token
+            });
+
+            let data = response.data;
+
+            return data.responseCode === 200;
+
+        } catch (error) {
+            return false;
+        }
+    }
 }
 
 export default UserLoginHelper;

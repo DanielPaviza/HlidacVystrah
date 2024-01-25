@@ -1,10 +1,13 @@
 ﻿import React, { Component } from 'react';
-import '../styles/logs.scss';
+import '../../styles/adm/logs.scss';
+import '../../styles/adm/adm.scss';
 import axios from "axios";
-import { NavMenu } from './NavMenu';
-import { Footer } from './Footer';
-import { Spinner } from './Spinner';
-import UserFormHelper from './UserFormHelper';
+import { NavMenu } from '../NavMenu';
+import { Footer } from '../Footer';
+import { Spinner } from '../Spinner';
+import UserFormHelper from '../UserFormHelper';
+import UserLoginHelper from '../UserLoginHelper';
+import { Login } from '../Login';
 
 export class Logs extends Component {
     static displayName = Logs.name;
@@ -35,14 +38,30 @@ export class Logs extends Component {
 
             filterType: null,
             filterService: null,
+
+            loggedIn: false,
+            loading: true,
         };
 
+        this.loginHelper = new UserLoginHelper();
         this.helper = new UserFormHelper();
     }
 
     componentDidMount() {
+        this.TokenLogin();
         this.FetchLogs(this.state.pageSize, 1);
         this.FetchFilterOptions();
+    }
+
+    TokenLogin = (token) => {
+        this.loginHelper.AdminTokenLogin(token).then(adminLoggedIn => {
+
+            this.setState((prevState) => ({
+                ...prevState,
+                loggedIn: adminLoggedIn,
+                loading: false
+            }));
+        });
     }
 
     HandleToggleShowId = () => {
@@ -84,13 +103,9 @@ export class Logs extends Component {
 
     FetchFilterOptions = () => {
 
-        let admToken = localStorage.getItem("admToken");
-        if (!admToken)
-            return this.setState((prevState) => ({ ...prevState, response: 415, responseOk: false }));
-
         axios
             .post("/api/adm/logs/options", {
-                LoginToken: admToken
+                LoginToken: localStorage.getItem("loginToken")
             })
             .then((response) => {
 
@@ -105,14 +120,10 @@ export class Logs extends Component {
 
     FetchLogs = (pageSize, pageNumber, filterType = null, filterService = null) => {
 
-        let admToken = localStorage.getItem("admToken");
-        if (!admToken)
-            return this.setState((prevState) => ({ ...prevState, response: 415, responseOk: false }));
-
         this.setState((prevState) => ({ ...prevState, responseOk: false }));
         axios
             .post("/api/adm/logs", {
-                LoginToken: admToken,
+                LoginToken: localStorage.getItem("loginToken"),
                 PageSize: pageSize,
                 PageNumber: pageNumber,
                 FilterType: filterType,
@@ -226,6 +237,52 @@ export class Logs extends Component {
         );
     }
 
+    HandleUserLoginExpired = (statusCode, goHome = false) => {
+
+        if (statusCode != 440 && statusCode != 401)
+            return;
+
+        localStorage.removeItem("loginToken");
+        this.setState((prevState) => ({
+            ...prevState,
+            loggedIn: false,
+            loginToken: null,
+            loginExpired: true
+        }));
+
+        if (goHome)
+            window.location.href = '/';
+    }
+
+    RenderPageContent = () => {
+        return (
+            <>
+                <NavMenu HandleUserLoginExpired={this.HandleUserLoginExpired} />
+                <section id="logspage" className='container mb-5'>
+                    <div className='mt-2 mt-md-3'>
+                        <a href='/_adm' className='administrationBack border-bottom fit-content'>
+                            <i className="fa-solid fa-arrow-left me-2"></i>
+                            Zpět do administrace
+                        </a>
+                    </div>
+                    <h2 className='mt-3 mt-md-4 mb-3'>Logs</h2>
+                    {this.RenderResponseText()}
+                    {this.RenderLogOptions()}
+                    <div className='position-relative mt-3 pt-3 border-top'>
+                        {this.state.responseOk ?
+                            <>
+                                {this.RenderLogTable()}
+                            </>
+                            :
+                            <Spinner />
+                        }
+                    </div>
+                </section>
+                <Footer />
+            </>
+        )
+    }
+
     RenderLogTable = () => {
         return (
             <table className='logs col-12'>
@@ -262,24 +319,13 @@ export class Logs extends Component {
     render() {
 
         return (
-            <>
-                <NavMenu />
-                <section id="logspage" className='container mb-5'>
-                    <h2 className='mt-4 mt-md-5 mb-3'>Logs</h2>
-                    {this.RenderResponseText()}
-                    {this.RenderLogOptions()}
-                    <div className='position-relative mt-3 pt-3 border-top'>
-                        {this.state.responseOk ?
-                            <>
-                                {this.RenderLogTable()}
-                            </>
-                            :
-                            <Spinner />
-                        }
-                    </div>
-                </section>
-                <Footer />
-            </>
+            this.state.loading ?
+                <Spinner />
+                :
+                this.state.loggedIn ?
+                    this.RenderPageContent()
+                    :
+                    <Login HandleUserLogIn={this.TokenLogin} isAdministration={true} loginExpired={this.state.loginExpired} />
         );
     }
 }

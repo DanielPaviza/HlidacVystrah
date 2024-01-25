@@ -12,7 +12,7 @@ using hlidacVystrah.Model;
 namespace hlidacVystrah.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240125195435_clean")]
+    [Migration("20240125203609_clean")]
     partial class clean
     {
         /// <inheritdoc />
@@ -40,7 +40,6 @@ namespace hlidacVystrah.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("update_events_token")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");

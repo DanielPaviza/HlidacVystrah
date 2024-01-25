@@ -37,7 +37,6 @@ namespace hlidacVystrah.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("update_events_token")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");

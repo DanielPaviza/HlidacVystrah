@@ -139,7 +139,7 @@ namespace hlidacVystrah.Services
             string LOG_NAME = "UpdateEvents";
 
             string decodedToken = token.Replace(' ', '+');
-            AdminTable admin = _context.Admin.FirstOrDefault(a => a.update_events_token == decodedToken);
+            AdminTable admin = _context.Admin.FirstOrDefault(a => a.update_events_token == decodedToken && decodedToken != null);
             if(admin == null)
             {
                 _logService.WriteError("Unauthorized. Invalid update token.", LOG_NAME);

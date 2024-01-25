@@ -18,7 +18,7 @@ namespace hlidacVystrah.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     id_user = table.Column<int>(type: "int", nullable: false),
-                    update_events_token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    update_events_token = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>

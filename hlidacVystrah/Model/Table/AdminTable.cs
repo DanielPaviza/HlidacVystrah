@@ -16,9 +16,9 @@ namespace hlidacVystrah.Model
 
         public int id_user { get; set; }
 
-        public string update_events_token { get; set; }
+        public string? update_events_token { get; set; } = null;
 
-        public string? name { get; set; }
+        public string? name { get; set; } = null;
 
     }
 }

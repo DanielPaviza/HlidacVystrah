@@ -12,7 +12,7 @@ using hlidacVystrah.Model;
 namespace hlidacVystrah.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240125194128_clean")]
+    [Migration("20240125195435_clean")]
     partial class clean
     {
         /// <inheritdoc />

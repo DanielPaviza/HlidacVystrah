@@ -6,6 +6,39 @@
         * {{
             font-family: 'Roboto', sans-serif;
             color: #292929;
+            text-decoration: none!important;
+        }}
+        .background {{
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+        }}
+        .container {{
+            background-color: #fcfcfc;
+            width: 100%;
+            padding: 14px;
+            border-radius: 6px;
+            margin: 20px;
+        }}
+        @media screen and (min-width: 576px) {{
+            .container {{
+                width: 80%;
+            }}
+        }}        
+        @media screen and (min-width: 992px) {{
+            .container {{
+                width: 70%;
+            }}
+        }}        
+        @media screen and (min-width: 1200px) {{
+            .container {{
+                width: 60%;
+            }}
+        }}        
+        @media screen and (min-width: 1400px) {{
+            .container {{
+                width: 50%;
+            }}        
         }}
         h1 {{
             font-size: 22px;
@@ -18,21 +51,19 @@
             margin-left: 8px;
         }}
         .button {{
-            display: flex;
+            display: inline-flex;
             justify-content: center;
             align-items: center;
-            width: 80px;
             border: 1px solid #292929;
             border-radius: 4px;
             background-color: #90f5b5;
             padding: 10px;
-        }}
-        button a {{
-            margin-left: 6px;
-            margin-right: 6px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
         }}
         .button:hover {{
-            background-color: #3ebd88;
+            background-color: #3ce8a0;
         }}
         a {{
             text-decoration: none;
@@ -42,21 +73,23 @@
     </style>
 </head>
 <body>
-    <a href="{0}">
-        <h1>
-            Hlídač výstrah
-            <img src="{0}/images/logo.png" />
-        </h1>
-    </a>
-    <h2>Vaše registrace proběhla úspěsně!</h2>
-    <p>
-        Aktivujte si účet <a href='{0}{1}'>zde</a>, nebo kliknutím na tlačítko níže.
-    </p>
-    <div class="button">
-        <a href='{0}{1}' target="_blank" class="">Aktivovat</a>
+    <div class="background">
+        <div class="container">
+            <a href="{0}">
+                <h1>
+                    Hlídač výstrah
+                    <img src="{0}/images/logo.png" />
+                </h1>
+            </a>
+            <h2>Vaše registrace proběhla úspěsně!</h2>
+            <p>
+                Aktivujte si účet <a href='{0}{1}'>zde</a>, nebo kliknutím na tlačítko níže.
+            </p>
+            <a href='{0}{1}' target="_blank" class="button">Aktivovat</a>
+            </br>
+            <p>Datum registrace: {2}</p>
+            </br
+            <p>S pozdravem, <a href="{0}">Hlídač výstrah</a></p>
+        </div>
     </div>
-    </br>
-    <p>Datum registrace: {2}</p>
-    </br
-    <p>S pozdravem, <a href="{0}">Hlídač výstrah</a></p>
 </body>

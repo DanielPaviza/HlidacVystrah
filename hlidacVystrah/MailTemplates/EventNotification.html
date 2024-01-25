@@ -7,6 +7,42 @@
             font-family: 'Roboto', sans-serif;
             color: #292929;
         }}
+        .background {{
+            background-color: #f7f7f7;
+
+            display: flex;
+            justify-content: center;
+        }}
+        .container {{
+            background-color: #fcfcfc;
+            width: 100%;
+            padding: 14px;
+            border-radius: 6px;
+            margin: 20px;
+        }}
+        @media screen and (min-width: 576px) {{
+            .container {{
+                width: 80%;
+            }}
+            .eventImg {{
+                display: block;
+            }}
+        }}        
+        @media screen and (min-width: 992px) {{
+            .container {{
+                width: 70%;
+            }}
+        }}        
+        @media screen and (min-width: 1200px) {{
+            .container {{
+                width: 60%;
+            }}
+        }}        
+        @media screen and (min-width: 1400px) {{
+            .container {{
+                width: 50%;
+            }}        
+        }}
         h1 {{
             font-size: 22px;
             display: flex;
@@ -15,6 +51,7 @@
         .eventImg {{
             width: 64px;
             height: 64px;
+            display: none;
         }}
         h1 img {{
             width: 48px;
@@ -85,67 +122,66 @@
         .Neznámá {{
             background-color: #e8e8e8;
         }}
-        @media screen and (max-width: 576px) {{
-            .eventImg {{
-                display: none;
-            }}
-        }}
     </style>
 </head>
 <body>
-    <a href="{0}">
-        <h1>
-            Hlídač výstrah
-            <img src="{0}/images/logo.png" />
-        </h1>
-    </a>
-    <h2>Varování před jevem!</h2>
-    <p>
-        Byla vydána výstraha před Vaším sledovaným jevem. Detail vyskytutého jevu si můžete přečíst níže.
-    </p>
-    <div class="detail">
-        <h3>Informace o vyskytnutém jevu v {10}</h3>
-        <div>
-            <div>
-                <span class="row">
-                    <span class="bold">Typ:</span>
-                    {1}
-                </span>
-                <span class="row">
-                    <span class="bold">Závažnost:</span>
-                    {2}
-                    <div class="colorCircle {2}"></div>
-                </span>
-                <span class="row">
-                    <span class="bold">Pravděpodobnost:</span>
-                    {3}
-                </span>
-                <span class="row">
-                    <span class="bold">Výskyt:</span>
-                    {4}
-                </span>
-                <span class="row">
-                    <span class="bold">Začátek:</span>
-                    {5}
-                </span>
-                <span class="row">
-                    <span class="bold">Konec:</span>
-                    {6}
+    <div class="background">
+        <div class="container">
+            <a href="{0}">
+                <h1>
+                    Hlídač výstrah
+                    <img src="{0}/images/logo.png" />
+                </h1>
+            </a>
+            <h2>Varování před jevem!</h2>
+            <p>
+                Byla vydána výstraha před Vaším sledovaným jevem. Detail vyskytutého jevu si můžete přečíst níže.
+            </p>
+            <div class="detail">
+                <h3>Informace o vyskytnutém jevu v {10}</h3>
+                <div>
+                    <div>
+                        <span class="row">
+                            <span class="bold">Typ:</span>
+                            {1}
+                        </span>
+                        <span class="row">
+                            <span class="bold">Závažnost:</span>
+                            {2}
+                            <div class="colorCircle {2}"></div>
+                        </span>
+                        <span class="row">
+                            <span class="bold">Pravděpodobnost:</span>
+                            {3}
+                        </span>
+                        <span class="row">
+                            <span class="bold">Výskyt:</span>
+                            {4}
+                        </span>
+                        <span class="row">
+                            <span class="bold">Začátek:</span>
+                            {5}
+                        </span>
+                        <span class="row">
+                            <span class="bold">Konec:</span>
+                            {6}
+                        </span>
+                    </div>
+                    <img src="{0}/images/{9}" alt="jev image" class="eventImg" />
+                </div>
+                <span class="description">
+                    <span class="bold">Popis:</span>
+                    <div>
+                        {7} Byla vydána výstraha před Vaším sledovaným jevem. Detail vyskytutého jevu si můžete přečíst níže.
+                        </br>
+                        </br>
+                        {8}
+                    </div>
                 </span>
             </div>
-            <img src="{0}/images/{9}" alt="jev image" class="eventImg"/>
-        </div>     
-        <span class="description">
-            <span class="bold">Popis:</span>
-            <div>
-                {7} Byla vydána výstraha před Vaším sledovaným jevem. Detail vyskytutého jevu si můžete přečíst níže.
-                </br>
-                </br>
-                {8}
-            </div>
-        </span>
+            <p>Vaše sledované jevy můžete po přihlášení spravovat <a href="{0}/account">zde</a>.</p>
+            </br
+            <p>S pozdravem, <a href="{0}">Hlídač výstrah</a></p>
+        </div>
     </div>
-    <p>Vaše sledované jevy můžete po přihlášení spravovat <a href="{0}/account">zde</a>.</p>
-    </br
-    <p>S pozdravem, <a href="{0}">Hlídač výstrah</a></p>
 </body>

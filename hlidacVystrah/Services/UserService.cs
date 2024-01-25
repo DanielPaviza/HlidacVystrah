@@ -525,7 +525,7 @@ namespace hlidacVystrah.Services
                 return new UserLoginResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
-            _logService.WriteSuccess("ok", LOG_NAME);
+            _logService.WriteSuccessDev("ok", LOG_NAME);
             return new UserLoginResponse { ResponseCode = StatusCodes.Status200OK, Email = user.email, IsActive = user.isActive };
         }
         public BaseResponse ReSendActivateAccountEmail(LoginTokenDto data)

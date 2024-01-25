@@ -83,9 +83,14 @@ export class Logs extends Component {
     }
 
     FetchFilterOptions = () => {
+
+        let admToken = localStorage.getItem("admToken");
+        if (!admToken)
+            return this.setState((prevState) => ({ ...prevState, response: 415, responseOk: false }));
+
         axios
             .post("/api/adm/logs/options", {
-                LoginToken: localStorage.getItem("admToken")
+                LoginToken: admToken
             })
             .then((response) => {
 
@@ -100,10 +105,14 @@ export class Logs extends Component {
 
     FetchLogs = (pageSize, pageNumber, filterType = null, filterService = null) => {
 
+        let admToken = localStorage.getItem("admToken");
+        if (!admToken)
+            return this.setState((prevState) => ({ ...prevState, response: 415, responseOk: false }));
+
         this.setState((prevState) => ({ ...prevState, responseOk: false }));
         axios
             .post("/api/adm/logs", {
-                LoginToken: localStorage.getItem("admToken"),
+                LoginToken: admToken,
                 PageSize: pageSize,
                 PageNumber: pageNumber,
                 FilterType: filterType,
@@ -136,7 +145,9 @@ export class Logs extends Component {
             case 400:
                 return this.helper.RenderInformationText("Neplatný požadavek!", true);
             case 401:
-                return this.helper.RenderInformationText("Přístup odepřen!", true);
+                return this.helper.RenderInformationText("Přístup odepřen! Neplatné přihlášení!", true);
+            case 415:
+                return this.helper.RenderInformationText("Přístup odepřen! Uložte svůj přihlašovací token!", true);
             case 500:
                 return this.helper.RenderInformationText("Něco se nepovedlo. Zkuste to později.", true);
             default:

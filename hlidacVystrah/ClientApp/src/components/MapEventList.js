@@ -21,8 +21,8 @@ export class MapEventList extends Component {
                         GetEventColor={this.props.GetEventColor}
                         OpenLocalityDetail={this.props.OpenLocalityDetail}
                         map={this.props.map}
-                        svgMapElements={this.props.svgMapElements}
                         allLocalities={this.props.allLocalities}
+                        isDetail={this.props.isDetail}
                     />
                 }
                 {this.props.mapType == "locality" && 

@@ -12,7 +12,7 @@ using hlidacVystrah.Model;
 namespace hlidacVystrah.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240124171023_clean")]
+    [Migration("20240125094021_clean")]
     partial class clean
     {
         /// <inheritdoc />
@@ -33,10 +33,14 @@ namespace hlidacVystrah.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<string>("login_token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("token")
+                    b.Property<string>("update_events_token")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

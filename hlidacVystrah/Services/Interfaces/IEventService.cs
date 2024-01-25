@@ -6,6 +6,6 @@ namespace hlidacVystrah.Services.Interfaces
     {
         EventListResponse GetEvents();
 
-        ParseResponse UpdateEvents();
+        ParseResponse UpdateEvents(string token);
     }
 }

@@ -9,9 +9,7 @@ export class MapEventController extends Component {
         super(props);
         this.helper = new MapHelper(this.props.map, this.props.OpenLocalityDetail);
 
-        this.isDetail = false;
-        if (this.props.events.length == 1)
-            this.isDetail = true;
+        this.isDetail = this.props.isDetail;
 
         this.state = {
             labelOpened: false,

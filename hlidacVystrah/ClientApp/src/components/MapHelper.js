@@ -105,8 +105,9 @@ class MapHelper {
             Object.entries(affected).forEach(([color, localities]) => {
 
                 const locality = localities.find((item) => item.cisorp == g.getAttribute('cisorp'));
-                if (locality)
+                if (locality) {
                     g.setAttribute("class", color)
+                }
             })
         })
 

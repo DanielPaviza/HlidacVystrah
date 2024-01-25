@@ -70,13 +70,13 @@ namespace hlidacVystrah.Services
         public void WriteSuccessDev(string text, string name)
         {
             if(_enviroment.IsDevelopment())
-                this.Write("Success", text, name);
+                this.Write("Success", ("DEV " + text), name);
         }
 
         public void WriteInfoDev(string text, string name)
         {
             if (_enviroment.IsDevelopment())
-                this.Write("Info", text, name);
+                this.Write("Info", ("DEV " + text), name);
         }
 
         private string GenerateSessionNumber(int length = 32)

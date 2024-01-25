@@ -135,7 +135,6 @@ export class HomeController extends Component {
                 GetEventColor={this.HandleGetEventColor}
                 OpenLocalityDetail={this.HandleOpenLocality}
                 ScrollToTop={this.scrollToTop}
-                svgMapElements={this.state.svgMapElements}
                 map={this.state.map}
                 allLocalities={this.state.localityList}
                 CloseDetail={this.HandleCloseDetail}
@@ -171,6 +170,7 @@ export class HomeController extends Component {
                 OpenLocalityDetail={this.HandleOpenLocality}
                 map={this.state.map}
                 allLocalities={this.state.localityList}
+                isDetail={false}
             />
         </section>
     }
@@ -180,7 +180,7 @@ export class HomeController extends Component {
             <div className='d-flex justify-content-end'>
                 <div className='d-flex flex-column'>
                     <span className='border-bottom'>Poslední aktualizace</span>
-                    <span>{this.state.timestamp == null ? "Nikdy" : this.state.timestamp}</span>
+                    <span className=''>{this.state.timestamp == null ? "Nikdy" : this.state.timestamp}</span>
                 </div>
             </div>
         )

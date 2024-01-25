@@ -25,14 +25,14 @@ namespace hlidacVystrah.Services
 
             try
             {
-                AdminTable admin = _context.Admin.FirstOrDefault(a => a.token == data.LoginToken);
+                AdminTable admin = _context.Admin.FirstOrDefault(a => a.login_token == data.LoginToken);
                 if(admin == null)
                 {
                     _logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                     return new LogsResponse { ResponseCode = StatusCodes.Status401Unauthorized };
                 }
 
-                LOG_NAME += $" - Admin {admin.id}";
+                LOG_NAME += $" - Admin {admin.name} ({admin.id})";
 
                 if (data.PageSize < 1 || data.PageNumber < 1)
                 {
@@ -86,14 +86,14 @@ namespace hlidacVystrah.Services
             try
             {
 
-                AdminTable admin = _context.Admin.FirstOrDefault(a => a.token == data.LoginToken);
+                AdminTable admin = _context.Admin.FirstOrDefault(a => a.login_token == data.LoginToken);
                 if (admin == null)
                 {
                     _logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
                     return new LogsFilterOptionsResponse { ResponseCode = StatusCodes.Status401Unauthorized };
                 }
 
-                LOG_NAME += $" - Admin {admin.id}";
+                LOG_NAME += $" - Admin {admin.name} ({admin.id})";
 
                 List<LogTypeTable> logTypes = _context.LogType.ToList();
                 List<LogServiceTable> logServices = _context.LogService.ToList();

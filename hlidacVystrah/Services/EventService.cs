@@ -4,6 +4,7 @@ using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 using hlidacVystrah.Model.Dto;
 using System.Linq;
+using System.Web;
 
 namespace hlidacVystrah.Services
 {
@@ -30,11 +31,19 @@ namespace hlidacVystrah.Services
             DateTimeOffset localTime = DateTimeOffset.Parse(timestamp);
             string readable = localTime.ToString();
 
+            string date = readable.Split(' ')[0];
+            string hours = readable.Split(" ")[1];
+            hours = hours.Split(":")[0] + ':' + hours.Split(":")[1];
+
             //today
             if (localTime.Date == DateTimeOffset.Now.Date)
-                return $"Dnes v {readable.Split(' ')[1]}";
+                return $"Dnes v {hours}";
 
-            return $"{readable.Split(' ')[0]} {readable.Split(' ')[1]}"; ;
+            //yesterday
+            if (localTime.Date == DateTimeOffset.Now.Date.AddDays(-1))
+                return $"Včera v {hours}";
+
+            return $"{date} {hours}"; ;
         }
 
         public EventListResponse GetEvents() {
@@ -116,7 +125,7 @@ namespace hlidacVystrah.Services
                 return new EventListResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
 
-            this._logService.WriteSuccessDev("ok", LOG_NAME);
+            this._logService.WriteSuccessDev("DEV ok", LOG_NAME);
             return new EventListResponse
             {
                 ResponseCode = StatusCodes.Status200OK,
@@ -125,7 +134,17 @@ namespace hlidacVystrah.Services
             };
         }
 
-        public ParseResponse UpdateEvents() {
+        public ParseResponse UpdateEvents(string token) {
+
+            string LOG_NAME = "UpdateEvents";
+
+            string decodedToken = token.Replace(' ', '+');
+            AdminTable admin = _context.Admin.FirstOrDefault(a => a.update_events_token == decodedToken);
+            if(admin == null)
+            {
+                _logService.WriteError("Unauthorized. Invalid update token.", LOG_NAME);
+                return  new ParseResponse { ResponseCode = StatusCodes.Status401Unauthorized };
+            }
 
             return _parseService.UpdateEvents();
         }

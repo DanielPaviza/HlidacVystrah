@@ -53,11 +53,13 @@ export class Legend extends Component {
                                 <div className='d-flex align-items-center me-3 mb-1'>
                                     <div className='colorCircle gray me-1'></div>
                                     <span>Neznámý</span>
-                                </div>
-                                    <div className='d-flex align-items-center me-3 mb-1'>
-                                    <div className='colorCircle noEvent me-1'></div>
-                                    <span>Žádný</span>
-                                </div>
+                                    </div>
+                                    {!this.props.isDetail &&
+                                        <div className='d-flex align-items-center me-3 mb-1'>
+                                            <div className='colorCircle noEvent me-1'></div>
+                                            <span>Žádný</span>
+                                        </div>
+                                    }
                             </div>
                         </div>
                     </div>

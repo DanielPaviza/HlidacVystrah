@@ -9,6 +9,10 @@ export class LocalityDetail extends Component {
         this.props.ScrollToTop();
     }
 
+    componentDidUpdate() {
+        this.props.ScrollToTop();
+    }
+
     GetLocalityInfo = () => {
 
         let result = { region: null, name: null, cisorp: null };

@@ -20,6 +20,10 @@ export class EventDetail extends Component {
         this.props.ScrollToTop();
     }
 
+    componentDidUpdate() {
+        this.props.ScrollToTop();
+    }
+
     ToggleShowDescription = () => {
         this.setState((prevState) => ({
             ...prevState,
@@ -141,7 +145,7 @@ export class EventDetail extends Component {
                             allLocalities={this.props.allLocalities}
                             isDetail={true}
                         />
-                        <Legend />
+                        <Legend isDetail={true} />
                     </div>
                 </div>
             </section>

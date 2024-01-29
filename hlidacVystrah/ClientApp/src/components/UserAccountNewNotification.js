@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Spinner } from './Spinner';
+import { Search } from './Search';
 import axios from "axios";
 import UserFormHelper from './UserFormHelper';
 
@@ -19,6 +20,9 @@ export class UserAccountNewNotification extends Component {
             severityOptions: [],
             certaintyOptions: [],
             localityOptions: [],
+
+            selectedAreaId: null,
+            selectedAreaIsRegion: false
         };
 
         this.formHelper = new UserFormHelper();
@@ -28,12 +32,19 @@ export class UserAccountNewNotification extends Component {
         this.GetNotificationOptions();
     }
 
+    HandleSelectArea = (id, isRegion) => {
+
+        this.setState((prevState) => ({
+            ...prevState,
+            selectedAreaId: id,
+            selectedAreaIsRegion: isRegion
+        }));
+    }
+
     GetNewNotificationPayload = () => {
         let idEventType = document.getElementById("selectEventType").value;
         let idSeverity = document.getElementById("selectSeverity").value;
         let idcertainty = document.getElementById("selectcertainty").value;
-        let idArea = document.getElementById("selectArea").value.split(':')[0];
-        let isRegion = document.getElementById("selectArea").value.split(':')[1];
 
         if (idSeverity == "Jakákoliv")
             idSeverity = null;
@@ -41,15 +52,17 @@ export class UserAccountNewNotification extends Component {
         if (idcertainty == "Jakákoliv")
             idcertainty = null;
 
-        isRegion = isRegion == "0" ? false : true;
+        let selectedAreaString = this.state.selectedAreaId;
+        if(selectedAreaString != null)
+            selectedAreaString = selectedAreaString.toString()
 
         return {
             "LoginToken": this.props.loginToken,
             "IdEventType": idEventType,
             "IdSeverity": idSeverity,
             "Idcertainty": idcertainty,
-            "IdArea": idArea,
-            "IsRegion": isRegion,
+            "IdArea": selectedAreaString,
+            "IsRegion": this.state.selectedAreaIsRegion,
         };
     }
 
@@ -117,7 +130,9 @@ export class UserAccountNewNotification extends Component {
             .finally(() => {
                 this.setState((prevState) => ({
                     ...prevState,
-                    loading: false
+                    loading: false,
+                    selectedAreaId: null,
+                    selectedAreaIsRegion: false
                 }));
             });
     }
@@ -132,6 +147,8 @@ export class UserAccountNewNotification extends Component {
         switch (this.state.createResponse) {
             case 200:
                 return this.formHelper.RenderInformationText("Výstraha úspěšně uložena", false);
+            case 400:
+                return this.formHelper.RenderInformationText("Neplatná volba!", true);
             case 409:
                 return this.formHelper.RenderInformationText("Výstraha je již uložena", true);
             case 500:
@@ -148,7 +165,7 @@ export class UserAccountNewNotification extends Component {
                     <div className='d-flex flex-wrap justify-content-between'>
                         <div className='selectBox d-flex flex-column'>
                             <label>Typ výstrahy</label>
-                            <select id='selectEventType' className='border'>
+                            <select id='selectEventType' className='border rounded'>
                                 {this.state.eventTypeOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
                                         {option.name}
@@ -158,7 +175,7 @@ export class UserAccountNewNotification extends Component {
                         </div>
                         <div className='selectBox d-flex flex-column '>
                             <label>Závažnost</label>
-                            <select id='selectSeverity' className='border'>
+                            <select id='selectSeverity' className='border rounded'>
                                 <option value={null}>Jakákoliv</option>
                                 {this.state.severityOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
@@ -169,7 +186,7 @@ export class UserAccountNewNotification extends Component {
                         </div>
                         <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
                             <label>Pravděpodobnost</label>
-                            <select id='selectcertainty' className='border'>
+                            <select id='selectcertainty' className='border rounded'>
                                 <option value={null}>Jakákoliv</option>
                                 {this.state.certaintyOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
@@ -178,6 +195,12 @@ export class UserAccountNewNotification extends Component {
                                 ))}
                             </select>
                         </div>
+                        <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
+                            <label>Lokalita</label>
+                            <Search isAccount={true} localityList={this.state.localityOptions} HandleSelectArea={this.HandleSelectArea} />
+                        </div>
+                        {
+                            /*
                         <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
                             <label>Lokalita</label>
                             <select id='selectArea' className='border'>
@@ -193,6 +216,9 @@ export class UserAccountNewNotification extends Component {
                                 ))}
                             </select>
                         </div>
+                            */
+                        }
+                        
                     </div>
                     <span className='d-flex justify-content-end mt-3'>
                         <button className='border-0 p-2 rounded' onClick={() => this.SetNewNotification() }>Přidat</button>

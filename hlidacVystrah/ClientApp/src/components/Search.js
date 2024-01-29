@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
 import '../styles/search.scss';
+import { Prev } from '../../../../node_modules/react-bootstrap/esm/PageItem';
 export class Search extends Component {
     static displayName = Search.name;
 
@@ -50,11 +51,41 @@ export class Search extends Component {
     }
 
     DeleteSearchText = () => {
+
+        if (this.props.isAccount)
+            this.props.HandleSelectArea(null, false);
+
         this.setState((prevState) => ({
             ...prevState,
             searchText: "",
             filteredLocalityList: this.props.localityList
         }));
+    }
+
+    HandleOpenLocality = (cisorp, text) => {
+
+        if (this.props.isAccount) {
+            this.props.HandleSelectArea(cisorp, false);
+            this.setState((prevState) => ({
+                ...prevState,
+                searchText: text
+            }));
+        } else {
+            this.props.OpenLocalityDetail(cisorp);
+        }
+    }
+
+    HandleOpenRegion = (name) => {
+
+        if (this.props.isAccount) {
+            this.props.HandleSelectArea(name, true);
+            this.setState((prevState) => ({
+                ...prevState,
+                searchText: name
+            }));
+        } else {
+            this.props.OpenLocalityDetail(name, true);
+        }
     }
 
     RenderLocalityList = () => {
@@ -63,10 +94,10 @@ export class Search extends Component {
             Object.keys(this.state.filteredLocalityList).map(key => (
 
                 <div className='mt-2' key={key}>
-                    <p className='fw-bold m-0 ps-2 region' onClick={() => this.props.OpenLocalityDetail(key, true)}>{key}</p>
+                    <p className='fw-bold m-0 ps-2 region' onClick={() => this.HandleOpenRegion(key)}>{key}</p>
                     <div className='d-flex flex-wrap flex-column'>
                         {this.state.filteredLocalityList[key].map(locality => (
-                            <span key={locality.cisorp} className='ps-3 locality' onClick={() => this.props.OpenLocalityDetail(locality.cisorp) }>
+                            <span key={locality.cisorp} className='ps-3 locality' onClick={() => this.HandleOpenLocality(locality.cisorp, locality.name)}>
                                 {locality.name}
                             </span>
                         ))}
@@ -95,11 +126,11 @@ export class Search extends Component {
     render() {
 
         return (
-            <div id="search" className='d-flex flex-column mb-3 col-12 col-lg-10 col-xl-8 mx-auto position-relative'>
+            <div id='search' className={`${this.props.isAccount ? '' : 'd-flex flex-column mb-3 col-12 col-lg-10 col-xl-8 mx-auto position-relative'}`}>
                 <input
                     id='localitySearch'
                     type="text"
-                    className={`border p-1 ${this.state.listOpened && "opened"} ps-2`}
+                    className={`border ${!this.props.isAccount && 'p-1'} ${this.state.listOpened && "opened"} ps-2 mw-100 w-100`}
                     onChange={(event) => this.FilterLocalityList(event.target.value)}
                     onFocus={() => this.HandleInputFocus()}
                     onBlur={() => this.HandleInputBlur()}

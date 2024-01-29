@@ -13,7 +13,7 @@ namespace hlidacVystrah.Model.Response
 
         public int? Idcertainty { get; set; }
 
-        public string IdArea { get; set; }
+        public string? IdArea { get; set; }
 
         public bool IsRegion { get; set; }
     }

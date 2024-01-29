@@ -81,6 +81,9 @@ namespace hlidacVystrah.Services
 
                 LOG_NAME += $" - User id: {user.id}";
 
+                if(data.IdArea == null)
+                    return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+
                 if (data.IsRegion)
                 {
 

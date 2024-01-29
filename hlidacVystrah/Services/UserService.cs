@@ -417,7 +417,7 @@ namespace hlidacVystrah.Services
 
             string LOG_NAME = "ResetPassword";
 
-            UserTable? user = _context.User.FirstOrDefault(u => u.email == data.Email);
+            UserTable? user = _context.User.FirstOrDefault(u => u.email == data.Email.ToLower());
             if(user == null)
             {
                 _logService.WriteInfo($"Non existing email", LOG_NAME);
@@ -454,7 +454,7 @@ namespace hlidacVystrah.Services
 
             string LOG_NAME = "Login";
 
-            UserTable user = _context.User.FirstOrDefault(u => u.email == data.Email);
+            UserTable user = _context.User.FirstOrDefault(u => u.email == data.Email.ToLower());
             if(user == null || user.password != this.HashPassword(data.Password))
             {
                 this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
@@ -559,18 +559,19 @@ namespace hlidacVystrah.Services
         public BaseResponse Register(EmailPasswordDto data) {
 
             string LOG_NAME = "Register";
+            string emailLower = data.Email.ToLower();
 
             // Return bad request if the email isnt the right format or if the password isnt at least 6 characters long
-            if (!this.EmailIsValid(data.Email) || data.Password.Length < passwordMinLength)
+            if (!this.EmailIsValid(emailLower) || data.Password.Length < passwordMinLength)
             {
                 this._logService.WriteInfo($"Invalid information. Either invalid email or password too short.", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
             }
 
-            LOG_NAME += $" - User email: {data.Email}";
+            LOG_NAME += $" - User email: {emailLower}";
 
             // Return 409 conflict if the email is already registered
-            if (_context.User.Any(user => user.email == data.Email))
+            if (_context.User.Any(user => user.email == emailLower))
             {
                 this._logService.WriteInfo($"Email is already registered.", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status409Conflict };
@@ -581,7 +582,7 @@ namespace hlidacVystrah.Services
 
                 UserTable user = new UserTable
                 {
-                    email = data.Email,
+                    email = emailLower,
                     password = this.HashPassword(data.Password),
                     isActive = false,
                     activation_token = this.GenerateActivationToken(),

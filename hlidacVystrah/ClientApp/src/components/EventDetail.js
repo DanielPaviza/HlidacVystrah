@@ -21,7 +21,8 @@ export class EventDetail extends Component {
     }
 
     componentDidUpdate() {
-        this.props.ScrollToTop();
+        if(this.props.event != this.state.event)
+            this.props.ScrollToTop();
     }
 
     ToggleShowDescription = () => {

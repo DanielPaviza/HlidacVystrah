@@ -7,10 +7,15 @@ export class LocalityDetail extends Component {
     constructor(props) {
         super(props);
         this.props.ScrollToTop();
+
+        this.state = {
+            targetId: this.props.targetId
+        }
     }
 
     componentDidUpdate() {
-        this.props.ScrollToTop();
+        if (this.props.targetId != this.state.targetId)
+            this.props.ScrollToTop();
     }
 
     GetLocalityInfo = () => {

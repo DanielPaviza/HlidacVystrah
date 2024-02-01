@@ -23,8 +23,12 @@ class SiteHistory {
 
     RecordCanAdd = (newRecord) => {
 
-        if (this.history.length < 1)
+        if (this.history.length < 1) {
+            if (newRecord.type == "home")
+                return false
+
             return true
+        }
 
         return !(newRecord.id == this.RecordGetLast().id);
     }

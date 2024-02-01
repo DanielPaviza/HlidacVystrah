@@ -33,7 +33,7 @@ export class Legend extends Component {
                     <div className='legenda ms-auto' onClick={() => this.HandleToggleOpen()}>
                         <div className='ms-auto p-2 border'>
                             <span className='fw-bold'>Stupeň nebezpečí</span>
-                                <div className='d-flex mt-1 flex-wrap align-items-center justify-content-between'>
+                                <div className={`d-flex mt-1 flex-wrap align-items-center justify-content-${this.props.isDetail ? 'start' : 'between'}`}>
                                 <div className='d-flex align-items-center me-3 mb-1'>
                                     <div className='colorCircle red me-1'></div>
                                     <span>Extrémní</span>
@@ -53,14 +53,14 @@ export class Legend extends Component {
                                 <div className='d-flex align-items-center me-3 mb-1'>
                                     <div className='colorCircle gray me-1'></div>
                                     <span>Neznámý</span>
+                                </div>
+                                {!this.props.isDetail &&
+                                    <div className='d-flex align-items-center me-3 mb-1'>
+                                        <div className='colorCircle noEvent me-1'></div>
+                                        <span>Žádný</span>
                                     </div>
-                                    {!this.props.isDetail &&
-                                        <div className='d-flex align-items-center me-3 mb-1'>
-                                            <div className='colorCircle noEvent me-1'></div>
-                                            <span>Žádný</span>
-                                        </div>
-                                    }
-                            </div>
+                                }
+                            </div> 
                         </div>
                     </div>
                 }

@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-import '../styles/backButton.scss';
 import UserFormHelper from './UserFormHelper';
 
 export class CurrentPasswordForm extends Component {
@@ -46,7 +45,7 @@ export class CurrentPasswordForm extends Component {
     render() {
 
         return (
-            <div className='accountSettingsContent d-flex justify-content-center'>
+            <div className='currentPassword accountSettingsContent d-flex justify-content-center'>
                 <div className='d-flex flex-column p-4 m-3 align-items-center'>
                     <h3>Současné heslo</h3>
                     <span className='mb-2 d-flex align-items-center position-relative mx-auto'>

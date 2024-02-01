@@ -92,11 +92,11 @@ export class EventDetail extends Component {
                                     <div className={`ms-2 colorCircle ${this.props.GetEventColor(this.event.severity)}`}></div>
                                 </span>
                                 <span className='detailRow'>
-                                    <span className='fw-bold me-1'>Pravděpodobnost:</span>
+                                    <span className='fw-bold me-1'>Výskyt:</span>
                                     <span>{this.event.certainty}</span>
                                 </span>
                                 <span className='detailRow'>
-                                    <span className='fw-bold me-1'>Výskyt:</span>
+                                    <span className='fw-bold me-1'>Doba výskytu:</span>
                                     <span>{this.event.urgency}</span>
                                 </span>
                                 <span className='detailRow'>

@@ -3,6 +3,13 @@
 
 .notificationSettings {
 
+    .addNotification {
+        border: 1px solid transparent!important;
+        &:hover {
+            border: 1px solid $grayDarker !important;
+        }
+    }
+
     .selectBox {
         width: 48%;
 

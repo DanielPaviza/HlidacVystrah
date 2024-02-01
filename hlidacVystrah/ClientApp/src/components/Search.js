@@ -130,7 +130,7 @@ export class Search extends Component {
                 <input
                     id='localitySearch'
                     type="text"
-                    className={`${!this.props.isAccount ? 'border' : 'p-1'} ${this.state.listOpened && "opened"} ps-2 mw-100 w-100`}
+                    className={`${!this.props.isAccount && 'p-1'} ${this.state.listOpened && "opened"} ps-2 mw-100 w-100`}
                     onChange={(event) => this.FilterLocalityList(event.target.value)}
                     onFocus={() => this.HandleInputFocus()}
                     onBlur={() => this.HandleInputBlur()}

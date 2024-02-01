@@ -26,6 +26,8 @@
 
             &:not(:first-child) {
                 border-top: 1px solid $grayDarker;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
             }
 
             &.noBorderTop {
@@ -61,6 +63,12 @@
 
             input {
                 width: 260px;
+                border: 1px solid $grayDarker !important;
+                outline: none;
+
+                &:focus {
+                    border-color: rgba(black, 0.5) !important;
+                }
             }
 
             button {

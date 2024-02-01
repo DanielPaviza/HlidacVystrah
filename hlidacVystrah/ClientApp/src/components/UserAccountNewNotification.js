@@ -185,9 +185,9 @@ export class UserAccountNewNotification extends Component {
                             </select>
                         </div>
                         <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
-                            <label>Pravděpodobnost</label>
+                            <label>Výskyt</label>
                             <select id='selectcertainty' className='rounded'>
-                                <option value={null}>Jakákoliv</option>
+                                <option value={null}>Jakýkoliv</option>
                                 {this.state.certaintyOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
                                         {option.text}
@@ -201,7 +201,7 @@ export class UserAccountNewNotification extends Component {
                         </div>                       
                     </div>
                     <span className='d-flex justify-content-end mt-3'>
-                        <button className='border-0 p-2 rounded' onClick={() => this.SetNewNotification() }>Přidat</button>
+                        <button className='border-0 p-2 rounded addNotification' onClick={() => this.SetNewNotification() }>Přidat</button>
                     </span>
                 </>
                 :

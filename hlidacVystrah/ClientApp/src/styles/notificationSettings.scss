@@ -6,8 +6,9 @@
     .selectBox {
         width: 48%;
 
-        select {
+        select, input {
             height: 28px;
+            border: 1px solid $grayDarker;
         }
     }
 

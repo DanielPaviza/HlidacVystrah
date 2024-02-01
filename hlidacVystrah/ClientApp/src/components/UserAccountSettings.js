@@ -195,7 +195,7 @@ export class UserAccountSettings extends Component {
                     {this.props.userEmail}
                 </div>
                 <div className='accountSettings d-flex flex-column'>
-                    <span className={`p-2 py-3 fw-bold d-flex justify-content-between align-items-center ${this.state.changePasswordOpened && 'borderLeft'}`} onClick={() => this.HandleToggleChangePassword()}>
+                    <span className={`p-2 py-3 fw-bold d-flex justify-content-between align-items-center`} onClick={() => this.HandleToggleChangePassword()}>
                         <span>Změnit heslo</span>
                         <i className={`fa-solid fa-angles-${this.state.changePasswordOpened ? 'down' : 'up'}`}></i>
                     </span>
@@ -208,7 +208,7 @@ export class UserAccountSettings extends Component {
                             </div>
                         )
                     }
-                    <span className={`p-2 py-3 fw-bold d-flex justify-content-between align-items-center ${this.state.deleteAccountOpened && 'borderLeft noBorderTop'}`} onClick={() => this.HandleToggleDeleteAccount()}>
+                    <span className={`p-2 py-3 fw-bold d-flex justify-content-between align-items-center ${this.state.deleteAccountOpened && 'noBorderTop'}`} onClick={() => this.HandleToggleDeleteAccount()}>
                         <span>Smazat účet</span>
                         <i className={`fa-solid fa-angles-${this.state.deleteAccountOpened ? 'down' : 'up'}`}></i>
                     </span>

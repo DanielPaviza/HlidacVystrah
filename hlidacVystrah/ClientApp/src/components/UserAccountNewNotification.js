@@ -165,7 +165,7 @@ export class UserAccountNewNotification extends Component {
                     <div className='d-flex flex-wrap justify-content-between'>
                         <div className='selectBox d-flex flex-column'>
                             <label>Typ výstrahy</label>
-                            <select id='selectEventType' className='border rounded'>
+                            <select id='selectEventType' className='rounded'>
                                 {this.state.eventTypeOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
                                         {option.name}
@@ -175,7 +175,7 @@ export class UserAccountNewNotification extends Component {
                         </div>
                         <div className='selectBox d-flex flex-column '>
                             <label>Závažnost</label>
-                            <select id='selectSeverity' className='border rounded'>
+                            <select id='selectSeverity' className='rounded'>
                                 <option value={null}>Jakákoliv</option>
                                 {this.state.severityOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
@@ -186,7 +186,7 @@ export class UserAccountNewNotification extends Component {
                         </div>
                         <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
                             <label>Pravděpodobnost</label>
-                            <select id='selectcertainty' className='border rounded'>
+                            <select id='selectcertainty' className='rounded'>
                                 <option value={null}>Jakákoliv</option>
                                 {this.state.certaintyOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
@@ -198,27 +198,7 @@ export class UserAccountNewNotification extends Component {
                         <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
                             <label>Lokalita</label>
                             <Search isAccount={true} localityList={this.state.localityOptions} HandleSelectArea={this.HandleSelectArea} />
-                        </div>
-                        {
-                            /*
-                        <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
-                            <label>Lokalita</label>
-                            <select id='selectArea' className='border'>
-                                {Object.entries(this.state.localityOptions).map(([region, localities]) => (
-                                    <React.Fragment key={region}>
-                                        <option value={region + ':1'} className='fw-bold'>{region}</option>
-                                        {localities.map(locality => (
-                                            <option key={locality.cisorp} value={locality.cisorp + ':0'}>
-                                                {locality.name}
-                                            </option>
-                                        ))}}; 
-                                    </React.Fragment>             
-                                ))}
-                            </select>
-                        </div>
-                            */
-                        }
-                        
+                        </div>                       
                     </div>
                     <span className='d-flex justify-content-end mt-3'>
                         <button className='border-0 p-2 rounded' onClick={() => this.SetNewNotification() }>Přidat</button>

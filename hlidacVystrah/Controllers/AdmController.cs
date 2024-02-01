@@ -39,7 +39,34 @@ namespace hlidacVystrah.Controllers
         public LogsFilterOptionsResponse GetLogsFilterOptions([FromBody] LoginTokenDto data)
         {
             return _admService.GetLogsFilterOptions(data);
+        }        
+        
+        // POST api/adm/users
+        [HttpPost("users")]
+        public UserListResponse GetUserList([FromBody] LoginTokenDto data)
+        {
+            return _admService.GetUserList(data);  
+        }        
+        
+        // POST api/adm/users/makeadmin
+        [HttpPost("users/makeadmin")]
+        public BaseResponse UserMakeAdmin([FromBody] AdminUserDto data)
+        {
+            return _admService.UserMakeAdmin(data);
+        }        
+        
+        // POST api/adm/users/removeadmin
+        [HttpPost("users/removeadmin")]
+        public BaseResponse UserRemoveAdmin([FromBody] AdminUserDto data)
+        {
+            return _admService.UserRemoveAdmin(data);
+        }       
+        
+        // POST api/adm/users/delete
+        [HttpPost("users/delete")]
+        public BaseResponse UserDelete(AdminUserDto data)
+        {
+            return _admService.UserDelete(data);
         }
-
     }
 }

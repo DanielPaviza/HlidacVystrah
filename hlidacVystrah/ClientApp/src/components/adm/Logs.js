@@ -49,8 +49,6 @@ export class Logs extends Component {
 
     componentDidMount() {
         this.TokenLogin();
-        this.FetchLogs(this.state.pageSize, 1);
-        this.FetchFilterOptions();
     }
 
     TokenLogin = (token) => {
@@ -61,6 +59,11 @@ export class Logs extends Component {
                 loggedIn: adminLoggedIn,
                 loading: false
             }));
+
+            if (adminLoggedIn) {
+                this.FetchLogs(this.state.pageSize, 1);
+                this.FetchFilterOptions();
+            }
         });
     }
 
@@ -153,12 +156,10 @@ export class Logs extends Component {
             }, this.helper.timeoutDuration);
 
         switch (this.state.response) {
-            case 400:
-                return this.helper.RenderInformationText("Neplatný požadavek!", true);
             case 401:
-                return this.helper.RenderInformationText("Přístup odepřen! Neplatné přihlášení!", true);
-            case 415:
-                return this.helper.RenderInformationText("Přístup odepřen! Uložte svůj přihlašovací token!", true);
+                return this.helper.RenderInformationText("Přístup odepřen!", true);
+            case 440:
+                return this.helper.RenderInformationText("Přihlášení vypršelo!", true);
             case 500:
                 return this.helper.RenderInformationText("Něco se nepovedlo. Zkuste to později.", true);
             default:
@@ -227,9 +228,9 @@ export class Logs extends Component {
                         </select>
                     </div>
                 </div>
-                <div className='pt-2 d-flex align-items-center mt-1 mt-md-0'>
+                <div className='pt-2 d-flex mt-1 mt-md-0'>
                     <div className='me-2'>Page:</div>
-                    <div className='d-flex align-items-center'>
+                    <div className='d-flex flex-wrap'>
                         {this.RenderPageNumbers()}
                     </div>
                 </div>

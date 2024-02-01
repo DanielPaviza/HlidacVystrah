@@ -11,5 +11,13 @@ namespace hlidacVystrah.Services.Interfaces
         LogsFilterOptionsResponse GetLogsFilterOptions(LoginTokenDto data);
 
         BaseResponse TokenLogin([FromBody] LoginTokenDto data);
+
+        UserListResponse GetUserList(LoginTokenDto data);
+
+        BaseResponse UserMakeAdmin(AdminUserDto data);
+
+        BaseResponse UserRemoveAdmin(AdminUserDto data);
+
+        BaseResponse UserDelete(AdminUserDto data);
     }
 }

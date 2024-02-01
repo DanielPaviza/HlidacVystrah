@@ -7,6 +7,7 @@ import { UserAccount } from "./components/UserAccount";
 import { NewPassword } from "./components/NewPassword";
 import { Adm } from "./components/adm/Adm";
 import { Logs } from "./components/adm/Logs";
+import { Users } from "./components/adm/Users";
 import ActivateAccount from "./components/ActivateAccount";
 import { BrowserRouter as Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -58,6 +59,10 @@ const AppRoutes = [
     {
         path: '/_adm/logs',
         element: <Logs />
+    },
+    {
+        path: '/_adm/users',
+        element: <Users />
     },
     {
         path: '*',

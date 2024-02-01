@@ -37,9 +37,10 @@ export class Adm extends Component {
 
     RenderAdmContent = () => {
         return (
-            <section id='adm' className='container'>
+            <section id='adm' className='container d-flex flex-column'>
                 <h2 className='mt-4 mb-3'>Administrace</h2>
-                <a href='/_adm/logs'>Výpis logů</a>
+                <a href='/_adm/logs' className='mb-1'>Výpis logů</a>
+                <a href='/_adm/users'>Výpis uživatelů</a>
             </section>
         );
     }

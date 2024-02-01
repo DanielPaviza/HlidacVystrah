@@ -4,10 +4,8 @@ using System.Xml.Linq;
 
 namespace hlidacVystrah.Model.Dto
 {
-    public class NewPasswordLoggedInDto: LoginTokenDto
+    public class UserDeleteDto : LoginTokenDto
     {
         public string Password {  get; set; }
-
-        public string CurrentPassword { get; set; }
     }
 }

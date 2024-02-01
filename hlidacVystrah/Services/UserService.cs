@@ -275,12 +275,15 @@ namespace hlidacVystrah.Services
             } 
         }
 
-        public BaseResponse DeleteAccount(LoginTokenDto data)
+        public BaseResponse DeleteAccount(UserDeleteDto data)
         {
 
             string LOG_NAME = "DeleteAccount";
 
-            UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+            UserTable? user = _context.User.FirstOrDefault(u => 
+                u.login_token == data.LoginToken &&
+                u.password == this.HashPassword(data.Password)
+            );
             int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
             if (authorizeTokenStatus != 200)
             {
@@ -312,7 +315,10 @@ namespace hlidacVystrah.Services
 
             string LOG_NAME = "SetNewPasswordLoggedIn";
 
-            UserTable user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+            UserTable? user = _context.User.FirstOrDefault(u => 
+                u.login_token == data.LoginToken &&
+                u.password == this.HashPassword(data.CurrentPassword)
+            );
             int authorizeTokenStatus = this.AuthorizeUserTokenStatusCode(user);
             if (authorizeTokenStatus != 200)
             {

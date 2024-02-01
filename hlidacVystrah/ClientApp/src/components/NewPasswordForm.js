@@ -6,7 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import UserFormHelper from './UserFormHelper';
 import axios from "axios";
 
-function NewPasswordForm({ loggedIn }) {
+function NewPasswordForm({ loggedIn, PasswordChanged, currentPassword, HandleInvalidCurrentPassword }) {
     // Access the token parameter from the URL
     const [searchParams] = useSearchParams();
     const token = searchParams.get('token');
@@ -57,6 +57,7 @@ function NewPasswordForm({ loggedIn }) {
         if (loggedIn) {
             api += 'loggedin';
             payload.loginToken = localStorage.getItem("loginToken");
+            payload.currentPassword = currentPassword
         } else {
             payload.passwordResetToken = token
         } 
@@ -64,7 +65,17 @@ function NewPasswordForm({ loggedIn }) {
         axios
             .post(api, payload)
             .then((response) => {
-                setResponse(response.data.responseCode);
+                let data = response.data;
+                setResponse(data.responseCode);
+
+                if (loggedIn) {
+                    if (data.responseCode == 200)
+                        PasswordChanged();
+
+                    if (data.responseCode == 401)
+                        HandleInvalidCurrentPassword();
+                }
+
             }).catch(err => {
                 setResponse(400);
             }).finally(() => {
@@ -84,6 +95,9 @@ function NewPasswordForm({ loggedIn }) {
             setTimeout(() => {
                 setResponse(null)
             }, helper.timeoutDuration);
+
+        if (loggedIn && response == 401)
+            return helper.RenderInformationText("Nesprávné současné heslo!", true);
 
         switch (response) {
             case 200:
@@ -109,10 +123,14 @@ function NewPasswordForm({ loggedIn }) {
 
     return (
         <div className='d-flex flex-column justify-content-center p-4 p-lg-5 rounded position-relative'>
-            <h2 className='mb-3 mx-auto'>Změna hesla</h2>
+            {loggedIn ?
+                <h3 className='mb-3 mx-auto'>Změna hesla</h3>
+                :
+                <h2 className='mb-3 mx-auto'>Změna hesla</h2>    
+            }
             <span className='mb-2 d-flex align-items-center position-relative mx-auto'>
                 <i className="fa-solid fa-lock me-2"></i>
-                <input className='p-1' type={`${passwordVisible ? 'text' : 'password'}`} placeholder='Heslo' value={password1} onChange={(e) => setPassword1(e.target.value)} />
+                <input className='p-1' type={`${passwordVisible ? 'text' : 'password'}`} placeholder='Nové heslo' value={password1} onChange={(e) => setPassword1(e.target.value)} />
                 <i
                     className={`toggler fa-regular fa-eye${passwordVisible ? '-slash' : ''} position-absolute`}
                     onClick={() => HandleTogglePassword()}
@@ -120,7 +138,7 @@ function NewPasswordForm({ loggedIn }) {
             </span>
             <span className='mb-2 d-flex align-items-center position-relative mx-auto'>
                 <i className="fa-solid fa-lock me-2"></i>
-                <input className='p-1' type={`${passwordVisible ? 'text' : 'password'}`} placeholder='Heslo znovu' value={password2} onChange={(e) => setPassword2(e.target.value)} />
+                <input className='p-1' type={`${passwordVisible ? 'text' : 'password'}`} placeholder='Nové heslo znovu' value={password2} onChange={(e) => setPassword2(e.target.value)} />
             </span>
             {passwordMismatch && helper.RenderInformationText('Hesla se neshodují', true, HandleHidePasswordMismatch)}
             {passwordTooShort && helper.RenderInformationText('Heslo musí obsahovat alespoň 6 znaků', true, HandleHidePasswordTooShort)}

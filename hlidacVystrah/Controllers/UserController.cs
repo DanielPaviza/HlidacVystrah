@@ -75,7 +75,7 @@ namespace hlidacVystrah.Controllers
 
         // GET api/user/deleteaccount
         [HttpPost("deleteaccount")]
-        public BaseResponse DeleteAccount([FromBody] LoginTokenDto data)
+        public BaseResponse DeleteAccount([FromBody] UserDeleteDto data)
         {
             return _userService.DeleteAccount(data);
         }

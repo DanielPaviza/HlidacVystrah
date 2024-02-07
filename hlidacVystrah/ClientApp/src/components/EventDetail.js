@@ -111,7 +111,7 @@ export class EventDetail extends Component {
                                 }
                             </div>
                         </div>
-                        <div className='eventIconContainer col-4 mx-auto my-auto d-flex justify-content-center align-items-center'>       
+                        <div className='eventIconContainer col-4 mx-auto my-auto d-flex justify-content-center align-items-center p-3'>       
                             <img className={`typeImg `} src={`/images/${this.event.imgPath}`} />
                         </div>
                     </div>

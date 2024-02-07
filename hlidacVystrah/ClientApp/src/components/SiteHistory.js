@@ -21,6 +21,11 @@ class SiteHistory {
         }
     }
 
+    RemoveLastRecord = () => {
+        this.history.pop();
+        this.SaveHistory();
+    }
+
     RecordCanAdd = (newRecord) => {
 
         if (this.history.length < 1) {

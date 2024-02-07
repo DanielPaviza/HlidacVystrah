@@ -35,7 +35,13 @@ export class NavMenu extends Component {
     }
 
     CloseDetail = () => {
-        if (window.location.pathname == '/')
+
+        let path = window.location.pathname;
+
+        if (path == '/')
+            return this.props.NavigateHome();
+
+        if (path.split('/')[1] == 'obec')
             return this.props.NavigateHome();
     }
 

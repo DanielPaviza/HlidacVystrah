@@ -36,6 +36,9 @@ export class HomeController extends Component {
         this.GetSvgMap();
 
         this.history = this.InitializeSiteHistory();
+
+        if (this.props.isLocalityForce)
+            this.HandleOpenLocality(this.props.cisorp);
     }
 
     InitializeSiteHistory = () => {
@@ -152,6 +155,7 @@ export class HomeController extends Component {
                 OpenLocalityDetail={this.HandleOpenLocality}
                 GetEventColor={this.HandleGetEventColor}
                 ScrollToTop={this.scrollToTop}
+                RemoveLastHistoryRecord={this.history.RemoveLastRecord}
                 map={this.state.map}
             />
         }

@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { MapEventList } from "./MapEventList";
 import '../styles/localityDetail.scss';
+import { Prev } from '../../../../node_modules/react-bootstrap/esm/PageItem';
 export class LocalityDetail extends Component {
     static displayName = LocalityDetail.name;
 
@@ -13,9 +14,26 @@ export class LocalityDetail extends Component {
         }
     }
 
+    ValidateLocality = () => {
+
+        const allLocalitiesArray = Object.values(this.props.allLocalities).flat();
+        let localityIsValid = allLocalitiesArray.some(localityObj => localityObj.cisorp == this.props.targetId);
+
+        if (!localityIsValid)
+            this.props.RemoveLastHistoryRecord();
+
+        this.setState((prevState) => ({ ...prevState, localityIsValid: localityIsValid }));
+    }
+
+    componentDidMount() {
+        this.ValidateLocality();
+    }
+
     componentDidUpdate() {
-        if (this.props.targetId != this.state.targetId)
+
+        if (this.props.targetId != this.state.targetId) {
             this.props.ScrollToTop();
+        }
     }
 
     GetLocalityInfo = () => {
@@ -57,6 +75,14 @@ export class LocalityDetail extends Component {
 
     render() {
 
+        if (!this.state.localityIsValid) {
+            return <div id="notFound" className='container mt-5'>
+                <h2>Stránka nenalezena</h2>
+                <p>Pravděpodobně jste zadali neexistující adresu.</p>
+                <a href='/' title='Meteorologické jevy v České republice'>Zpět na hlavní stranu</a>
+            </div>
+        }
+
         this.events = this.GetEventsInLocality();
         this.localityInfo = this.GetLocalityInfo();
 
@@ -68,7 +94,7 @@ export class LocalityDetail extends Component {
                     :
                     <>
                         <h3 className='pt-1 mb-1'>{this.localityInfo.name}</h3>
-                        <h4 className='mb-3 mb-md-4' role="button" onClick={() => this.props.OpenLocalityDetail(this.localityInfo.region, true)}>{this.localityInfo.region}</h4>
+                        <h4 className='mb-3 mb-md-4 fit-content' role="button" onClick={() => this.props.OpenLocalityDetail(this.localityInfo.region, true)}>{this.localityInfo.region}</h4>
                     </>
                 }
                 <MapEventList

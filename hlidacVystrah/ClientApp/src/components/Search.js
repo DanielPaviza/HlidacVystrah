@@ -97,8 +97,9 @@ export class Search extends Component {
                     <p className='fw-bold m-0 ps-2 region' onClick={() => this.HandleOpenRegion(key)}>{key}</p>
                     <div className='d-flex flex-wrap flex-column'>
                         {this.state.filteredLocalityList[key].map(locality => (
-                            <span key={locality.cisorp} className='ps-3 locality' onClick={() => this.HandleOpenLocality(locality.cisorp, locality.name)}>
-                                {locality.name}
+                            <span key={locality.cisorp} className='ps-3 pe-3 locality d-flex justify-content-between' onClick={() => this.HandleOpenLocality(locality.cisorp, locality.name)}>
+                                <span>{locality.name}</span>
+                                <span className='opacity-50'>{locality.cisorp}</span>
                             </span>
                         ))}
                     </div>

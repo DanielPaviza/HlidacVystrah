@@ -4,11 +4,6 @@
 #logspage {
     min-height: calc(100vh - 56px);
 
-    .administrationBack {
-        text-decoration: none;
-        color: $black;
-    }
-
     #spinner {
         transform: none !important;
         position: relative !important;

@@ -38,7 +38,7 @@ export class HomeController extends Component {
         this.history = this.InitializeSiteHistory();
 
         if (this.props.isLocalityForce)
-            this.HandleOpenLocality(this.props.cisorp);
+            this.HandleOpenLocality(this.props.cisorp);    
     }
 
     InitializeSiteHistory = () => {
@@ -128,6 +128,20 @@ export class HomeController extends Component {
             behavior: "smooth"
         });
     };
+
+    GetLocalityInfo = (localityList, cisorp) => {
+
+        let result = { region: null, name: null, cisorp: null };
+            
+        Object.entries(localityList).forEach(([region, localities]) => {
+
+            const locality = localities.find((item) => item.cisorp == cisorp);
+            if (locality)
+                return result = { region, name: locality.name, cisorp: locality.cisorp };
+        })
+
+        return result;
+    }
 
     RenderPage() {
 
@@ -234,12 +248,20 @@ export class HomeController extends Component {
             .then(response => {
 
                 let data = response.data;
-                if (data.responseCode == 200)
+                if (data.responseCode == 200) {
                     this.setState((prevState) => ({
                         ...prevState,
                         localityList: data.localityList,
                         localityListLoading: false
                     }));
+
+                    // locality detail meta tags
+                    if (this.props.isLocalityForce) {
+                        let localityInfo = this.GetLocalityInfo(data.localityList, this.props.cisorp);
+                        this.props.SetLocalityMetaTitle(localityInfo.name);
+                        this.props.SetLocalityMetaDescription("Detail obce " + localityInfo.name + " v kraji " + localityInfo.region + ".");
+                    }
+                }
             });
     }
 

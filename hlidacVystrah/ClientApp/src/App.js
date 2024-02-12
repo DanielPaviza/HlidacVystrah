@@ -28,8 +28,19 @@ const LoginRedirect = () => {
 
 const App = () => {
 
-    const [baseMetaDescription] = useState('Přehled výstrah ČHMÚ před meteorologickými jevy v České republice a jejích obcích.');
-    const [baseShortTitle] = useState('Hlídač výstrah');
+    const [baseMetaDescription, setBaseMetaDescription] = useState('Přehled výstrah ČHMÚ před meteorologickými jevy v České republice a jejích obcích.');
+    const [baseShortTitle, setBaseShortTitle] = useState('Hlídač výstrah');
+
+    const [localityMetaDescription, setLocalityMetaDescription] = useState('');
+    const [localityMetaTitle, setLocalityMetaTitle] = useState('');
+
+    const HandleSetLocalityMetaDescription = (description) => {
+        setLocalityMetaDescription(description);
+    };
+
+    const HandleSetLocalityMetaTitle = (title) => {
+        setLocalityMetaTitle(title);
+    };
 
     const AppRoutes = [
         {
@@ -39,12 +50,18 @@ const App = () => {
                     <title>Hlídač meteorologických výstrah</title>
                     <meta name="description" content={baseMetaDescription + " Možnost nastavení odeslání upozornění na email v případě výskytu daného jevu."} />
                 </Helmet>
-                <HomeController />
+                <HomeController SetLocalityMetaDescription={HandleSetLocalityMetaDescription} SetLocalityMetaTitle={HandleSetLocalityMetaTitle} />
             </>
         },
         {
             path: '/obec/:cisorp',
-            element: <LocalityController />,
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - " + localityMetaTitle}</title>
+                    <meta name="description" content={baseMetaDescription + " " + localityMetaDescription} />
+                </Helmet>
+                <LocalityController SetLocalityMetaDescription={HandleSetLocalityMetaDescription} SetLocalityMetaTitle={HandleSetLocalityMetaTitle} />
+            </>
         },
         {
             path: '/register',

@@ -8,7 +8,12 @@ function LocalityController(props) {
     const { cisorp } = useParams();
 
     return (
-        <HomeController isLocalityForce={true} cisorp={cisorp} />
+        <HomeController
+            isLocalityForce={true}
+            cisorp={cisorp}
+            SetLocalityMetaDescription={props.SetLocalityMetaDescription}
+            SetLocalityMetaTitle={props.SetLocalityMetaTitle}
+        />
     );
 }
 

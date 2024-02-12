@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+﻿import React, { Component, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { HomeController } from "./components/HomeController";
 import { Register } from "./components/Register";
@@ -14,6 +14,7 @@ import LocalityController from './components/LocalityController';
 import { BrowserRouter as Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import './styles/shared.scss';
+import { Helmet } from 'react-helmet';
 
 const LoginRedirect = () => {
     const navigate = useNavigate();
@@ -26,10 +27,20 @@ const LoginRedirect = () => {
 };
 
 const App = () => {
+
+    const [baseMetaDescription] = useState('Přehled výstrah ČHMÚ před meteorologickými jevy v České republice a jejích obcích.');
+    const [baseShortTitle] = useState('Hlídač výstrah');
+
     const AppRoutes = [
         {
             index: true,
-            element: <HomeController />
+            element: <>
+                <Helmet>
+                    <title>Hlídač meteorologických výstrah</title>
+                    <meta name="description" content={baseMetaDescription + " Možnost nastavení odeslání upozornění na email v případě výskytu daného jevu."} />
+                </Helmet>
+                <HomeController />
+            </>
         },
         {
             path: '/obec/:cisorp',
@@ -37,43 +48,103 @@ const App = () => {
         },
         {
             path: '/register',
-            element: <Register />
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - Registrace"}</title>
+                    <meta name="description" content={baseMetaDescription + " Vytvoření nového uživatelského účtu."} />
+                </Helmet>
+                <Register />
+            </>
         },
         {
             path: '/resetpassword',
-            element: <ResetPassword />
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - Zapomenuté heslo"}</title>
+                    <meta name="description" content={baseMetaDescription + " Odeslání odkazu pro nastavení nového hesla na daný email."} />
+                </Helmet>
+                <ResetPassword />
+            </>
         },
         {
             path: '/newpassword',
-            element: <NewPassword />
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - Nové heslo"}</title>
+                    <meta name="description" content={baseMetaDescription + " Změna zapomenutého hesla."} />
+                </Helmet>
+                <NewPassword />
+            </>
         },
         {
             path: '/activateaccount',
-            element: <ActivateAccount />
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - Aktivace účtu"}</title>
+                    <meta name="description" content={baseMetaDescription + " Aktivate nově vytvořeného účtu."} />
+                </Helmet>
+                <ActivateAccount />
+            </>
         },
         {
             path: '/login',
-            element: <LoginRedirect />
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - Přihlášení"}</title>
+                    <meta name="description" content={baseMetaDescription + " Přihlášení do správy účtu."} />
+                </Helmet>
+                <LoginRedirect />
+            </>
         },
         {
             path: '/account',
-            element: <UserAccount />
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - Účet"}</title>
+                    <meta name="description" content={baseMetaDescription + " Účet uživatele s nastavením upozornění na daný jev, změnou hesla a možností smazání účtu."} />
+                </Helmet>
+                <UserAccount />
+            </>
         },
         {
             path: '/_adm',
-            element: <Adm />
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - Administrace"}</title>
+                    <meta name="description" content={baseMetaDescription} />
+                </Helmet>
+                <Adm />
+            </>
         },
         {
             path: '/_adm/logs',
-            element: <Logs />
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - Administrace/Logy"}</title>
+                    <meta name="description" content={baseMetaDescription} />
+                </Helmet>
+                <Logs />
+            </>
         },
         {
             path: '/_adm/users',
-            element: <Users />
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - Administrace/Uživatelé"}</title>
+                    <meta name="description" content={baseMetaDescription} />
+                </Helmet>
+                <Users />
+            </>
         },
         {
             path: '*',
-            element: <NotFound />
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - Nenalezeno"}</title>
+                    <meta name="description" content={baseMetaDescription + " Neexistující adresa na webu. 404 not found."} />
+                </Helmet>
+                <NotFound />
+            </>
         },
     ];
 

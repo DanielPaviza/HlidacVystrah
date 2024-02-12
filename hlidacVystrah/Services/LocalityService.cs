@@ -75,7 +75,7 @@ namespace hlidacVystrah.Services
                 string? localityName = locality.name;
                 string regionName = _context.Region.First(r => r.id == locality.id_region).name;
 
-                lastUpdate = _context.Update.FirstOrDefault();
+                lastUpdate = _context.Update.OrderByDescending(u => u.id).FirstOrDefault();
                 if (lastUpdate == null)
                 {
                     this._logService.WriteInfo("No data yet, but ok.", LOG_NAME);

@@ -28,8 +28,8 @@ const LoginRedirect = () => {
 
 const App = () => {
 
-    const [baseMetaDescription, setBaseMetaDescription] = useState('Přehled výstrah ČHMÚ před meteorologickými jevy v České republice a jejích obcích.');
-    const [baseShortTitle, setBaseShortTitle] = useState('Hlídač výstrah');
+    const [baseMetaDescription] = useState('Přehled výstrah ČHMÚ před meteorologickými jevy pro Českou republiku a jednotlivé obce s rozšířenou působností.');
+    const [baseShortTitle] = useState('Hlídač výstrah');
 
     const [localityMetaDescription, setLocalityMetaDescription] = useState('');
     const [localityMetaTitle, setLocalityMetaTitle] = useState('');
@@ -48,7 +48,7 @@ const App = () => {
             element: <>
                 <Helmet>
                     <title>Hlídač meteorologických výstrah</title>
-                    <meta name="description" content={baseMetaDescription + " Možnost nastavení odeslání upozornění na email v případě výskytu daného jevu."} />
+                    <meta name="description" content={baseMetaDescription + " Možnost nastavení odesílání emailových notifikací při výskytu jevu Vašeho výběru."} />
                 </Helmet>
                 <HomeController SetLocalityMetaDescription={HandleSetLocalityMetaDescription} SetLocalityMetaTitle={HandleSetLocalityMetaTitle} />
             </>
@@ -118,7 +118,7 @@ const App = () => {
             element: <>
                 <Helmet>
                     <title>{baseShortTitle + " - Účet"}</title>
-                    <meta name="description" content={baseMetaDescription + " Účet uživatele s nastavením upozornění na daný jev, změnou hesla a možností smazání účtu."} />
+                    <meta name="description" content={baseMetaDescription + " Správa účtu uživatele s možností úpravy sledovaných jevů."} />
                 </Helmet>
                 <UserAccount />
             </>

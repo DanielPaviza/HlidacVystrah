@@ -139,7 +139,7 @@ export class UserAccountNotifications extends Component {
                                 <td className='d-flex align-items-center my-auto h-100'>
                                     <span>{notification.eventType}</span>
                                     <div>
-                                        <img src={`/images/${notification.eventImg}`} alt='obrázek typu jevu' className='ms-2 my-auto' />
+                                        <img src={`/images/${notification.eventImg}`} alt={`Ikona jevu ${notification.eventType}`} className='ms-2 my-auto' />
                                     </div>
                                 </td>
                                 <td>{notification.severity || 'Jakákoliv'}</td>

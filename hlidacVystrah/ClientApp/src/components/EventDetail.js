@@ -112,7 +112,7 @@ export class EventDetail extends Component {
                             </div>
                         </div>
                         <div className='eventIconContainer col-4 mx-auto my-auto d-flex justify-content-center align-items-center p-3'>       
-                            <img className={`typeImg `} src={`/images/${this.event.imgPath}`} />
+                            <img className={`typeImg `} src={`/images/${this.event.imgPath}`} alt={`Ikona jevu ${this.event.eventType}`} />
                         </div>
                     </div>
                     <div className='rollDown detailRow' onClick={() => this.ToggleShowDescription() }>

@@ -126,5 +126,7 @@
    dotnet publish -c Release
 3. The resulting package will be located in the `bin/Release/net6.0/publish` directory.
 
+- Insert the MailTemplates folder into the published application directory.
+
 ## Credits
 - **[ČHMÚ](https://www.chmi.cz/) (Czech Hydrometeorological Institute):** Providing [meteorological data](https://www.chmi.cz/files/portal/docs/meteo/om/bulletiny/XOCZ50_OKPR.xml).

@@ -126,5 +126,7 @@
    dotnet publish -c Release
 3. Výsledný balíček bude umístěn ve složce `bin/Release/net6.0/publish`.
 
+- Do složky s publikovanou aplikací vložte složku `MailTemplates`.
+
 ## Zásluhy
 - **[ČHMÚ](https://www.chmi.cz/) (Český hydrometeorologický ústav):** Poskytnutí [meteorologických dat](https://www.chmi.cz/files/portal/docs/meteo/om/bulletiny/XOCZ50_OKPR.xml).

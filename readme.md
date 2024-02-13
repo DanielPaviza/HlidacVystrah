@@ -1,5 +1,7 @@
 # Hlídač výstrah
 
+- English version is in the project folder under the name readme.en.md
+
 ## Úvod
 
 - Hlídač výstrah je webová aplikace zobrazující výstrahy před meteorologickými jevy v krajích a obcích s rozšířenou působností v České republice.

@@ -10,7 +10,8 @@ export class LocalityDetail extends Component {
         this.props.ScrollToTop();
 
         this.state = {
-            targetId: this.props.targetId
+            targetId: this.props.targetId,
+            similarCisorps: []
         }
     }
 
@@ -19,10 +20,39 @@ export class LocalityDetail extends Component {
         const allLocalitiesArray = Object.values(this.props.allLocalities).flat();
         let localityIsValid = allLocalitiesArray.some(localityObj => localityObj.cisorp == this.props.targetId);
 
-        if (!localityIsValid)
+        if (!localityIsValid) {
             this.props.RemoveLastHistoryRecord();
+            if (this.props.targetId.length >= 2)
+                this.GetSimilarCisorpsToInvalidInput();
+        }  
 
         this.setState((prevState) => ({ ...prevState, localityIsValid: localityIsValid }));
+    }
+
+    GetSimilarCisorpsToInvalidInput = () => {
+
+        let similar = [];
+
+        Object.entries(this.props.allLocalities).forEach(([region, localities]) => {
+
+            let localityList;
+
+            if (this.props.targetId.length < 4) {
+
+                localityList = localities.filter((l) =>
+                    l.cisorp.toString().includes(this.props.targetId.toString())
+                );
+            } else {
+                localityList = localities.filter((l) =>
+                    this.props.targetId.toString().includes(l.cisorp.toString())
+                );
+            }
+
+            if (localityList.length > 0)
+                similar.push(localityList);
+        })
+
+        this.setState((prevState) => ({ ...prevState, similarCisorps: similar.flat() }));
     }
 
     componentDidMount() {
@@ -76,9 +106,19 @@ export class LocalityDetail extends Component {
     render() {
 
         if (!this.state.localityIsValid) {
-            return <div id="notFound" className='container mt-5'>
-                <h2>Stránka nenalezena</h2>
-                <p>Pravděpodobně jste zadali neexistující adresu.</p>
+            return <div id="notFound" className='container mt-5 mb-3'>
+                <h2>Obec s rozšířenou působností s číslem CISORP <i>{this.props.targetId}</i> nebyla nalezena.</h2>
+                {this.state.similarCisorps.length > 0 &&
+                    <div className='mb-4'>
+                        <p className='mb-0'>Podobná čísla CISORP:</p>
+                        {this.state.similarCisorps.map((item) => (
+                            <div className='mb-1' key={item.cisorp}>
+                                <span className='me-1'>{item.cisorp} -</span>
+                                <a href={`/obec/${item.cisorp}`}>{item.name}</a>
+                            </div>
+                        ))}
+                    </div>
+                }
                 <a href='/' title='Meteorologické jevy v České republice'>Zpět na hlavní stranu</a>
             </div>
         }

@@ -50,7 +50,7 @@ const App = () => {
                     <title>Hlídač meteorologických výstrah</title>
                     <meta name="description" content={baseMetaDescription + " Možnost nastavení odesílání emailových notifikací při výskytu jevu Vašeho výběru."} />
                 </Helmet>
-                <HomeController SetLocalityMetaDescription={HandleSetLocalityMetaDescription} SetLocalityMetaTitle={HandleSetLocalityMetaTitle} />
+                <HomeController />
             </>
         },
         {

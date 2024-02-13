@@ -85,9 +85,14 @@ export class HomeController extends Component {
     }
 
     HandleOpenHome = () => {
+
         this.HandleCloseDetail();
         if (this.history)
             this.history.AddRecord("home");
+
+        let path = window.location.pathname;
+        if (path.split('/')[1] == 'obec')
+            window.location.href = '/';
     }
 
     HandleCloseDetail = () => {
@@ -258,8 +263,12 @@ export class HomeController extends Component {
                     // locality detail meta tags
                     if (this.props.isLocalityForce) {
                         let localityInfo = this.GetLocalityInfo(data.localityList, this.props.cisorp);
-                        this.props.SetLocalityMetaTitle(localityInfo.name);
-                        this.props.SetLocalityMetaDescription("Detail obce " + localityInfo.name + " v kraji " + localityInfo.region + ".");
+                        if (localityInfo.name == null) {
+                            this.props.SetLocalityMetaTitle("Neznámá obec");
+                        } else {
+                            this.props.SetLocalityMetaTitle(localityInfo.name);
+                            this.props.SetLocalityMetaDescription("Detail obce " + localityInfo.name + " v kraji " + localityInfo.region + ".");
+                        }
                     }
                 }
             });

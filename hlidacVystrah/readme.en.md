@@ -47,6 +47,7 @@
         - Microsoft.EntityFrameworkCore 7.0.12
         - Microsoft.EntityFrameworkCore.SqlServer 7.0.12
         - Microsoft.EntityFrameworkCore.Tools 7.0.12
+        - Swashbuckle.AspNetCore 4.5.0
 
 - **Installing Dependencies**
   - **Backend**

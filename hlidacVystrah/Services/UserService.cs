@@ -109,7 +109,7 @@ namespace hlidacVystrah.Services
                 {
                     id_event_type = data.IdEventType,
                     id_severity = data.IdSeverity,
-                    id_certainty = data.Idcertainty,
+                    id_certainty = data.IdCertainty,
                     id_area = Int32.Parse(data.IdArea),
                     isRegion = data.IsRegion
                 };
@@ -157,7 +157,16 @@ namespace hlidacVystrah.Services
             } catch (Exception ex)
             {
                 this._logService.WriteError(ex.Message, LOG_NAME);
-                return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("The INSERT statement conflicted with the FOREIGN KEY constraint"))
+                {
+                    
+                    return new BaseResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                }
+                else
+                {
+                    this._logService.WriteError(ex.Message, LOG_NAME);
+                    return new BaseResponse { ResponseCode = StatusCodes.Status500InternalServerError };
+                }
             }
         }
 

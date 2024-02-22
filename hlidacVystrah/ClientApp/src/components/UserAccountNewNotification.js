@@ -44,13 +44,13 @@ export class UserAccountNewNotification extends Component {
     GetNewNotificationPayload = () => {
         let idEventType = document.getElementById("selectEventType").value;
         let idSeverity = document.getElementById("selectSeverity").value;
-        let idcertainty = document.getElementById("selectcertainty").value;
+        let idCertainty = document.getElementById("selectCertainty").value;
 
-        if (idSeverity == "Jakákoliv")
+        if (idSeverity.length <= 0)
             idSeverity = null;
 
-        if (idcertainty == "Jakákoliv")
-            idcertainty = null;
+        if (idCertainty.length <= 0)
+            idCertainty = null;
 
         let selectedAreaString = this.state.selectedAreaId;
         if(selectedAreaString != null)
@@ -60,7 +60,7 @@ export class UserAccountNewNotification extends Component {
             "LoginToken": this.props.loginToken,
             "IdEventType": idEventType,
             "IdSeverity": idSeverity,
-            "Idcertainty": idcertainty,
+            "IdCertainty": idCertainty,
             "IdArea": selectedAreaString,
             "IsRegion": this.state.selectedAreaIsRegion,
         };
@@ -176,7 +176,7 @@ export class UserAccountNewNotification extends Component {
                         <div className='selectBox d-flex flex-column '>
                             <label>Závažnost</label>
                             <select id='selectSeverity' className='rounded'>
-                                <option value={null}>Jakákoliv</option>
+                                <option value="" selected>Jakákoliv</option>
                                 {this.state.severityOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
                                         {option.text}
@@ -186,8 +186,8 @@ export class UserAccountNewNotification extends Component {
                         </div>
                         <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
                             <label>Výskyt</label>
-                            <select id='selectcertainty' className='rounded'>
-                                <option value={null}>Jakýkoliv</option>
+                            <select id='selectCertainty' className='rounded'>
+                                <option value="" selected>Jakýkoliv</option>
                                 {this.state.certaintyOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
                                         {option.text}

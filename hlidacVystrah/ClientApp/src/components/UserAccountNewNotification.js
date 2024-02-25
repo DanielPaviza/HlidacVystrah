@@ -176,7 +176,7 @@ export class UserAccountNewNotification extends Component {
                         <div className='selectBox d-flex flex-column '>
                             <label>Závažnost</label>
                             <select id='selectSeverity' className='rounded'>
-                                <option value="" selected>Jakákoliv</option>
+                                <option value=''>Jakákoliv</option>
                                 {this.state.severityOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
                                         {option.text}
@@ -187,7 +187,7 @@ export class UserAccountNewNotification extends Component {
                         <div className='selectBox d-flex flex-column mt-2 mt-md-0'>
                             <label>Výskyt</label>
                             <select id='selectCertainty' className='rounded'>
-                                <option value="" selected>Jakýkoliv</option>
+                                <option value=''>Jakýkoliv</option>
                                 {this.state.certaintyOptions.map((option) => (
                                     <option key={option.id} value={option.id}>
                                         {option.text}

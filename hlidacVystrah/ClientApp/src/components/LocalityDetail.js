@@ -11,7 +11,7 @@ export class LocalityDetail extends Component {
 
         this.state = {
             targetId: this.props.targetId,
-            similarCisorps: []
+            similarCisorps: [],
         }
     }
 
@@ -26,7 +26,16 @@ export class LocalityDetail extends Component {
                 this.GetSimilarCisorpsToInvalidInput();
         }  
 
-        this.setState((prevState) => ({ ...prevState, localityIsValid: localityIsValid }));
+        return localityIsValid;
+    }
+
+    ValidateRegion = () => {
+        let keys = Object.keys(this.props.allLocalities);
+        let regionIsValid = keys.some(key => key == this.props.targetId);
+        if (!regionIsValid)
+            this.props.RemoveLastHistoryRecord();
+
+        return regionIsValid;
     }
 
     GetSimilarCisorpsToInvalidInput = () => {
@@ -56,7 +65,6 @@ export class LocalityDetail extends Component {
     }
 
     componentDidMount() {
-        this.ValidateLocality();
     }
 
     componentDidUpdate() {
@@ -105,7 +113,7 @@ export class LocalityDetail extends Component {
 
     render() {
 
-        if (!this.state.localityIsValid) {
+        if (!this.props.isRegion && !this.ValidateLocality()) {
             return <div id="notFound" className='container mt-5 mb-3'>
                 <h2>Obec s rozšířenou působností s číslem CISORP <i>{this.props.targetId}</i> nebyla nalezena.</h2>
                 {this.state.similarCisorps.length > 0 &&
@@ -119,6 +127,13 @@ export class LocalityDetail extends Component {
                         ))}
                     </div>
                 }
+                <a href='/' title='Meteorologické jevy v České republice'>Zpět na hlavní stranu</a>
+            </div>
+        }
+
+        if (this.props.isRegion && !this.ValidateRegion()) {
+            return <div id="notFound" className='container mt-5 mb-3'>
+                <h2>Kraj s názvem <i>{this.props.targetId}</i> nebyl nalezen.</h2>
                 <a href='/' title='Meteorologické jevy v České republice'>Zpět na hlavní stranu</a>
             </div>
         }

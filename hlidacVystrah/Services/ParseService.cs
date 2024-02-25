@@ -76,7 +76,7 @@ namespace hlidacVystrah.Services
         {
 
             string LOG_NAME = "UpdateEvents";
-            this._logService.WriteInfo("Start", LOG_NAME);
+            this._logService.WriteInfoDev("Start", LOG_NAME);
 
             bool saveToDb = true; // testing purposes
             string dataUrl = this._downloadEventsEndpoint.Url;

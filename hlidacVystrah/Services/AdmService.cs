@@ -136,7 +136,6 @@ namespace hlidacVystrah.Services
                 _context.Admin.Remove(admin);
                 _context.SaveChanges();
 
-                _logService.WriteError($"skrrrr", LOG_NAME);
                 _logService.WriteSuccess($"Administrator rights removed from user {admin.id_user}.", LOG_NAME);
                 return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
             }

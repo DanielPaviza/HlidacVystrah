@@ -176,7 +176,7 @@ namespace hlidacVystrah.Services
                             Id = u.id,
                             Email = u.email,
                             IsActive = u.isActive,
-                            CreatedAt = u.created_at
+                            CreatedAt = u.created_at.ToShortDateString() + " " + u.created_at.ToLongTimeString()
                         }
                 ).ToList();
 

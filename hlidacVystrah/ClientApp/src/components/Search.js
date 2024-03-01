@@ -97,10 +97,10 @@ export class Search extends Component {
                     <p className='fw-bold m-0 ps-2 region' onClick={() => this.HandleOpenRegion(key)}>{key}</p>
                     <div className='d-flex flex-wrap flex-column'>
                         {this.state.filteredLocalityList[key].map(locality => (
-                            <span key={locality.cisorp} className='ps-3 pe-3 locality d-flex justify-content-between' onClick={() => this.HandleOpenLocality(locality.cisorp, locality.name)}>
+                            <div key={locality.cisorp} className='ps-3 pe-3 locality d-flex justify-content-between' onClick={() => this.HandleOpenLocality(locality.cisorp, locality.name)}>
                                 <span>{locality.name}</span>
                                 <span className='opacity-50'>{locality.cisorp}</span>
-                            </span>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -131,7 +131,7 @@ export class Search extends Component {
                 <input
                     id='localitySearch'
                     type="text"
-                    className={`${!this.props.isAccount && 'p-1'} ${this.state.listOpened && "opened"} ps-2 mw-100 w-100`}
+                    className={`${!this.props.isAccount && 'm-1'} ${this.state.listOpened && "opened"} ps-2 mw-100 w-100`}
                     onChange={(event) => this.FilterLocalityList(event.target.value)}
                     onFocus={() => this.HandleInputFocus()}
                     onBlur={() => this.HandleInputBlur()}

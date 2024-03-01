@@ -68,7 +68,7 @@ const App = () => {
             element: <>
                 <Helmet>
                     <title>{baseShortTitle + " - Registrace"}</title>
-                    <meta name="description" content={baseMetaDescription + " Vytvoření nového uživatelského účtu."} />
+                    <meta name="description" content={baseMetaDescription + " Registrace nového uživatelského účtu."} />
                 </Helmet>
                 <Register />
             </>
@@ -98,7 +98,7 @@ const App = () => {
             element: <>
                 <Helmet>
                     <title>{baseShortTitle + " - Aktivace účtu"}</title>
-                    <meta name="description" content={baseMetaDescription + " Aktivate nově vytvořeného účtu."} />
+                    <meta name="description" content={baseMetaDescription + " Aktivace nově vytvořeného účtu."} />
                 </Helmet>
                 <ActivateAccount />
             </>
@@ -108,7 +108,7 @@ const App = () => {
             element: <>
                 <Helmet>
                     <title>{baseShortTitle + " - Přihlášení"}</title>
-                    <meta name="description" content={baseMetaDescription + " Přihlášení do správy účtu."} />
+                    <meta name="description" content={baseMetaDescription + " Přihlášení do správy účtu s možností úpravy sledovaných jevů."} />
                 </Helmet>
                 <LoginRedirect />
             </>

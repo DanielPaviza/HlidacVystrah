@@ -8,6 +8,7 @@ import { Footer } from './Footer';
 import SiteHistory from './SiteHistory';
 import { BackButton } from './BackButton';
 import { Loading } from './Loading';
+import { Timestamp } from './Timestamp';
 import axios from "axios";
 export class HomeController extends Component {
     static displayName = HomeController.name;
@@ -198,17 +199,6 @@ export class HomeController extends Component {
         </section>
     }
 
-    RenderTimestamp() {
-        return (
-            <div className='d-flex justify-content-end'>
-                <div className='d-flex flex-column'>
-                    <span className='border-bottom'>Poslední aktualizace</span>
-                    <span className=''>{this.state.timestamp == null ? "Nikdy" : this.state.timestamp}</span>
-                </div>
-            </div>
-        )
-    }
-
     render() {
         return (
             this.state.eventListLoading || this.state.localityListLoading || this.state.map.length <= 0 ?
@@ -220,7 +210,7 @@ export class HomeController extends Component {
                         <div className='container mt-3'>
                             <span className='d-flex justify-content-between '>
                                 <BackButton history={this.history} NavigateHome={this.HandleOpenHome} />
-                                {this.RenderTimestamp()}
+                                <Timestamp timestamp={this.state.timestamp} />
                             </span>
                             {this.RenderPage()}
                         </div>

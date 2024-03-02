@@ -122,7 +122,7 @@ namespace hlidacVystrah.Services
                     var emailTo = new MailboxAddress("", email);
                     emailMessage.To.Add(emailTo);
 
-                    emailMessage.Subject = "Výstraha před jevem v " + areaName;
+                    emailMessage.Subject = "Výstraha před jevem " + eventDetail.EventType + " v " + areaName;
 
                     string filePath = Directory.GetCurrentDirectory() + "\\MailTemplates\\EventNotification.html";
                     var emailTemplateText = await File.ReadAllTextAsync(filePath);

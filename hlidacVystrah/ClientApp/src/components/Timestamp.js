@@ -29,7 +29,14 @@ export class Timestamp extends Component {
                 </div>
                 {this.state.opened &&
                     <div className='infoBox position-absolute border p-1 rounded' onMouseLeave={() => this.HandleToggleOpen()} onClick={() => this.HandleToggleOpen()}>
-                        Data jsou aktuální. Poslední změna zdrojových dat proběhla {this.props.timestamp} a jejich aktuálnost se kontroluje každých 10 minut.
+
+                        {this.props.timestamp == null ?
+                            "Data o meteorologické situaci nebyla načtena."
+                            :
+                            <>
+                                Poslední změna meteorologické situace proběhla {this.props.timestamp.toLowerCase()} a data jsou stále aktuální.
+                            </>
+                        }      
                     </div>    
                 }
             </div>

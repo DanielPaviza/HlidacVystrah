@@ -69,7 +69,7 @@ namespace hlidacVystrah.Services
 
                 _context.User.Remove(user);
                 _context.SaveChanges();
-                _logService.WriteSuccess($"Administrator id {_context.Admin.First(a => a.id_user == admin.id).id} deleted user id {user.id} and all users notifications.", LOG_NAME);
+                _logService.WriteSuccess($"Administrator id {_context.Admin.First(a => a.id_user == admin.id).id} deleted user {user.email} and all users notifications.", LOG_NAME);
 
                 return new BaseResponse { ResponseCode = StatusCodes.Status200OK };
             }

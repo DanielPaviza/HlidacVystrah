@@ -244,10 +244,10 @@ export class Users extends Component {
                     <thead className='border-bottom '>
                         <tr className='col-12'>
                             <th className='col-1 p-1'>DEL</th>
-                            <th className='col-4 p-1'>id</th>
-                            <th className='col-3 p-1'>user id</th>
-                            <th className='col-4 p-1'>email</th>
-                            <th className='col-4 p-1'>name</th>
+                            <th className='col-1 p-1'>Id</th>
+                            <th className='col-3 p-1'>User id</th>
+                            <th className='col-4 p-1'>E-mail</th>
+                            <th className='col-3 p-1'>Name</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -256,10 +256,10 @@ export class Users extends Component {
                                 <td className='col-1 p-1 del'>
                                     <i className="fa-solid fa-xmark" onClick={() => this.HandleRemoveUserAdmin(a.id)}></i>
                                 </td>
-                                <td className='col-4 p-1'>{a.id}</td>
+                                <td className='col-1 p-1'>{a.id}</td>
                                 <td className='col-3 p-1'>{a.idUser}</td>
-                                <td className='col-3 p-1'>{a.email}</td>
-                                <td className='col-4 p-1'>{a.name}</td>
+                                <td className='col-4 p-1'>{a.email}</td>
+                                <td className='col-3 p-1'>{a.name}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -274,11 +274,11 @@ export class Users extends Component {
                 <thead className='border-bottom '>
                     <tr className='col-12'>
                         <th className='col-1 p-1'>DEL</th>
-                        <th className='col-1 p-1'>id</th>
-                        <th className='col-3 p-1'>email</th>
-                        <th className='col-2 p-1'>is active</th>
-                        <th className='col-2 p-1'>created at</th>
-                        <th className='col-1 p-1'>admin</th>
+                        <th className='col-1 p-1'>Id</th>
+                        <th className='col-3 p-1'>Email</th>
+                        <th className='col-2 p-1'>Is active</th>
+                        <th className='col-2 p-1'>Created at</th>
+                        <th className='col-1 p-1'>Admin</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -294,7 +294,10 @@ export class Users extends Component {
                             <td className='col-1 p-1'>
                                 {this.state.admins.find(a => a.idUser == u.id) ?
                                     'True' :
-                                    <button className='border rounded p-1' onClick={() => this.HandleMakeUserAdmin(u.id)}>Add</button>
+                                    <>
+                                        False
+                                        <button className='border rounded p-1 ms-2' onClick={() => this.HandleMakeUserAdmin(u.id)}>Add</button>
+                                    </>
                                 }
                             </td>
                         </tr>

@@ -228,7 +228,7 @@ export class HomeController extends Component {
     }
 
     async GetEventList() {
-  
+
         axios.get('/api/event/list')
             .then(response => {
 

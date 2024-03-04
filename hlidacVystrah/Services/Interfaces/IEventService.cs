@@ -4,7 +4,7 @@ namespace hlidacVystrah.Services.Interfaces
 {
     public interface IEventService
     {
-        EventListResponse GetEvents();
+        EventListResponse GetEvents(string? updateTimestamp = null);
 
         ParseResponse UpdateEvents(string token);
     }

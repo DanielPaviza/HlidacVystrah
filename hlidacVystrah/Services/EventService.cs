@@ -46,7 +46,7 @@ namespace hlidacVystrah.Services
             return $"{date} {hours}"; ;
         }
 
-        public EventListResponse GetEvents() {
+        public EventListResponse GetEvents(string? updateTimestamp = null) {
 
             string LOG_NAME = "GetEvents";
 
@@ -55,13 +55,23 @@ namespace hlidacVystrah.Services
 
             try
             {
-
-               lastUpdate = _context.Update.OrderByDescending(u => u.id).FirstOrDefault();
-
-                if (lastUpdate == null)
+                
+               if(updateTimestamp != null)
                 {
-                    _logService.WriteInfoDev("No update yet, but ok.", LOG_NAME);
-                    return new EventListResponse { ResponseCode = StatusCodes.Status200OK };
+                    lastUpdate = _context.Update.Where(u => u.timestamp == updateTimestamp).FirstOrDefault();
+                    if (lastUpdate == null)
+                    {
+                        _logService.WriteInfoDev("Specific update was not found.", LOG_NAME);
+                        return new EventListResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                    }
+                } else
+                {
+                    lastUpdate = _context.Update.OrderByDescending(u => u.id).FirstOrDefault();
+                    if (lastUpdate == null)
+                    {
+                        _logService.WriteInfoDev("No update yet, but ok.", LOG_NAME);
+                        return new EventListResponse { ResponseCode = StatusCodes.Status200OK };
+                    }
                 }
                     
                 List<IGrouping<int, EventLocalityTable>> eventsGrouped = _context.EventLocality

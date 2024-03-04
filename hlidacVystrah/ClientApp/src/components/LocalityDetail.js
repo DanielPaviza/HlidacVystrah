@@ -11,7 +11,6 @@ export class LocalityDetail extends Component {
 
         this.state = {
             targetId: this.props.targetId,
-            similarCisorps: [],
         }
     }
 
@@ -22,8 +21,6 @@ export class LocalityDetail extends Component {
 
         if (!localityIsValid) {
             this.props.RemoveLastHistoryRecord();
-            if (this.props.targetId.length >= 2)
-                this.GetSimilarCisorpsToInvalidInput();
         }  
 
         return localityIsValid;
@@ -61,7 +58,7 @@ export class LocalityDetail extends Component {
                 similar.push(localityList);
         })
 
-        this.setState((prevState) => ({ ...prevState, similarCisorps: similar.flat() }));
+        return similar.flat();
     }
 
     componentDidMount() {
@@ -116,10 +113,11 @@ export class LocalityDetail extends Component {
         if (!this.props.isRegion && !this.ValidateLocality()) {
             return <div id="notFound" className='container mt-5 mb-3'>
                 <h2>Obec s rozšířenou působností s číslem CISORP <i>{this.props.targetId}</i> nebyla nalezena.</h2>
-                {this.state.similarCisorps.length > 0 &&
+                {
+                    (this.props.targetId.length >= 2 && this.GetSimilarCisorpsToInvalidInput().length > 0) &&
                     <div className='mb-4'>
                         <p className='mb-0'>Podobná čísla CISORP:</p>
-                        {this.state.similarCisorps.map((item) => (
+                        {this.GetSimilarCisorpsToInvalidInput().map((item) => (
                             <div className='mb-1' key={item.cisorp}>
                                 <span className='me-1'>{item.cisorp} -</span>
                                 <a href={`/obec/${item.cisorp}`}>{item.name}</a>

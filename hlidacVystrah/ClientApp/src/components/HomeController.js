@@ -44,9 +44,15 @@ export class HomeController extends Component {
 
     InitializeSiteHistory = () => {
 
-        let savedHistory = JSON.parse(localStorage.getItem("history"));
-        if (!savedHistory)
+        let savedHistory;
+        try {
+            savedHistory = JSON.parse(localStorage.getItem("history"));
+            if (!savedHistory)
+                savedHistory = [];
+        } catch (e) {
+            localStorage.setItem("history", []);
             savedHistory = [];
+        }
 
         return new SiteHistory(
             this.HandleCloseDetail,
@@ -161,6 +167,7 @@ export class HomeController extends Component {
                 map={this.state.map}
                 allLocalities={this.state.localityList}
                 CloseDetail={this.HandleCloseDetail}
+                RemoveLastSiteHistory={this.history.RemoveLastRecord}
             />
         }
 
@@ -221,7 +228,7 @@ export class HomeController extends Component {
     }
 
     async GetEventList() {
-
+  
         axios.get('/api/event/list')
             .then(response => {
 

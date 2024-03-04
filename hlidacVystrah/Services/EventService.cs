@@ -46,7 +46,7 @@ namespace hlidacVystrah.Services
             return $"{date} {hours}"; ;
         }
 
-        public EventListResponse GetEvents(string? updateTimestamp = null) {
+        public EventListResponse GetEvents(int? updateId = null) {
 
             string LOG_NAME = "GetEvents";
 
@@ -56,9 +56,9 @@ namespace hlidacVystrah.Services
             try
             {
                 
-               if(updateTimestamp != null)
+               if(updateId != null)
                 {
-                    lastUpdate = _context.Update.Where(u => u.timestamp == updateTimestamp).FirstOrDefault();
+                    lastUpdate = _context.Update.Where(u => u.id == updateId).FirstOrDefault();
                     if (lastUpdate == null)
                     {
                         _logService.WriteInfoDev("Specific update was not found.", LOG_NAME);

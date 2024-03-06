@@ -18,17 +18,17 @@ namespace hlidacVystrah.Controllers
 
         // GET api/event/list
         [HttpGet("list")]
-        public EventListResponse Get()
+        public EventListResponse GetEvents()
         {
             return _eventService.GetEvents();
         }
 
-        // GET api/event/list/{updateId}
-        [HttpGet("list/{updateId}")]
-        public EventListResponse Get(int updateId)
+        // POST api/event/list
+        [HttpPost("list")]
+        public EventListResponse GetEventsWithTimestamp(string updateTimestamp)
         {
-            return _eventService.GetEvents(updateId);
-        }        
+            return _eventService.GetEvents(updateTimestamp);
+        }
 
         // POST api/event/list/update
         [HttpGet("list/update")]

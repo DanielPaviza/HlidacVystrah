@@ -5,6 +5,7 @@ using hlidacVystrah.Services.Interfaces;
 using hlidacVystrah.Model.Dto;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json.Linq;
 
 namespace hlidacVystrah.Services
 {
@@ -46,7 +47,7 @@ namespace hlidacVystrah.Services
             return $"{date} {hours}"; ;
         }
 
-        public EventListResponse GetEvents(string? updateTimestamp = null) {
+        public EventListResponse GetEvents(string? updateTimestamp) {
 
             string LOG_NAME = "GetEvents";
 
@@ -58,7 +59,8 @@ namespace hlidacVystrah.Services
                 
                if(updateTimestamp != null)
                 {
-                    lastUpdate = _context.Update.Where(u => u.timestamp == updateTimestamp).FirstOrDefault();
+                    string decodedTimestamp = updateTimestamp.Replace(' ', '+');
+                    lastUpdate = _context.Update.Where(u => u.timestamp == decodedTimestamp).FirstOrDefault();
                     if (lastUpdate == null)
                     {
                         _logService.WriteInfoDev("Specific update was not found.", LOG_NAME);

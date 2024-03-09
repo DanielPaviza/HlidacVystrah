@@ -1,0 +1,11 @@
+﻿
+@import "vars";
+
+#history {
+    min-height: 100vh;
+    .updates {
+        &>div {
+            cursor: pointer;
+        }
+    }
+}

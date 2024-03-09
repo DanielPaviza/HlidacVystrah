@@ -74,14 +74,16 @@ export class EventDetail extends Component {
     render() {
 
         if (this.event == null || this.event == undefined) {
-            this.props.RemoveLastSiteHistory();
+
+            if (!this.props.isHistory)
+                this.props.RemoveLastSiteHistory();
             this.props.CloseDetail();
             return "";
         }
 
         return (
             <section id="eventDetail">
-                <h2 className='mt-4 mt-md-5 mb-3'>Detail meteorologické výstrahy</h2>
+                <h2 className='mt-4 mt-md-5 mb-3'>Detail meteorologické výstrahy {this.props.isHistory && ' - ARCHIV'}</h2>
                 <div className='detail d-flex flex-column'>
                     <div className='d-flex'>
                         <div className=''>

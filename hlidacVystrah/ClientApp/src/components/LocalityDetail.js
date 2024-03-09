@@ -19,7 +19,7 @@ export class LocalityDetail extends Component {
         const allLocalitiesArray = Object.values(this.props.allLocalities).flat();
         let localityIsValid = allLocalitiesArray.some(localityObj => localityObj.cisorp == this.props.targetId);
 
-        if (!localityIsValid) {
+        if (!localityIsValid && !this.props.isHistory) {
             this.props.RemoveLastHistoryRecord();
         }  
 
@@ -29,7 +29,7 @@ export class LocalityDetail extends Component {
     ValidateRegion = () => {
         let keys = Object.keys(this.props.allLocalities);
         let regionIsValid = keys.some(key => key == this.props.targetId);
-        if (!regionIsValid)
+        if (!regionIsValid && !this.props.isHistory)
             this.props.RemoveLastHistoryRecord();
 
         return regionIsValid;
@@ -141,7 +141,7 @@ export class LocalityDetail extends Component {
 
         return (
             <section id="localityDetail">
-                <h2 className='mt-3 pb-1 mb-0 mt-lg-4 border-bottom fit-content'>Meteorologické výstrahy v {this.props.isRegion ? 'kraji' : 'obci'}</h2>
+                <h2 className='mt-3 pb-1 mb-0 mt-lg-4 border-bottom fit-content'>Meteorologické výstrahy v {this.props.isRegion ? 'kraji' : 'obci'} {this.props.isHistory && ' - ARCHIV'}</h2>
                 {this.props.isRegion ?
                     <h3 className='pt-1 mb-3 mb-md-4'>{this.localityInfo.region}</h3>
                     :

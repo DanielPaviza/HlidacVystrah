@@ -23,12 +23,5 @@ namespace hlidacVystrah.Controllers
             return _eventService.GetEvents(timestamp);
         }
 
-        // POST api/event/list/update
-        [HttpGet("list/update")]
-        public ParseResponse Update([FromQuery] string token)
-        {
-            return _eventService.UpdateEvents(token);
-        }
-
     }
 }

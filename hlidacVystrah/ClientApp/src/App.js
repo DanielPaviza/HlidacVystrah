@@ -9,12 +9,14 @@ import { NewPassword } from "./components/NewPassword";
 import { Adm } from "./components/adm/Adm";
 import { Logs } from "./components/adm/Logs";
 import { Users } from "./components/adm/Users";
+import { History } from "./components/History";
 import ActivateAccount from "./components/ActivateAccount";
 import LocalityController from './components/LocalityController';
 import { BrowserRouter as Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import './styles/shared.scss';
 import { Helmet } from 'react-helmet';
+import { HistoryController } from './components/HistoryController';
 
 const LoginRedirect = () => {
     const navigate = useNavigate();
@@ -151,6 +153,16 @@ const App = () => {
                     <meta name="description" content={baseMetaDescription} />
                 </Helmet>
                 <Users />
+            </>
+        },
+        {
+            path: '/historie',
+            element: <>
+                <Helmet>
+                    <title>{baseShortTitle + " - Historie"}</title>
+                    <meta name="description" content={baseMetaDescription} />
+                </Helmet>
+                <HistoryController />
             </>
         },
         {

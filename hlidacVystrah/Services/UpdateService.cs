@@ -99,6 +99,8 @@ namespace hlidacVystrah.Services
                         TimestampReadable = TimestampToReadable(u.timestamp)
                     }).ToList();
 
+                _logService.WriteSuccessDev("ok", LOG_NAME);
+
                 return new UpdateListResponse { 
                     ResponseCode = StatusCodes.Status200OK,
                     PriorUpdates = priorUpdates,

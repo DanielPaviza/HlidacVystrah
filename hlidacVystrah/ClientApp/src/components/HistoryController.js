@@ -21,6 +21,8 @@ export class HistoryController extends Component {
             response: null,
             selectedDate: null
         };
+
+        this.todayDate = new Date().toISOString().substring(0, 10);
     }
 
     componentDidMount() {
@@ -141,7 +143,7 @@ export class HistoryController extends Component {
                         <div className='d-flex flex-column'>
                             <div className='mt-2 mb-2'>
                                 <label htmlFor="timestamp" className='me-2'>Vyhledat datum aktualizace:</label>
-                                <input type="date" id="timestamp" value={this.state.selectedDate ?? ""} onChange={(e) => this.HandleSetDateFromCalendar(e.target.value)} />
+                                <input type="date" id="timestamp" max={this.todayDate} value={this.state.selectedDate ?? ""} onChange={(e) => this.HandleSetDateFromCalendar(e.target.value)} />
                                 {this.state.selectedDate != null &&
                                     <i className="fa-solid fa-xmark ms-1" onClick={() => this.GetUpdateList(null)} />
                                 }

@@ -3,6 +3,11 @@
 
 #history {
     min-height: 100vh;
+
+    i {
+        cursor: pointer;
+    }
+
     .updates {
         &>div {
             cursor: pointer;

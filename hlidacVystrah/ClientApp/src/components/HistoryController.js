@@ -15,18 +15,19 @@ export class HistoryController extends Component {
 
         this.state = {
             loading: true,
-            priorUpdates: [],
-            posteriorUpdates: [],
+            previousUpdates: [],
+            nextUpdates: [],
             currentUpdate: null,
-            response: null
+            response: null,
+            selectedDate: null
         };
     }
 
     componentDidMount() {
-        this.GetUpdateList();
+        this.GetUpdateList(null);
     }
 
-    async GetUpdateList(timestamp = null) {
+    async GetUpdateList(timestamp) {
 
         axios.post('/api/update/list', {
             "timestamp": timestamp
@@ -38,34 +39,82 @@ export class HistoryController extends Component {
                 this.setState((prevState) => ({
                     ...prevState,
                     response: data.responseCode,
+                    selectedDate: this.GetDateFromTimestamp(timestamp)
                 }));
 
                 if (data.responseCode == 200) {
                     this.setState((prevState) => ({
                         ...prevState,
                         loading: false,
-                        priorUpdates: data.priorUpdates,
+                        previousUpdates: data.previousUpdates,
                         currentUpdate: data.currentUpdate,
-                        posteriorUpdates: data.posteriorUpdates
+                        nextUpdates: data.nextUpdates,
                     }));
                 }
             });
     }
 
+    HandleGetNextUpdate = () => {
+
+        if (this.state.nextUpdates.length <= 0)
+            return;
+
+        let nextUpdate = this.state.nextUpdates[this.state.nextUpdates.length-1];
+        this.GetUpdateList(nextUpdate.timestamp);
+    }
+
+    HandleGetPreviousUpdate = () => {
+
+        if (this.state.previousUpdates.length <= 0)
+            return;
+
+        let previousUpdate = this.state.previousUpdates[0];
+        this.GetUpdateList(previousUpdate.timestamp);
+    }
+
+    HandleSetDateFromCalendar = (calendarDate) => {
+
+        if (!calendarDate) {
+            this.GetUpdateList(null);
+            return;
+        }
+
+        let dateSplit = calendarDate.split("-");
+        let day = dateSplit[2];
+        if (day[0] == "0")
+            day = day[1];
+
+        let date = dateSplit[0] + '-' + dateSplit[1] + '-' + day;
+        this.GetUpdateList(date);
+    }
+
+    GetDateFromTimestamp = (timestamp) => {
+
+        if (timestamp == null)
+            return null;
+
+        let dateSplit = timestamp.split("T")[0].split('-');
+        let day = dateSplit[2].length < 2 ? ('0' + dateSplit[2]) : dateSplit[2];
+        let date = dateSplit[0] + '-' + dateSplit[1] + '-' + day;
+
+        return date;
+    }
+
     RenderUpdates = () => {
         return (
-            <div className='updates d-flex border-bottom justify-content-around'>
-                {this.state.posteriorUpdates.map((update, index) => (
-                    <div key={update.timestamp} className={`${(index != this.state.posteriorUpdates.length - 1) && 'd-none'} d-md-flex w-100 d-flex align-items-center justify-content-center p-1 m-1  ${index != 0 && 'border-start'}`} onClick={() => this.GetUpdateList(update.timestamp) }>
+            <div className='w-100 updates d-flex border-bottom justify-content-around'>
+                {this.state.nextUpdates.map((update, index) => (
+                    <div key={update.timestamp} className={`${(index != this.state.nextUpdates.length - 1) && 'd-none'} d-md-flex w-100 d-flex align-items-center justify-content-center p-1 m-1  ${index != 0 && 'border-start'}`} onClick={() => this.GetUpdateList(update.timestamp) }>
                         <div>{update.timestampReadable}</div>
                     </div>
                 ))}
 
-                <div key={this.state.currentUpdate.timestamp} className={`w-100 d-flex align-items-center justify-content-center currentTimestamp fw-bold p-2 ${this.state.posteriorUpdates.length > 0 && 'border-start'}`}>
+                <div key={this.state.currentUpdate.timestamp} className={`position-relative w-100 d-flex align-items-center justify-content-center currentTimestamp fw-bold p-2 ${this.state.nextUpdates.length > 0 && 'border-start'}`}>
                     <div>{this.state.currentUpdate.timestampReadable}</div>
+                    <small className="text-muted position-absolute top-100">Vybráno</small>
                 </div>
 
-                {this.state.priorUpdates.map((update, index) => (
+                {this.state.previousUpdates.map((update, index) => (
                     <div key={update.timestamp} className={`${index != 0 && 'd-none'} d-md-flex w-100 d-flex align-items-center justify-content-center p-1 m-1 border-start`} onClick={() => this.GetUpdateList(update.timestamp)}>
                         <div>{update.timestampReadable}</div>
                     </div>
@@ -73,6 +122,11 @@ export class HistoryController extends Component {
             </div>
         );
     }
+
+    TimestampDateToHumanReadable = (date) => {
+        let dateSplit = date.split('-');
+        return dateSplit[2] + '.' + dateSplit[1] + '.' + dateSplit[0];
+    } 
 
     render() {
 
@@ -87,17 +141,35 @@ export class HistoryController extends Component {
                         <div className='d-flex flex-column'>
                             <div className='mt-2 mb-2'>
                                 <label htmlFor="timestamp" className='me-2'>Vyhledat datum aktualizace:</label>
-                                <input type="date" id="timestamp" name="timestamp" onChange={(e) => this.GetUpdateList(e.target.value)} />
+                                <input type="date" id="timestamp" value={this.state.selectedDate ?? ""} onChange={(e) => this.HandleSetDateFromCalendar(e.target.value)} />
+                                {this.state.selectedDate != null &&
+                                    <i className="fa-solid fa-xmark ms-1" onClick={() => this.GetUpdateList(null)} />
+                                }
                             </div>
                             {this.state.response == 200 ? 
                             <>
-                                {this.RenderUpdates()}
+                                <div className='d-flex flex-column align-items-center'>
+                                    <div className='d-flex align-items-center'>
+                                        {this.state.nextUpdates.length > 0 ?
+                                            <i className="fa-solid fa-arrow-left" onClick={() => this.HandleGetNextUpdate()} />
+                                            :
+                                            <i className="fa-solid fa-arrow-right invisible" />
+                                        }
+                                        <h5 className='m-0 m-2'>Časová osa aktualizací</h5>
+                                        {this.state.previousUpdates.length > 0 ?
+                                            <i className="fa-solid fa-arrow-right" onClick={() => this.HandleGetPreviousUpdate()} />
+                                            :
+                                            <i className="fa-solid fa-arrow-right invisible"/>
+                                        }
+                                    </div>
+                                    {this.RenderUpdates()}
+                                </div>
                                 <div className='p-2 w-100'>
                                     <History currentUpdate={this.state.currentUpdate} />
                                 </div>
                             </>
                             :
-                                <h5 className='mt-4'>Pro toto datum nebyly nalezeny žádné aktualizace.</h5>
+                                <h5 className='mt-4'>Pro datum {this.TimestampDateToHumanReadable(this.state.selectedDate)} nebyly nalezeny žádné aktualizace.</h5>
                             }
                         </div>
                     </div>

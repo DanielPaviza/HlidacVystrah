@@ -161,7 +161,7 @@ export class History extends Component {
         }
 
         return <section id='home'>
-            <h2 className='mt-3 mb-3 mt-lg-4 mb-lg-4'>Meteorologické výstrahy v České Republice - ARCHIV</h2>
+            <h2 className={`mt-3 mb-3 mt-lg-4 mb-lg-4`}>Meteorologické výstrahy v České Republice - ARCHIV</h2>
             <Search
                 localityList={this.state.localityList}
                 OpenLocalityDetail={this.HandleOpenLocality}
@@ -185,8 +185,8 @@ export class History extends Component {
                 <Loading />
                 :
                 <div className='container mt-3'>
-                    <span className='d-flex justify-content-between '>
-                        <span className='borderLeft fw-bold' onClick={() => this.HandleCloseDetail()}>
+                    <span className='d-flex justify-content-between mt-4'>
+                        <span className='borderLeft fw-bold cursor' onClick={() => this.HandleCloseDetail()}>
                             <i className="fa-solid fa-house me-2"></i>
                             Domů
                         </span>

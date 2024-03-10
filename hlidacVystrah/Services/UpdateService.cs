@@ -74,25 +74,25 @@ namespace hlidacVystrah.Services
                 int rowsToTakeFromEachSide = 3;
 
                 int numOfSkippedRows = currentUpdateIndex - rowsToTakeFromEachSide;
-                int numOfPosteriorRowsToTake = rowsToTakeFromEachSide;
+                int numOfNextRowsToTake = rowsToTakeFromEachSide;
                 if (numOfSkippedRows < 0)
                 {
-                    numOfPosteriorRowsToTake = rowsToTakeFromEachSide + numOfSkippedRows;
+                    numOfNextRowsToTake = rowsToTakeFromEachSide + numOfSkippedRows;
                     numOfSkippedRows = 0;
                 }
 
-                List<UpdateDto> posteriorUpdates = _context.Update.OrderByDescending(u => u.id)
-                .Skip(numOfSkippedRows).Take(numOfPosteriorRowsToTake)
+                List<UpdateDto> nextUpdates = _context.Update.OrderByDescending(u => u.id)
+                .Skip(numOfSkippedRows).Take(numOfNextRowsToTake)
                 .Select(u => new UpdateDto
                 {
                     Timestamp = u.timestamp,
                     TimestampReadable = TimestampToReadable(u.timestamp)
                 }).ToList();
 
-                int numOfPriorUpdatesToTake = (rowsToTakeFromEachSide * 2) - posteriorUpdates.Count;
+                int numOfPreviousUpdatesToTake = (rowsToTakeFromEachSide * 2) - nextUpdates.Count;
                 
-                List<UpdateDto> priorUpdates = _context.Update.OrderByDescending(u => u.id)
-                    .Skip(currentUpdateIndex + 1).Take(numOfPriorUpdatesToTake)
+                List<UpdateDto> previousUpdates = _context.Update.OrderByDescending(u => u.id)
+                    .Skip(currentUpdateIndex + 1).Take(numOfPreviousUpdatesToTake)
                     .Select(u => new UpdateDto
                     {
                         Timestamp = u.timestamp,
@@ -103,9 +103,9 @@ namespace hlidacVystrah.Services
 
                 return new UpdateListResponse { 
                     ResponseCode = StatusCodes.Status200OK,
-                    PriorUpdates = priorUpdates,
+                    PreviousUpdates = previousUpdates,
                     CurrentUpdate = currentUpdate,
-                    PosteriorUpdates = posteriorUpdates
+                    NextUpdates = nextUpdates
                 };
 
             } catch (Exception ex)

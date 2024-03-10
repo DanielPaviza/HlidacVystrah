@@ -68,6 +68,10 @@ body {
         width: fit-content;
     }
 
+    .cursor {
+        cursor: pointer;
+    }
+
     .formInfo {
         animation-name: formInfoAnimation;
         animation-duration: 5s;

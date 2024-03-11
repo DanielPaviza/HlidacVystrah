@@ -37,7 +37,6 @@ export class HistoryController extends Component {
             .then(response => {
 
                 let data = response.data;
-                console.log(data);
                 this.setState((prevState) => ({
                     ...prevState,
                     response: data.responseCode,

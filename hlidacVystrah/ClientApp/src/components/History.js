@@ -8,6 +8,7 @@ import { Footer } from './Footer';
 import SiteHistory from './SiteHistory';
 import { BackButton } from './BackButton';
 import { Loading } from './Loading';
+import { Spinner } from './Spinner';
 import { Timestamp } from './Timestamp';
 import axios from "axios";
 export class History extends Component {
@@ -182,7 +183,9 @@ export class History extends Component {
     render() {
         return (
             this.state.eventListLoading || this.state.localityListLoading || this.state.map.length <= 0 ?
-                <Loading />
+                <div className='position-relative mt-5'>
+                    <Spinner />
+                </div>
                 :
                 <div className='container mt-3'>
                     <span className='d-flex justify-content-between mt-4'>

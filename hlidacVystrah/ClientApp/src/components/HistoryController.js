@@ -81,13 +81,7 @@ export class HistoryController extends Component {
             return;
         }
 
-        let dateSplit = calendarDate.split("-");
-        let day = dateSplit[2];
-        if (day[0] == "0")
-            day = day[1];
-
-        let date = dateSplit[0] + '-' + dateSplit[1] + '-' + day;
-        this.GetUpdateList(date);
+        this.GetUpdateList(calendarDate);
     }
 
     GetDateFromTimestamp = (timestamp) => {
@@ -135,11 +129,13 @@ export class HistoryController extends Component {
         return (
             <>
                 <NavMenu />
-                {this.state.loading ?
-                    <Spinner />
-                    :
-                    <div id="history" className='container'>
-                        <h2 className='mt-4'>Archiv meteorologických dat</h2>
+                <div id="history" className='container'>
+                    <h2 className='mt-4'>Archiv meteorologických dat</h2>
+                    {this.state.loading ?
+                        <div className='position-relative mt-5'>
+                            <Spinner />
+                        </div>
+                        :
                         <div className='d-flex flex-column'>
                             <div className='mt-2 mb-2'>
                                 <label htmlFor="timestamp" className='me-2'>Vyhledat datum aktualizace:</label>
@@ -148,34 +144,34 @@ export class HistoryController extends Component {
                                     <i className="fa-solid fa-xmark ms-1" onClick={() => this.GetUpdateList(null)} />
                                 }
                             </div>
-                            {this.state.response == 200 ? 
-                            <>
-                                <div className='d-flex flex-column align-items-center'>
-                                    <div className='d-flex align-items-center'>
-                                        {this.state.nextUpdates.length > 0 ?
-                                            <i className="fa-solid fa-arrow-left" onClick={() => this.HandleGetNextUpdate()} />
-                                            :
-                                            <i className="fa-solid fa-arrow-right invisible" />
-                                        }
-                                        <h5 className='m-0 m-2'>Časová osa aktualizací</h5>
-                                        {this.state.previousUpdates.length > 0 ?
-                                            <i className="fa-solid fa-arrow-right" onClick={() => this.HandleGetPreviousUpdate()} />
-                                            :
-                                            <i className="fa-solid fa-arrow-right invisible"/>
-                                        }
+                            {this.state.response == 200 ?
+                                <>
+                                    <div className='d-flex flex-column align-items-center'>
+                                        <div className='d-flex align-items-center'>
+                                            {this.state.nextUpdates.length > 0 ?
+                                                <i className="fa-solid fa-arrow-left" onClick={() => this.HandleGetNextUpdate()} />
+                                                :
+                                                <i className="fa-solid fa-arrow-right invisible" />
+                                            }
+                                            <h5 className='m-0 m-2'>Časová osa aktualizací</h5>
+                                            {this.state.previousUpdates.length > 0 ?
+                                                <i className="fa-solid fa-arrow-right" onClick={() => this.HandleGetPreviousUpdate()} />
+                                                :
+                                                <i className="fa-solid fa-arrow-right invisible" />
+                                            }
+                                        </div>
+                                        {this.RenderUpdates()}
                                     </div>
-                                    {this.RenderUpdates()}
-                                </div>
-                                <div className='p-2 w-100'>
-                                    <History currentUpdate={this.state.currentUpdate} />
-                                </div>
-                            </>
-                            :
+                                    <div className='p-2 w-100'>
+                                        <History currentUpdate={this.state.currentUpdate} />
+                                    </div>
+                                </>
+                                :
                                 <h5 className='mt-4'>Pro datum {this.TimestampDateToHumanReadable(this.state.selectedDate)} nebyly nalezeny žádné aktualizace.</h5>
                             }
                         </div>
-                    </div>
-                }
+                    }
+                </div>
                 <Footer background={'lightGray'} />
             </>
         );

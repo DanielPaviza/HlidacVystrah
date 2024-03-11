@@ -30,13 +30,22 @@ namespace hlidacVystrah.Services
 
             string decodedToken = token.Replace(' ', '+');
             AdminTable admin = _context.Admin.FirstOrDefault(a => a.update_events_token == decodedToken && decodedToken != null);
-            if(admin == null)
+            if (admin == null)
             {
                 _logService.WriteError("Unauthorized. Invalid update token.", LOG_NAME);
-                return  new ParseResponse { ResponseCode = StatusCodes.Status401Unauthorized };
+                return new ParseResponse { ResponseCode = StatusCodes.Status401Unauthorized };
             }
 
             return _parseService.UpdateEvents();
+        }
+
+        private string GetDateFromTimestamp(string timestamp)
+        {
+
+            string[] dateSplit = timestamp.Split("T")[0].Split('-');
+            string day = dateSplit[2].Length < 2 ? '0' + dateSplit[2] : dateSplit[2];
+
+            return dateSplit[0] + '-' + dateSplit[1] + '-' + day;
         }
 
         public UpdateListResponse GetList(UpdateListDto? data)
@@ -46,31 +55,36 @@ namespace hlidacVystrah.Services
             try
             {
 
-                UpdateDto? currentUpdate;
+                UpdateTable? currentUpdate;
 
                 if (data.Timestamp == null)
                 {
-                    currentUpdate = _context.Update.OrderByDescending(u => u.id)
-                    .Select(u => new UpdateDto
-                    {
-                        Timestamp = u.timestamp,
-                        TimestampReadable = TimestampToReadable(u.timestamp)
-                    }).FirstOrDefault();
+                    currentUpdate = _context.Update.OrderByDescending(u => u.id).FirstOrDefault();
+
                 } else
                 {
-                    currentUpdate = _context.Update.Where(u => u.timestamp.Contains(data.Timestamp))
-                    .Select(u => new UpdateDto
+                    try
                     {
-                        Timestamp = u.timestamp,
-                        TimestampReadable = TimestampToReadable(u.timestamp)
-                    }).FirstOrDefault();
+
+                        currentUpdate = _context.Update.Where(u => u.timestamp == data.Timestamp).FirstOrDefault();
+
+                        if(currentUpdate == null)
+                        {
+                            currentUpdate = _context.Update.OrderByDescending(u => u.id).AsEnumerable().Where(u =>
+                                GetDateFromTimestamp(u.timestamp) == GetDateFromTimestamp(data.Timestamp)
+                            ).FirstOrDefault();
+                        }
+
+                    } catch (Exception ex)
+                    {
+                        return new UpdateListResponse { ResponseCode = StatusCodes.Status400BadRequest };
+                    }
                 }
 
                 if (currentUpdate == null)
                     return new UpdateListResponse { ResponseCode = StatusCodes.Status400BadRequest };
 
-                UpdateTable currentUpdateTable = _context.Update.Where(u => u.timestamp == currentUpdate.Timestamp).First();
-                int currentUpdateIndex = _context.Update.OrderByDescending(u => u.id).ToList().IndexOf(currentUpdateTable);
+                int currentUpdateIndex = _context.Update.OrderByDescending(u => u.id).ToList().IndexOf(currentUpdate);
                 int rowsToTakeFromEachSide = 3;
 
                 int numOfSkippedRows = currentUpdateIndex - rowsToTakeFromEachSide;
@@ -104,7 +118,7 @@ namespace hlidacVystrah.Services
                 return new UpdateListResponse { 
                     ResponseCode = StatusCodes.Status200OK,
                     PreviousUpdates = previousUpdates,
-                    CurrentUpdate = currentUpdate,
+                    CurrentUpdate = new UpdateDto { Timestamp = currentUpdate.timestamp, TimestampReadable = TimestampToReadable(currentUpdate.timestamp)},
                     NextUpdates = nextUpdates
                 };
 

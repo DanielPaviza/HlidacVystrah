@@ -244,10 +244,10 @@ export class Users extends Component {
                     <thead className='border-bottom '>
                         <tr className='col-12'>
                             <th className='col-1 p-1'>DEL</th>
-                            <th className='col-1 p-1'>Id</th>
-                            <th className='col-3 p-1'>User id</th>
-                            <th className='col-4 p-1'>E-mail</th>
-                            <th className='col-3 p-1'>Name</th>
+                            <th className='col-1 p-1'>ID</th>
+                            <th className='col-3 p-1'>ID uživatele</th>
+                            <th className='col-4 p-1'>E-mail uživatele</th>
+                            <th className='col-3 p-1'>Popis</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -274,10 +274,10 @@ export class Users extends Component {
                 <thead className='border-bottom '>
                     <tr className='col-12'>
                         <th className='col-1 p-1'>DEL</th>
-                        <th className='col-1 p-1'>Id</th>
-                        <th className='col-3 p-1'>Email</th>
-                        <th className='col-2 p-1'>Is active</th>
-                        <th className='col-2 p-1'>Created at</th>
+                        <th className='col-1 p-1'>ID</th>
+                        <th className='col-3 p-1'>E-mail</th>
+                        <th className='col-2 p-1'>Aktivní</th>
+                        <th className='col-2 p-1'>Vytvořen</th>
                         <th className='col-1 p-1'>Admin</th>
                     </tr>
                 </thead>
@@ -289,14 +289,14 @@ export class Users extends Component {
                             </td>
                             <td className='col-1 p-1'>{u.id}</td>
                             <td className='col-4 p-1'>{u.email}</td>
-                            <td className='col-2 p-1'>{u.isActive ? 'True' : 'False'}</td>
+                            <td className='col-2 p-1'>{u.isActive ? 'Ano' : 'Ne'}</td>
                             <td className='col-2 p-1'>{u.createdAt}</td>
                             <td className='col-1 p-1'>
                                 {this.state.admins.find(a => a.idUser == u.id) ?
-                                    'True' :
+                                    'Ano' :
                                     <>
-                                        False
-                                        <button className='border rounded p-1 ms-2' onClick={() => this.HandleMakeUserAdmin(u.id)}>Add</button>
+                                        Ne
+                                        <button className='border rounded p-1 ms-2' onClick={() => this.HandleMakeUserAdmin(u.id)}>Přidat</button>
                                     </>
                                 }
                             </td>
@@ -315,16 +315,16 @@ export class Users extends Component {
                     <div className='mt-2 mt-md-3'>
                         <a href='/_adm' className='administrationBack border-bottom fit-content'>
                             <i className="fa-solid fa-arrow-left me-2"></i>
-                            Zpět do administrace
+                            Zpět do menu administrace
                         </a>
                     </div>
 
                     {this.state.response == 200 ?
                         <>
-                            <h2 className='mt-3 mt-md-4 mb-3'>Administrators</h2>
+                            <h2 className='mt-3 mt-md-4 mb-3'>Administrátoři aplikace</h2>
                             {this.RenderRemoveAdminResponseText()}
                             {this.RenderAdmins()}
-                            <h2 className='mt-3 mt-md-4 mb-3'>All users</h2>
+                            <h2 className='mt-3 mt-md-4 mb-3'>Uživatelské účty</h2>
                             {this.RenderMakeAdminResponseText()}
                             {this.RenderUserDeleteResponseText()}
                             {this.RenderUsers()}

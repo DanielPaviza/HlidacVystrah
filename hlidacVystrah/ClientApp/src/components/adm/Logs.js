@@ -188,15 +188,15 @@ export class Logs extends Component {
             <>
                 <div className='d-flex flex-column align-items-md-center flex-md-row'>
                     <div className='mt-1 mt-md-0 d-flex align-items-center'>
-                        <label htmlFor="showId" className='me-2'>Show id</label>
+                        <label htmlFor="showId" className='me-2'>Ukázat ID</label>
                         <input type="checkbox" id="showId" className='' onChange={() => this.HandleToggleShowId()} checked={this.state.showId} />
                     </div>
                     <div className='border-start mt-1 mt-md-0 d-flex align-items-center ps-md-3 ms-md-3'>
-                        <label htmlFor="showSession" className='me-2'>Show session</label>
+                        <label htmlFor="showSession" className='me-2'>Ukázat SID</label>
                         <input type="checkbox" id="showSession" className='' onChange={() => this.HandleToggleShowSession()} checked={this.state.showSession} />
                     </div>
                     <div className='border-start d-flex align-items-center mt-1 ps-md-3 ms-md-3'>
-                        <label className='me-2' htmlFor='recordOnPage'>Records on page:</label>
+                        <label className='me-2' htmlFor='recordOnPage'>Záznamů na stránce:</label>
                         <select id='recordOnPage' className='border p-1 fit-content' defaultValue={this.state.pageSize} onChange={(e) => this.HandleChangePageSize(e.target.value)}>
                             {this.state.pageSizeOptions.map((option, index) => (
                                 <option key={index} value={option}>
@@ -206,7 +206,7 @@ export class Logs extends Component {
                         </select>
                     </div>
                     <div className='border-start d-flex align-items-center mt-1 ps-md-3 ms-md-3'>
-                        <label className='me-2' htmlFor='typeFilter'>Filter type:</label>
+                        <label className='me-2' htmlFor='typeFilter'>Typ:</label>
                         <select id='typeFilter' className='border p-1 fit-content' defaultValue={null} onChange={(e) => this.HandleChangeFilterType(e.target.value)}>
                             <option value="Any">Any</option>
                             {this.state.filterOptionsTypes.map(option => (
@@ -217,7 +217,7 @@ export class Logs extends Component {
                         </select>
                     </div>
                     <div className='border-start d-flex align-items-center mt-1 ps-md-3 ms-md-3'>
-                        <label className='me-2' htmlFor='serviceFilter'>Filter service:</label>
+                        <label className='me-2' htmlFor='serviceFilter'>Třída:</label>
                         <select id='serviceFilter' className='border p-1 fit-content' defaultValue={null} onChange={(e) => this.HandleChangeFilterService(e.target.value)}>
                             <option value={null}>Any</option>
                             {this.state.filterOptionsServices.map(option => (
@@ -263,10 +263,10 @@ export class Logs extends Component {
                     <div className='mt-2 mt-md-3'>
                         <a href='/_adm' className='administrationBack border-bottom fit-content'>
                             <i className="fa-solid fa-arrow-left me-2"></i>
-                            Zpět do administrace
+                            Zpět do menu administrace
                         </a>
                     </div>
-                    <h2 className='mt-3 mt-md-4 mb-3'>Logs</h2>
+                    <h2 className='mt-3 mt-md-4 mb-3'>Systémové logy</h2>
                     {this.RenderResponseText()}
                     {this.RenderLogOptions()}
                     <div className='position-relative mt-3 pt-3 border-top'>
@@ -290,13 +290,13 @@ export class Logs extends Component {
                 <thead className='border-bottom '>
                     <tr className='col-12'>
                         {this.state.showId && <th className='col-1'>Id</th>}
-                        <th className='col-1'>Timestamp</th>
-                        <th className='col-1'>Type</th>
-                        <th className='col-1'>Service</th>
-                        <th className='col-2'>Name</th>
-                        <th className='col-3'>Message</th>
+                        <th className='col-1'>Čas</th>
+                        <th className='col-1'>Typ</th>
+                        <th className='col-1'>Třída</th>
+                        <th className='col-2'>Název</th>
+                        <th className='col-3'>Zpráva</th>
                         {this.state.showSession && <th className='col-1 overflow-auto'>Session</th>}
-                        <th className='col-3'>Client info</th>
+                        <th className='col-3'>Browser info</th>
                     </tr>
                 </thead>
                 <tbody>

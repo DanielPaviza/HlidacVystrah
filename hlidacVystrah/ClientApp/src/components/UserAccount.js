@@ -84,11 +84,11 @@ export class UserAccount extends Component {
                             {this.state.isActive ?
                                 <>
                                     <UserAccountNotifications loginToken={this.state.loginToken} HandleUserLoginExpired={this.HandleUserLoginExpired} />
-                                    <UserAccountSettings loginToken={this.state.loginToken} HandleUserLoginExpired={this.HandleUserLoginExpired} userEmail={this.state.userEmail} />
                                 </>
                                 :
                                 <UserAccountNotActive userEmail={this.state.userEmail} loginToken={this.state.loginToken} HandleUserLoginExpired={this.HandleUserLoginExpired} />
                             }
+                            <UserAccountSettings loginToken={this.state.loginToken} HandleUserLoginExpired={this.HandleUserLoginExpired} userEmail={this.state.userEmail} />
                         </div>
                         <Footer background={'lightGray'} />
                     </>

@@ -32,7 +32,7 @@ namespace hlidacVystrah.Services
                 if (authorizeAdminStatusCode != 200)
                 {
                     this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
-                    return new LogsFilterOptionsResponse { ResponseCode = authorizeAdminStatusCode };
+                    return new BaseResponse { ResponseCode = authorizeAdminStatusCode };
                 }
 
                 _logService.WriteSuccessDev("ok", LOG_NAME);

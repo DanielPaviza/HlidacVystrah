@@ -1,8 +1,10 @@
-# Alert watcher 
+# Alert Watcher (Hlídač výstrah)
+
+- The Czech version of this file is located in the project folder under the name readme.md
 
 ## Introduction
 
-- Alert watcher is a web application displaying alerts for meteorological phenomena in regions and municipalities with extended competence in the Czech Republic.
+- Alert Watcher is a web application displaying alerts for meteorological phenomena in regions and municipalities with extended competence in the Czech Republic.
 - The application allows users to create an account and set up email notifications for selected phenomena in their chosen location.
 
 ### Backend
@@ -11,9 +13,10 @@
 
 ### Frontend
   - React.js
+  - Bootstrap
   - Sass
 
-## Table of Contents
+## Contents
 
 1. [Introduction](#introduction)
 2. [Backend](#backend)
@@ -49,7 +52,11 @@
         - Microsoft.EntityFrameworkCore.Tools 7.0.12
         - Swashbuckle.AspNetCore 4.5.0
 
-- **Installing Dependencies**
+- **Dependency Installation**
+
+  - Download and install [Node.js](https://nodejs.org/en/)
+  - Download and install [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
+
   - **Backend**
     ```bash
     cd /hlidacVystrah/hlidacVystrah
@@ -61,25 +68,28 @@
     npm install
 
 ## Configuration
-- In the `appsettings.json` and `appsettings.Development.json` files, you need to set the connection string for database connection and the SMTP server details for sending emails.
+- In the `appsettings.json` and `appsettings.Development.json` files, set the connection string for database connection and the SMTP server connection details.
 
 ## API Documentation
 ### Frontend
 - **/**
-  - Introduction page of the Alert watcher application.
+  - Application's home page displaying meteorological situation across the Czech Republic.
 
 - **/obec/:cisorp**
-  - Page with information about the selected location based on its CISORP code.
-  - For example, `/obec/1100` displays details of the municipality Prague, `/obec/3209` displays details of the municipality Pilsen.
+  - Page with detailed information about a municipality with extended competence based on its number.
+  - For example, `/obec/1100` displays details about Prague, `/obec/3209` displays details about Plzeň.
+
+- **/history**
+  - Page allowing browsing through all available historical records of meteorological situation.
 
 - **/register**
-  - Page for creating a new user account.
+  - Page for registering a new user account.
 
 - **/resetpassword**
-  - Page for resetting forgotten password and sending a link to set a new password to the specified email.
+  - Page for sending an email with a link to reset the password to the provided address.
 
 - **/newpassword**
-  - Page for changing forgotten password.
+  - Page for changing a forgotten password.
 
 - **/activateaccount**
   - Page for activating a newly created account.
@@ -88,26 +98,26 @@
   - Page for logging into the account management.
 
 - **/account**
-  - Page for user account management with the option to edit tracked phenomena.
+  - Page for managing user account with options to edit monitored phenomena and manage the account.
 
 - **/_adm**
   - Application administration page.
 
 - **/_adm/logs**
-  - Application administration page with logs.
+  - Administration page with application logs.
 
 - **/_adm/users**
-  - Application administration page with users.
+  - Administration page with application users.
 
 ### Backend
-- Swagger can be used for API documentation. After running the project, API documentation can be accessed via the URL `/swagger`.
+- Swagger tool can be used for API documentation. After starting the project, access the API documentation via the `/swagger` URL.
   - Swagger UI provides an interactive interface for browsing and testing API endpoints.
   - Users can easily browse available endpoints, view their parameters, and send requests directly from the interface.
 
 ## Database Migrations
-- The project contains a `Migrations` folder with database migrations. Users only need to run database update using Entity Framework Core migrations.
+- The project includes a `Migrations` folder containing database migrations. Users only need to run database update using Entity Framework Core migrations.
 
-1. Open the command prompt or terminal in the project directory.
+1. Open a command prompt or terminal in the project directory.
 2. Run the following command to apply migrations and create the database schema:
    ```bash
    dotnet ef database update
@@ -121,13 +131,13 @@
 
 ### Using Command Line
 
-1. Open the command prompt or terminal in the project directory.
-2. For building and deploying the backend part of the application, use the command:
+1. Open a command prompt or terminal in the project directory.
+2. To build and deploy the backend part of the application, use the following command:
    ```bash
    dotnet publish -c Release
 3. The resulting package will be located in the `bin/Release/net6.0/publish` directory.
 
-- Insert the MailTemplates folder into the published application directory.
+- Place the `MailTemplates` folder into the published application folder.
 
 ## Credits
 - **[ČHMÚ](https://www.chmi.cz/) (Czech Hydrometeorological Institute):** Providing [meteorological data](https://www.chmi.cz/files/portal/docs/meteo/om/bulletiny/XOCZ50_OKPR.xml).

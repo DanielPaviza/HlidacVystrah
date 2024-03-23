@@ -1,6 +1,6 @@
 # Hlídač výstrah
 
-- English version is in the project folder under the name readme.en.md
+- English version of this file is in the project folder under the name readme.en.md
 
 ## Úvod
 
@@ -13,6 +13,7 @@
 
 ### Frontend
   - React.js
+  - Bootstrap
   - Sass
 
 ## Obsah
@@ -52,6 +53,10 @@
         - Swashbuckle.AspNetCore 4.5.0
 
 - **Instalace závislostí**
+
+  - Stažení a instalace [Node.js](https://nodejs.org/en/)
+  - Stažení a instalace [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
+
   - **Backend**
     ```bash
     cd /hlidacVystrah/hlidacVystrah
@@ -63,22 +68,25 @@
     npm install
 
 ## Konfigurace
-- V souborech `appsettings.json` a `appsettings.Development.json` je třeba nastavit connection string pro připojení k databázi a údaje k připojení k smtp serveru odesílající emaily.
+- V souborech `appsettings.json` a `appsettings.Development.json` je třeba nastavit connection string pro připojení k databázi a údaje k připojení k smtp serveru.
 
 ## API Dokumentace
 ### Frontend
 - **/**
-  - Úvodní stránka aplikace Hlídač výstrah.
+  - Úvodní stránka aplikace s pohledem na meteorologickou situaci v celé České republice.
 
 - **/obec/:cisorp**
-  - Stránka s informacemi o vybrané lokalitě na základě jejího CISORP kódu.
+  - Stránka s detailními informacemi o obci s rozšířenou působností na základě jejího čísla.
   - Např. `/obec/1100` zobrazí detail obce Praha, `/obec/3209` zobrazí detail obce Plzeň.
 
+- **/history**
+  - Stránka umožňující procházet všechny dostupné historické záznamy o meteorologické situaci.
+
 - **/register**
-  - Stránka pro vytvoření nového uživatelského účtu.
+  - Stránka pro registraci nového uživatelského účtu.
 
 - **/resetpassword**
-  - Stránka pro resetování zapomenutého hesla a odeslání odkazu pro nastavení nového hesla na daný email.
+  - Stránka pro odeslání e-mailové zprávy s odkazem na změnu hesla na danou adresu.
 
 - **/newpassword**
   - Stránka pro změnu zapomenutého hesla.
@@ -90,7 +98,7 @@
   - Stránka pro přihlášení do správy účtu.
 
 - **/account**
-  - Stránka pro správu účtu uživatele s možností úpravy sledovaných jevů.
+  - Stránka pro správu uživatelského účtu s možností úpravy sledovaných jevů a správou účtu.
 
 - **/_adm**
   - Stránka administrace aplikace.
@@ -102,12 +110,12 @@
   - Stránka administrace s uživateli aplikace.
 
 ### Backend
-- Pro API dokumentaci lze použít nástroj Swagger. Po spuštění projektu je možné přistoupit k dokumentaci API přes URL `/swagger`.
+- Pro API dokumentaci lze použít nástroj Swagger. Po spuštění projektu lze přistoupit k dokumentaci API přes URL `/swagger`.
   - Swagger UI poskytuje interaktivní rozhraní pro prohlížení a testování API endpointů.
   - Uživatelé mohou snadno procházet dostupné endpointy, zobrazovat jejich parametry a odesílat žádosti přímo z rozhraní.
 
 ## Migrace databáze
-- V projektu je složka `Migrations` obsahující migrace databáze. Uživatelé pouze potřebují spustit aktualizaci databáze pomocí Entity Framework Core migrací.
+- V projektu je složka `Migrations` obsahující migrace databáze. Uživatelé pouze potřebují spustit aktualizaci databáze pomocí Entity Framework Core migrace.
 
 1. Otevřete příkazový řádek nebo terminál v adresáři s projektem.
 2. Spusťte následující příkaz pro aplikaci migrací a vytvoření databázového schématu:

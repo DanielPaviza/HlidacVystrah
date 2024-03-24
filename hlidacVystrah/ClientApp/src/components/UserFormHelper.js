@@ -1,4 +1,5 @@
-﻿
+﻿import { InfoMessage } from './InfoMessage';
+
 class UserFormHelper {
 
     constructor() {
@@ -14,6 +15,8 @@ class UserFormHelper {
     }
 
     RenderInformationText = (text, isError, HandleClose = null) => {
+
+        return <InfoMessage text={text} isError={isError} />
 
         if (HandleClose != null)
             setTimeout(() => {

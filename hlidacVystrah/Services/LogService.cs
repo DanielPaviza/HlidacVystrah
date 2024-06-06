@@ -84,7 +84,7 @@ namespace hlidacVystrah.Services
             string LogName = "BackUpToFile";
 
             this.WriteInfo("Db logs to file backup start", LogName);
-            this.WriteInfo($"Logs to backup: ${logs.Count}", LogName);
+            this.WriteInfo($"Logs to backup: {logs.Count}", LogName);
 
             try
             {

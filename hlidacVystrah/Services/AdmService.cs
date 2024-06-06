@@ -269,17 +269,17 @@ namespace hlidacVystrah.Services
             }
         }
 
-        public BaseResponse BackupLogs(LoginTokenDto data)
+        public BaseResponse BackupLogs(string token)
         {
 
             string LOG_NAME = "BackupLogs";
+            string decodedToken = token.Replace(' ', '+');
 
-            UserTable? user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
-            int authorizeAdminStatusCode = this.AuthorizeUserAdminStatusCode(user);
-            if (authorizeAdminStatusCode != 200)
+            AdminTable admin = _context.Admin.FirstOrDefault(a => a.update_events_token == decodedToken && decodedToken != null);
+            if (admin == null)
             {
-                this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
-                return new BaseResponse { ResponseCode = authorizeAdminStatusCode };
+                _logService.WriteError("Unauthorized. Invalid admin token.", LOG_NAME);
+                return new BaseResponse { ResponseCode = StatusCodes.Status401Unauthorized };
             }
 
             DateTime oneMonthAgo = DateTime.Now.AddMonths(-1);

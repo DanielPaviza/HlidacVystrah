@@ -42,10 +42,10 @@ namespace hlidacVystrah.Controllers
         }
 
         // POST api/adm/logs/backup
-        [HttpPost("logs/backup")]
-        public BaseResponse BackupLogs([FromBody] LoginTokenDto data)
+        [HttpGet("logs/backup")]
+        public BaseResponse BackupLogs([FromQuery] string token)
         {
-            return _admService.BackupLogs(data);
+            return _admService.BackupLogs(token);
         }
 
         // POST api/adm/users

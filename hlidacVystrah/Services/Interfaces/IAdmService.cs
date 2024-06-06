@@ -8,7 +8,7 @@ namespace hlidacVystrah.Services.Interfaces
     {
         LogsResponse GetLogs(LogsDto data);
 
-        BaseResponse BackupLogs([FromBody] LoginTokenDto data);
+        BaseResponse BackupLogs(string token);
 
         LogsFilterOptionsResponse GetLogsFilterOptions(LoginTokenDto data);
 

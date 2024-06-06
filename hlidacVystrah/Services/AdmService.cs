@@ -4,6 +4,7 @@ using hlidacVystrah.Model.Dto;
 using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace hlidacVystrah.Services
 {
@@ -266,6 +267,42 @@ namespace hlidacVystrah.Services
                 _logService.WriteError(ex.Message, LOG_NAME);
                 return new LogsResponse { ResponseCode = StatusCodes.Status500InternalServerError };
             }
+        }
+
+        public BaseResponse BackupLogs(LoginTokenDto data)
+        {
+
+            string LOG_NAME = "BackupLogs";
+
+            UserTable? user = _context.User.FirstOrDefault(u => u.login_token == data.LoginToken);
+            int authorizeAdminStatusCode = this.AuthorizeUserAdminStatusCode(user);
+            if (authorizeAdminStatusCode != 200)
+            {
+                this._logService.WriteInfo($"Unauthorized access attempt.", LOG_NAME);
+                return new BaseResponse { ResponseCode = authorizeAdminStatusCode };
+            }
+
+            DateTime oneMonthAgo = DateTime.Now.AddMonths(-1);
+            List<LogTable> allLogs = _context.Log.ToList();
+
+            List<LogTable> monthOldLogs = allLogs
+                .Where(l => DateTime.ParseExact(l.timestamp, "yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture) >= oneMonthAgo)
+                .OrderByDescending(l => l.timestamp)
+                .ToList();
+
+            BaseResponse backupResponse = _logService.BackUpToFile(monthOldLogs);
+            if (backupResponse.ResponseCode == 200)
+            {
+                DateTime threeMonthsAgo = DateTime.Now.AddMonths(-3);
+                List<LogTable> logsOlderThanThreeMonths = allLogs
+                    .Where(l => DateTime.ParseExact(l.timestamp, "yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture) <= threeMonthsAgo)
+                    .OrderByDescending(l => l.timestamp)
+                    .ToList();
+
+                this._logService.RemoveLogs(logsOlderThanThreeMonths);
+            }
+
+            return backupResponse;
         }
 
         public LogsFilterOptionsResponse GetLogsFilterOptions(LoginTokenDto data)

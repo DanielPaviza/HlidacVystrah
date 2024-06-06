@@ -5,6 +5,7 @@ using hlidacVystrah.Model.Response;
 using hlidacVystrah.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace hlidacVystrah.Services
 {
@@ -53,6 +54,70 @@ namespace hlidacVystrah.Services
             } catch( Exception ex ) {
                 //this.Write("Error", ex.Message, "Log write");
             }      
+        }
+
+        public BaseResponse RemoveLogs(List<LogTable> logs)
+        {
+
+            string LogName = "RemoveLogs";
+
+            this.WriteInfo("Db logs delete old start", LogName);
+            this.WriteInfo($"Log delete count: {logs.Count}", LogName);
+
+            try
+            {
+                _context.Log.RemoveRange(logs);       
+                _context.SaveChanges();
+                this.WriteSuccess("Db logs delete old success", LogName);
+                return new BaseResponse { ResponseCode = 200 };
+            }
+            catch (Exception ex)
+            {
+                this.WriteError(ex.Message, LogName);
+                return new BaseResponse { ResponseCode = 500 };
+            }
+        }
+
+        public BaseResponse BackUpToFile(List<LogTable> logs)
+        {
+
+            string LogName = "BackUpToFile";
+
+            this.WriteInfo("Db logs to file backup start", LogName);
+            this.WriteInfo($"Logs to backup: ${logs.Count}", LogName);
+
+            try
+            {
+
+                // Ensure the /logs directory exists
+                string logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+                if (!Directory.Exists(logDirectory))
+                    Directory.CreateDirectory(logDirectory);
+
+                // Generate the log file path with a timestamp in the filename
+                string logFilePath = Path.Combine(logDirectory, $"log_backup_{DateTime.Now:dd_MM_yyyy}.txt");
+
+                // Write logs to the file
+                using (StreamWriter writer = new StreamWriter(logFilePath))
+                {
+
+                    // FIRST ROW
+                    writer.WriteLine($"Timestamp | ID | Type | Service | Name | Text | Session | Client Info");
+
+                    foreach (var log in logs)
+                    {
+                        writer.WriteLine($"{log.timestamp} | {log.id} | {log.id_log_type} | {log.id_log_service} | {log.name} | {log.text} | {log.session} | {log.client_info}");
+                    }
+                }
+
+                this.WriteSuccess("Db logs to file backup success", LogName);
+                return new BaseResponse { ResponseCode = 200 };
+            }
+            catch (Exception ex)
+            {
+                this.WriteError(ex.Message, LogName);
+                return new BaseResponse { ResponseCode = 500 };
+            }
         }
 
         public void WriteInfo(string text, string name) {

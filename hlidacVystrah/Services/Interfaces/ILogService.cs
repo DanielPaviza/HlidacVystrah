@@ -13,5 +13,7 @@ namespace hlidacVystrah.Services.Interfaces
         void WriteSuccess(string text, string name);
         void WriteSuccessDev(string text, string name);
         void WriteInfoDev(string text, string name);
+        BaseResponse BackUpToFile(List<LogTable> logs);
+        BaseResponse RemoveLogs(List<LogTable> logs);
     }
 }

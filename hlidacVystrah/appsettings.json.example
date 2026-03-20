@@ -1,0 +1,25 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": ""
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "MailSettings": {
+    "Server": "smtp.server.example",
+    "Port": 465,
+    "SenderName": "Example sender name",
+    "SenderEmail": "noreply@example.com",
+    "UserName": "noreply@example.com",
+    "Password": "examplepassword",
+    "BaseUrl": "https://www.base_app_url.com"
+  },
+  "DownloadEventsEndpoint": {
+    "Url": "https://www.chmi.cz/files/portal/docs/meteo/om/bulletiny/XOCZ50_OKPR.xml"
+  },
+  "AllowedHosts": "*"
+}
